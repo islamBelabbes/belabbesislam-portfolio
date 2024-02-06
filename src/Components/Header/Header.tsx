@@ -2,7 +2,7 @@
 import React, { useRef, useState } from "react";
 import Navigation from "./Navigation";
 import useIsSticky from "@/hooks/useIsSticky";
-import { cn } from "@/libs/utility";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import DarkModeButton from "../DarkModeButton";
 import SideMenu from "./SideMenu";

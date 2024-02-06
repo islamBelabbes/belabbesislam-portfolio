@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import Header from "@/Components/Header/Header";
 import { Providers } from "@/Components/Providers";
-import Footer from "@/Components/Footer";
+
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,16 +14,14 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: JSX.Element[] | JSX.Element;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <Providers>
           <div id="modal"></div>
-          <Header />
-          <main>{children}</main>
-          <Footer />
+          <>{children}</>
         </Providers>
       </body>
     </html>

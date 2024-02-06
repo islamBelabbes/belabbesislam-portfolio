@@ -1,4 +1,4 @@
-import { cn } from "@/libs/utility";
+import { cn } from "@/lib/utils";
 
 import { type ClassValue } from "clsx";
 

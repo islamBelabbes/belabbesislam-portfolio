@@ -28,13 +28,13 @@ function SideMenu({ closeModal }: { closeModal: () => void }) {
       </div>
 
       {/* menu items */}
-      <ul className="flex flex-col gap-4 p-6 border-b dark:border-[#ffffff1f]">
+      <nav className="flex flex-col gap-4 p-6 border-b dark:border-[#ffffff1f]">
         {NAV_ITEMS.map((item, index) => (
-          <li key={index} className={item.href} onClick={closeModal}>
-            <a href={`#${item.href}`}>{item.name}</a>
-          </li>
+          <a key={index} href={`#${item.href}`} onClick={closeModal}>
+            {item.name}
+          </a>
         ))}
-      </ul>
+      </nav>
 
       {/* Theme Switcher */}
       <label className="flex justify-between p-6">

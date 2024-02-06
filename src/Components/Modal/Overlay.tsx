@@ -1,5 +1,5 @@
 "use client";
-import { cn } from "@/libs/utility";
+import { cn } from "@/lib/utils";
 import { type ClassValue } from "clsx";
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
@@ -19,6 +19,16 @@ const variants = {
 };
 
 function Overlay({ children, className, onClickOutside }: overlayProps) {
+  useEffect(() => {
+    const html = document.querySelector("html");
+    if (html) {
+      html.style.overflow = "hidden";
+    }
+
+    return () => {
+      html ? (html.style.overflow = "") : null;
+    };
+  }, []);
   return (
     <WithPortal elementId="modal">
       <motion.div

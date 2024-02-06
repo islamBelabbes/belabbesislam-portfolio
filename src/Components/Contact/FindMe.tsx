@@ -21,7 +21,7 @@ const FIND: findData[] = [
 ];
 function FindMe() {
   return (
-    <div className="bg-WhitePrimary dark:bg-BlackPrimary py-10">
+    <section className="bg-WhitePrimary dark:bg-BlackPrimary py-10">
       <div className="lg:max-w-[1280px] mx-auto px-8 flex flex-col gap-7  justify-center items-center">
         <SectionEntry
           heading={"Find Me"}
@@ -41,7 +41,7 @@ function FindMe() {
           ))}
         </ul>
       </div>
-    </div>
+    </section>
   );
 }
 

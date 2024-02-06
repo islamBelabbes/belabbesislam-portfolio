@@ -4,7 +4,7 @@ import ProjectsListing from "./ProjectsListing";
 
 function Projects() {
   return (
-    <div className="bg-WhitePrimary dark:bg-BlackPrimary py-10">
+    <section className="bg-WhitePrimary dark:bg-BlackPrimary py-10">
       <div
         id="projects"
         className="lg:max-w-[1280px] mx-auto px-8 flex flex-col gap-12  justify-center items-center"
@@ -17,7 +17,7 @@ function Projects() {
         <Categories />
         <ProjectsListing />
       </div>
-    </div>
+    </section>
   );
 }
 

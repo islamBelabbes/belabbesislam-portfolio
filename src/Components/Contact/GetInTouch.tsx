@@ -22,7 +22,7 @@ function GetInTouch() {
   };
 
   return (
-    <div className="bg-WhiteSecondary dark:bg-BlackSecondary py-10">
+    <section className="bg-WhiteSecondary dark:bg-BlackSecondary py-10">
       <div className="lg:max-w-[1280px] mx-auto px-8 flex flex-col gap-7  justify-center items-center">
         <SectionEntry
           heading="Get in Touch"
@@ -46,7 +46,7 @@ function GetInTouch() {
           </ul>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 

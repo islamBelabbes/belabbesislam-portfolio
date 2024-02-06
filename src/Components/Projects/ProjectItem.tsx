@@ -9,12 +9,7 @@ function ProjectItem() {
   const url = "#";
   const image = "/project.png";
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="shadow_sm  rounded-[32px] flex flex-col transition-all duration-300 h-full"
-    >
+    <motion.div className="shadow_sm  rounded-[32px] flex flex-col transition-all duration-300 h-full">
       <div className="w-full flex relative" style={{ minHeight: "356px" }}>
         <Image
           src={image}
