@@ -1,6 +1,6 @@
 import React from "react";
 
-import SectionEntry from "@/Components/SectionEntry";
+import SectionEntry from "@/components/SectionEntry";
 import SkillsListing from "./SkillsListing";
 
 function Skills() {

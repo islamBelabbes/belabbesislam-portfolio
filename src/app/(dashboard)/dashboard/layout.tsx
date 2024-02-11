@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import "@/app/globals.css";
-import Header from "@/Components/Dashboard/Header";
-import SideMenu from "@/Components/Dashboard/SideMenu";
+import DashboardSideBar from "@/components/Dashboard/DashboardSideBar";
+import DashboardHeader from "@/components/Dashboard/DashboardHeader";
+import DashboardProvider from "@/components/Dashboard/DashboardProvider";
+import { HEADER_HEIGHT } from "@/constants/constants";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,11 +16,22 @@ export default function DashboardLayout({
 }>) {
   return (
     <div className="flex row">
-      <SideMenu />
-      <main className="w-full">
-        <Header />
-        {children}
-      </main>
+      <DashboardProvider>
+        <DashboardSideBar />
+        <main className="w-full z-10">
+          <DashboardHeader />
+          <div
+            className="bg-[#f8f8f8]  lg:p-[25px]"
+            style={{
+              height: `calc(100vh - ${HEADER_HEIGHT}px)`,
+            }}
+          >
+            <div className="bg-white w-full h-full p-3 overflow-y-scroll overflow-x-hidden">
+              {children}
+            </div>
+          </div>
+        </main>
+      </DashboardProvider>
     </div>
   );
 }
