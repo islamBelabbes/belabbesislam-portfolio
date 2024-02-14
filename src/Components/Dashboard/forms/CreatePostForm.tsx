@@ -7,8 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import ImageUploader from "../ImageUploader";
 import { Button } from "@/components/ui/button";
 import BlockUi from "@/components/BlockUi";
-import CategorySelect from "../CategorySelect";
-import { CommandDialogDemo } from "../Test";
+import CategoriesSelect from "../CategoriesSelect";
 
 type CreatePostFormProps = {
   postImg?: string | null;
@@ -42,7 +41,7 @@ const CreatePostForm = ({ postImg = null }: CreatePostFormProps) => {
           </div>
           <div className="flex flex-col gap-3">
             <Label htmlFor="url">Post url</Label>
-            <CategorySelect />
+            <CategoriesSelect />
           </div>
 
           <div className="flex flex-col gap-3 w-[450px]">

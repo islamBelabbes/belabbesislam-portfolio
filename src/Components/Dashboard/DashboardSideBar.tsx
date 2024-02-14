@@ -10,7 +10,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import { Separator } from "../ui/separator";
 import { DASHBOARD_NAV_ITEMS } from "@/constants/constants";
-import { TODO, dashboardMenuItems } from "@/types";
+import { TODO, TDashboardMenuItems } from "@/types";
 import { cn } from "@/lib/utils";
 import useDashboardSideBar from "@/hooks/useSideMenu";
 import DashboardSideBarToggle from "./DashboardSideBarToggle";
@@ -21,7 +21,7 @@ type TMenuHeaderProps = {
 };
 
 type TMenuItemProps = {
-  items: dashboardMenuItems[];
+  items: TDashboardMenuItems[];
   currentPath: string;
   handleNavigation: (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,

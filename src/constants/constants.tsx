@@ -1,4 +1,4 @@
-import { dashboardMenuItems } from "@/types";
+import { TDashboardMenuItems } from "@/types";
 import { Home } from "lucide-react";
 
 export const NAV_ITEMS = [
@@ -20,7 +20,7 @@ export const NAV_ITEMS = [
   },
 ] as const;
 
-export const DASHBOARD_NAV_ITEMS: dashboardMenuItems[] = [
+export const DASHBOARD_NAV_ITEMS: TDashboardMenuItems[] = [
   {
     name: "home",
     href: "/dashboard",
@@ -64,3 +64,7 @@ export const DASHBOARD_NAV_ITEMS: dashboardMenuItems[] = [
 ];
 
 export const HEADER_HEIGHT: string = "60";
+
+export const TOAST_IDs = {
+  fileError: "toast_file_error",
+};

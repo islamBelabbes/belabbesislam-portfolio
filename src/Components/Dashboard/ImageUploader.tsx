@@ -3,16 +3,27 @@ import { useDropzone } from "react-dropzone";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { ClassValue } from "clsx";
+import { toast } from "react-toastify";
+import { TOAST_IDs } from "@/constants/constants";
 
 type TImageUploaderProps = {
   image: string | null;
   setImage: (image: string | null) => void;
-  className?: string;
+  className?: ClassValue;
 };
 
 const ImageUploader = ({ image, setImage, className }: TImageUploaderProps) => {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     maxFiles: 1,
+    accept: {
+      "image/png": [".png"],
+    },
+    onDropRejected: (fileRejections) => {
+      return toast.error(fileRejections[0].errors[0].message, {
+        toastId: TOAST_IDs.fileError,
+      });
+    },
   });
 
   useEffect(() => {

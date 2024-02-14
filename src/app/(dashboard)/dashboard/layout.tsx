@@ -3,6 +3,7 @@ import DashboardSideBar from "@/components/Dashboard/DashboardSideBar";
 import DashboardHeader from "@/components/Dashboard/DashboardHeader";
 import DashboardProvider from "@/components/Dashboard/DashboardProvider";
 import { HEADER_HEIGHT } from "@/constants/constants";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -21,14 +22,14 @@ export default function DashboardLayout({
         <main className="w-full z-10">
           <DashboardHeader />
           <div
-            className="bg-[#f8f8f8]  lg:p-[25px]"
+            className="bg-[#f8f8f8] lg:p-[25px]"
             style={{
               height: `calc(100vh - ${HEADER_HEIGHT}px)`,
             }}
           >
-            <div className="bg-white w-full h-full p-3 overflow-y-scroll overflow-x-hidden">
+            <ScrollArea className="bg-white h-full w-full p-3" type="always">
               {children}
-            </div>
+            </ScrollArea>
           </div>
         </main>
       </DashboardProvider>

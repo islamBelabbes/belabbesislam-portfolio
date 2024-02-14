@@ -1,10 +1,10 @@
 export type TODO = any; // this is placeholder type
 
-export type dashboardMenuItems = {
+export type TDashboardMenuItems = {
   name: string;
   href: string;
   icon: JSX.Element;
-  subMenu?: dashboardMenuItems[] | null;
+  subMenu?: TDashboardMenuItems[] | null;
 };
 
 export type TProject = {
