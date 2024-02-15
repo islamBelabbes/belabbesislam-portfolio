@@ -31,7 +31,7 @@ const ImageUploader = ({ image, setImage, className }: TImageUploaderProps) => {
     if (acceptedFiles.length !== 0) {
       setImage(URL.createObjectURL(acceptedFiles[0]));
     }
-  }, [acceptedFiles]);
+  }, [acceptedFiles, setImage]);
 
   const handleRemove = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();

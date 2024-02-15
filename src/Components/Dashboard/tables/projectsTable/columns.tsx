@@ -11,7 +11,6 @@ import { TCategory, TProject } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { Link as LinkIcon, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 import CategoriesTag from "@/components/CategoriesTag";
 type TTProjects = Partial<TProject>;
@@ -61,7 +60,6 @@ export const columns: ColumnDef<TTProjects>[] = [
     header: "actions",
     cell: ({ row, table }) => {
       const data = row.original;
-      const router = useRouter();
       const meta = table.options.meta;
 
       return (
@@ -75,11 +73,7 @@ export const columns: ColumnDef<TTProjects>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => router.push(`/dashboard/project/create`)}
-              >
-                Edit Project
-              </DropdownMenuItem>
+              <DropdownMenuItem>Edit Project</DropdownMenuItem>
               <DropdownMenuItem>Delete Project</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

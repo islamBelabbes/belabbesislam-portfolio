@@ -1,5 +1,5 @@
 import CreateProjectForm from "@/components/Dashboard/forms/CreateProjectForm";
-import React from "react";
+import React, { Suspense } from "react";
 
 function page() {
   return (

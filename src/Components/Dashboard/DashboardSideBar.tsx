@@ -81,9 +81,9 @@ const MenuItems = ({
   currentPath,
   handleNavigation,
 }: TMenuItemProps) => {
-  return items.map((item: TODO) =>
+  return items.map((item: TDashboardMenuItems) =>
     item.subMenu ? (
-      <SubMenu icon={item.icon} label={item.name}>
+      <SubMenu key={item.href} icon={item.icon} label={item.name}>
         <MenuItems
           currentPath={currentPath}
           items={item.subMenu}
@@ -92,6 +92,7 @@ const MenuItems = ({
       </SubMenu>
     ) : (
       <MenuItem
+        key={item.href}
         className={cn({
           "bg-[#E1F8FD]": currentPath === item.href,
         })}

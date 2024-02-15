@@ -14,8 +14,8 @@ import { TCategory } from "@/types";
 import { cn, isInSelectedCategories } from "@/lib/utils";
 import { categories } from "@/seed";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { ScrollArea } from "../ui/scroll-area";
-import categoriesTag from "../Projects/categoriesTag";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import CategoriesTag from "@/components/CategoriesTag";
 
 type TSearchResult = {
   search: string;
@@ -47,7 +47,7 @@ const CategoriesSelect = () => {
           {selectedCategories?.length ? (
             <div className="flex gap-2">
               {selectedCategories.map((item) => (
-                <categoriesTag item={item} key={item.id} />
+                <CategoriesTag item={item} key={item.id} />
               ))}
             </div>
           ) : (
@@ -98,23 +98,22 @@ const SearchResult = ({
         {!isLoading &&
           res.length > 0 &&
           res.map((item) => (
-            <>
-              <CommandItem
-                data-current={isInSelectedCategories(selectedCategories, item)}
-                onSelect={() => setSelectedCategories(item)}
-                className={cn("flex justify-between cursor-pointer p-3", {
-                  "bg-primary text-white rounded-none": isInSelectedCategories(
-                    selectedCategories,
-                    item
-                  ),
-                })}
-              >
-                {item.name}
-                {isInSelectedCategories(selectedCategories, item) && (
-                  <Check size={18} />
-                )}
-              </CommandItem>
-            </>
+            <CommandItem
+              key={item.id}
+              data-current={isInSelectedCategories(selectedCategories, item)}
+              onSelect={() => setSelectedCategories(item)}
+              className={cn("flex justify-between cursor-pointer p-3", {
+                "bg-primary text-white rounded-none": isInSelectedCategories(
+                  selectedCategories,
+                  item
+                ),
+              })}
+            >
+              {item.name}
+              {isInSelectedCategories(selectedCategories, item) && (
+                <Check size={18} />
+              )}
+            </CommandItem>
           ))}
       </CommandList>
     </ScrollArea>

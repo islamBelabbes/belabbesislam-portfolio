@@ -13,10 +13,9 @@ import { TCategory } from "@/types";
 import { CellContext, ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { ClipLoader } from "react-spinners";
 
-type TTCategory = keyof TCategory;
+type TTCategory = Partial<TCategory>;
 
 export const columns: ColumnDef<TTCategory>[] = [
   {
@@ -39,7 +38,6 @@ export const columns: ColumnDef<TTCategory>[] = [
     header: "actions",
     cell: ({ row, table }) => {
       const data = row.original;
-      const router = useRouter();
       const meta = table.options.meta;
 
       return (
@@ -53,11 +51,7 @@ export const columns: ColumnDef<TTCategory>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => router.push(`/dashboard/category/create`)}
-              >
-                Edit Category
-              </DropdownMenuItem>
+              <DropdownMenuItem>Edit Category</DropdownMenuItem>
               <DropdownMenuItem>Delete Category</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

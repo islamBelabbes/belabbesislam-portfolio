@@ -1,5 +1,5 @@
-import { columns } from "@/components/Dashboard/tables/projectsTable/categoriesTable/columns";
-import { ProjectsTable } from "@/components/Dashboard/tables/projectsTable/categoriesTable/data-table";
+import { columns } from "@/components/Dashboard/tables/projectsTable/columns";
+import { ProjectsTable } from "@/components/Dashboard/tables/projectsTable/data-table";
 import { projects } from "@/seed";
 import React from "react";
 
