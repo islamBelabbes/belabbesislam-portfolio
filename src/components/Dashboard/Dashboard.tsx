@@ -15,7 +15,7 @@ type DashboardStatusProps = {
   title: string;
 };
 
-const DashboardView = () => {
+const Dashboard = () => {
   return (
     <div>
       <div className="flex gap-2 px-5">
@@ -71,4 +71,4 @@ const DashboardStatus = ({
   );
 };
 
-export default DashboardView;
+export default Dashboard;
