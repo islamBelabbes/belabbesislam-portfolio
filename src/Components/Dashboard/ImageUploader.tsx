@@ -24,6 +24,7 @@ const ImageUploader = ({ image, setImage, className }: TImageUploaderProps) => {
         toastId: TOAST_IDs.fileError,
       });
     },
+    onDropAccepted: () => toast.dismiss(TOAST_IDs.fileError),
   });
 
   useEffect(() => {

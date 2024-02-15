@@ -3,17 +3,17 @@ import { TCategory, TProject } from "./types";
 export const categories: TCategory[] = [
   {
     id: "0",
-    image: "/public/icon-tailwindcss.png",
+    image: "/icon-tailwindcss.png",
     name: "tailwindcss",
   },
   {
     id: "1",
-    image: "/icon-nextjs",
+    image: "/icon-nextjs.png",
     name: "nextjs",
   },
   {
     id: "2",
-    image: "/icon-wordpress",
+    image: "/icon-wordpress.png",
     name: "wordpress",
   },
   {
@@ -28,28 +28,28 @@ export const projects: TProject[] = [
     title: "wahaj",
     description: "suida arabia based learning platform",
     image: "/project.png",
-    technologies: categories,
-    url: "www.wahaj.com",
+    categories: categories,
+    url: "https://wahaj.co/",
   },
   {
     title: "wahaj",
     description: "suida arabia based learning platform",
     image: "/project.png",
-    technologies: categories,
-    url: "www.wahaj.com",
+    categories: categories,
+    url: "https://wahaj.co/",
   },
   {
     title: "wahaj",
     description: "suida arabia based learning platform",
     image: "/project.png",
-    technologies: categories,
-    url: "www.wahaj.com",
+    categories: categories,
+    url: "https://wahaj.co/",
   },
   {
     title: "wahaj",
     description: "suida arabia based learning platform",
     image: "/project.png",
-    technologies: categories,
-    url: "www.wahaj.com",
+    categories: categories,
+    url: "https://wahaj.co/",
   },
 ];

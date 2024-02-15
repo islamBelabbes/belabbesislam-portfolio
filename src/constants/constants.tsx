@@ -28,18 +28,18 @@ export const DASHBOARD_NAV_ITEMS: TDashboardMenuItems[] = [
     subMenu: null,
   },
   {
-    name: "post",
-    href: "/dashboard/post",
+    name: "project",
+    href: "/dashboard/project",
     icon: <Home />,
     subMenu: [
       {
         name: "all",
-        href: "/dashboard/post/all",
+        href: "/dashboard/project/all",
         icon: <Home />,
       },
       {
         name: "create",
-        href: "/dashboard/post/create",
+        href: "/dashboard/project/create",
         icon: <Home />,
       },
     ],

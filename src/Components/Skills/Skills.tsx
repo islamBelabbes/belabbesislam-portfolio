@@ -10,7 +10,7 @@ function Skills() {
         <div className="flex flex-col gap-12  justify-center items-center">
           <SectionEntry
             heading="Skills"
-            description="The skills , tools and technologies i am really good at:"
+            description="The skills , tools and categories i am really good at:"
           />
 
           <div className="w-full">

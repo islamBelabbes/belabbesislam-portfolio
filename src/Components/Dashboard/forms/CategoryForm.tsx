@@ -5,8 +5,14 @@ import { Label } from "@/components/ui/label";
 import React, { useState } from "react";
 import ImageUploader from "../ImageUploader";
 import { Button } from "@/components/ui/button";
+import { TCategory } from "@/types";
 
-function CategoryForm() {
+type TCategoryFormProps = {
+  initialData?: TCategory;
+  isUpdate?: boolean;
+};
+
+function CategoryForm({ initialData, isUpdate = false }: TCategoryFormProps) {
   const [image, setImage] = useState<null | string>(null);
 
   const customSetImage = (IMAGE: typeof image) => {

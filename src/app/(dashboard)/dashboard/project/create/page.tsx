@@ -1,10 +1,10 @@
-import CreatePostForm from "@/components/Dashboard/forms/CreatePostForm";
+import CreateProjectForm from "@/components/Dashboard/forms/CreateProjectForm";
 import React from "react";
 
 function page() {
   return (
-    <CreatePostForm
-      postImg={
+    <CreateProjectForm
+      projectImg={
         "http://localhost:3000/_next/image?url=%2Fproject.png&w=1920&q=75"
       }
     />

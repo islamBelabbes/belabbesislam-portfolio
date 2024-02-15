@@ -1,11 +1,12 @@
 "use client";
 import { motion } from "framer-motion";
-import TechnologiesTag from "./TechnologiesTag";
+import CategoriesTag from "@/components/CategoriesTag";
 import Image from "next/image";
+import { TCategory } from "@/types";
 function ProjectItem() {
   const title = "wahaj";
   const description = "Sa Based Saas";
-  const technologies: any = ["reactjs", "typescript", "nextjs"];
+  const categories: TCategory[] = [{ id: "0", image: "", name: "reactjs" }];
   const url = "#";
   const image = "/project.png";
   return (
@@ -27,7 +28,12 @@ function ProjectItem() {
         </p>
 
         <div className="flex flex-col gap-4 mt-auto">
-          <TechnologiesTag items={technologies} />
+          <div className="flex flex-wrap gap-2">
+            {categories.map((item) => (
+              <CategoriesTag item={item} key={item.id} />
+            ))}
+          </div>
+
           <a
             className="flex gap-3 cursor-not-allowed opacity-40"
             href="url"

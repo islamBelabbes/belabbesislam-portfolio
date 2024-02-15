@@ -10,7 +10,7 @@ export type TDashboardMenuItems = {
 export type TProject = {
   title: string;
   description: string;
-  technologies: TCategory[];
+  categories: TCategory[];
   url: string;
   image: string;
 };

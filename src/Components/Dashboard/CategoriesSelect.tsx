@@ -15,6 +15,7 @@ import { cn, isInSelectedCategories } from "@/lib/utils";
 import { categories } from "@/seed";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ScrollArea } from "../ui/scroll-area";
+import categoriesTag from "../Projects/categoriesTag";
 
 type TSearchResult = {
   search: string;
@@ -44,7 +45,11 @@ const CategoriesSelect = () => {
           className="w-full justify-between"
         >
           {selectedCategories?.length ? (
-            <SelectedCategoriesItem selectedCategories={selectedCategories} />
+            <div className="flex gap-2">
+              {selectedCategories.map((item) => (
+                <categoriesTag item={item} key={item.id} />
+              ))}
+            </div>
           ) : (
             <span> Select Category...</span>
           )}
@@ -73,22 +78,6 @@ const CategoriesSelect = () => {
         </DialogContent>
       </Dialog>
     </Popover>
-  );
-};
-
-const SelectedCategoriesItem = ({
-  selectedCategories,
-}: {
-  selectedCategories: TCategory[];
-}) => {
-  return (
-    <div className="flex gap-2">
-      {selectedCategories?.map((category) => (
-        <span className="p-1 bg-primary text-white rounded">
-          {category.name}
-        </span>
-      ))}
-    </div>
   );
 };
 
