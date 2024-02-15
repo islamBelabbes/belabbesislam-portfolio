@@ -1,5 +1,6 @@
 import React from "react";
 import SectionEntry from "../SectionEntry";
+import Image from "next/image";
 
 type findData = {
   to: string;
@@ -30,11 +31,13 @@ function FindMe() {
         />
         <ul className="flex flex-wrap justify-center gap-3 ">
           {FIND.map((item, index) => (
-            <li className="lg:w-[9rem] w-[90px]" key={index}>
+            <li className="lg:w-[9rem] w-[90px] h-12 relative" key={index}>
               <a target="_blank" href={item.to}>
-                <img
-                  className="object-contain w-full h-full white_filter"
+                <Image
+                  alt="logo"
                   src={item.logo}
+                  className="object-contain white_filter"
+                  fill
                 />
               </a>
             </li>
