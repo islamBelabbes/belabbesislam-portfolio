@@ -17,25 +17,23 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Suspense>
-      <div className="flex row">
-        <DashboardProvider>
-          <DashboardSideBar />
-          <main className="w-full z-10">
-            <DashboardHeader />
-            <div
-              className="bg-[#f8f8f8] lg:p-[25px]"
-              style={{
-                height: `calc(100vh - ${HEADER_HEIGHT}px)`,
-              }}
-            >
-              <ScrollArea className="bg-white h-full w-full p-3" type="always">
-                {children}
-              </ScrollArea>
-            </div>
-          </main>
-        </DashboardProvider>
-      </div>
-    </Suspense>
+    <div className="flex row">
+      <DashboardProvider>
+        <DashboardSideBar />
+        <main className="w-full z-10">
+          <DashboardHeader />
+          <div
+            className="bg-[#f8f8f8] lg:p-[25px]"
+            style={{
+              height: `calc(100vh - ${HEADER_HEIGHT}px)`,
+            }}
+          >
+            <ScrollArea className="bg-white h-full w-full p-3" type="always">
+              {children}
+            </ScrollArea>
+          </div>
+        </main>
+      </DashboardProvider>
+    </div>
   );
 }

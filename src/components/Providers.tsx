@@ -10,16 +10,14 @@ type Props = {
 };
 export function Providers({ children }: Props) {
   return (
-    <Suspense>
-      <ThemeProvider attribute="class">
-        <ToastContainer />
-        <Next13ProgressBar
-          height="4px"
-          color="#0A2FFF"
-          options={{ showSpinner: true }}
-        />
-        {children}
-      </ThemeProvider>
-    </Suspense>
+    <ThemeProvider attribute="class">
+      <ToastContainer />
+      <Next13ProgressBar
+        height="4px"
+        color="#0A2FFF"
+        options={{ showSpinner: true }}
+      />
+      {children}
+    </ThemeProvider>
   );
 }
