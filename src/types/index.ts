@@ -1,3 +1,6 @@
+import { categoryFormSchema, projectFormSchema } from "@/lib/Schema";
+import { z } from "zod";
+
 export type TODO = any; // this is placeholder type
 
 export type TDashboardMenuItems = {
@@ -7,16 +10,6 @@ export type TDashboardMenuItems = {
   subMenu?: TDashboardMenuItems[] | null;
 };
 
-export type TProject = {
-  title: string;
-  description: string;
-  categories: TCategory[];
-  url: string;
-  image: string;
-};
+export type TProject = z.infer<typeof projectFormSchema>;
 
-export type TCategory = {
-  id: string;
-  name: string;
-  image: string;
-};
+export type TCategory = z.infer<typeof categoryFormSchema> & { id: string };

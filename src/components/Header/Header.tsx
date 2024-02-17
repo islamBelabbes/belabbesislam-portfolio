@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import DarkModeButton from "../DarkModeButton";
 import SideMenu from "./SideMenu";
-import { AnimatePresence } from "framer-motion";
 
 function Header() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -22,7 +21,7 @@ function Header() {
         className={cn(
           "flex justify-center bg-WhiteSecondary dark:bg-BlackSecondary h-[80px] fixed top-0 w-full z-50",
           {
-            "shadow-sm transition-all  duration-500": isSticky,
+            "shadow-sm": isSticky,
           }
         )}
       >
@@ -48,9 +47,7 @@ function Header() {
       </div>
 
       {/* Side Menu */}
-      <AnimatePresence>
-        {isOpen && <SideMenu closeModal={() => setIsOpen(false)} />}
-      </AnimatePresence>
+      <SideMenu isOpen={isOpen} setIsOpen={setIsOpen} />
     </header>
   );
 }

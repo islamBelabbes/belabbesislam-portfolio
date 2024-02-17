@@ -1,9 +1,9 @@
 "use client";
 
+import { useState } from "react";
+
 import {
   ColumnDef,
-  RowData,
-  TableMeta,
   flexRender,
   getCoreRowModel,
   useReactTable,
@@ -17,24 +17,53 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import DeleteModal from "@/components/Modals/DeleteModal";
 
 interface ProjectsTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
+type TDeleteModal = {
+  isOpen: boolean;
+  targetId: string | null;
+};
+
 export function ProjectsTable<TData, TValue>({
   columns,
   data,
 }: ProjectsTableProps<TData, TValue>) {
+  const [deleteModal, setDeleteModal] = useState<TDeleteModal>({
+    isOpen: false,
+    targetId: null,
+  });
+
+  const tableMeta = {
+    handleDelete: (id: string) =>
+      setDeleteModal((prev) => {
+        return { isOpen: true, targetId: id };
+      }),
+  };
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    meta: tableMeta,
   });
 
   return (
     <div className="rounded-md border">
+      <DeleteModal
+        isOpen={deleteModal.isOpen}
+        setIsOpen={(open) =>
+          setDeleteModal((prev) => {
+            return { ...prev, isOpen: open };
+          })
+        }
+        onDelete={() => console.log(deleteModal.targetId)}
+      />
+
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (

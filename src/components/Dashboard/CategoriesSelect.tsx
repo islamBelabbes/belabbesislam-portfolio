@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Check, MousePointerSquare } from "lucide-react";
 
@@ -10,31 +10,33 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
-import { TCategory } from "@/types";
+import { TCategory, TODO } from "@/types";
 import { cn, isInSelectedCategories } from "@/lib/utils";
 import { categories } from "@/seed";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import CategoriesTag from "@/components/CategoriesTag";
+import { ClassValue } from "clsx";
 
-type TSearchResult = {
-  search: string;
+type TCategoriesSelectProps = {
   selectedCategories: TCategory[];
-  setSelectedCategories: (category: TCategory) => void;
+  onSelect: TODO;
+  className?: {
+    PopoverTrigger?: ClassValue;
+  };
 };
 
-const CategoriesSelect = () => {
+type TSearchResult = TCategoriesSelectProps & {
+  search: string;
+};
+
+const CategoriesSelect = ({
+  selectedCategories,
+  onSelect,
+  className = {},
+}: TCategoriesSelectProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [selectedCategories, setSelectedCategories] = useState<TCategory[]>([]);
-
-  const customSetSelectedCategories = (category: TCategory) => {
-    return isInSelectedCategories(selectedCategories, category)
-      ? setSelectedCategories((prev) =>
-          prev.filter((item) => item.id !== category?.id)
-        )
-      : setSelectedCategories([...selectedCategories, category]);
-  };
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -42,7 +44,7 @@ const CategoriesSelect = () => {
         <Button
           variant="outline"
           role="combobox"
-          className="w-full justify-between"
+          className={cn("w-full justify-between", className?.PopoverTrigger)}
         >
           {selectedCategories?.length ? (
             <div className="flex gap-2">
@@ -72,7 +74,7 @@ const CategoriesSelect = () => {
             <SearchResult
               search={search}
               selectedCategories={selectedCategories}
-              setSelectedCategories={customSetSelectedCategories}
+              onSelect={onSelect}
             />
           </Command>
         </DialogContent>
@@ -84,11 +86,10 @@ const CategoriesSelect = () => {
 const SearchResult = ({
   search,
   selectedCategories,
-  setSelectedCategories,
+  onSelect,
 }: TSearchResult) => {
   const [res, setRes] = useState<TCategory[]>(categories);
   const [isLoading, setIsLoading] = useState(false);
-
   return (
     <ScrollArea className="max-h-[250px]" type="always">
       <CommandList className="overflow-hidden">
@@ -101,7 +102,7 @@ const SearchResult = ({
             <CommandItem
               key={item.id}
               data-current={isInSelectedCategories(selectedCategories, item)}
-              onSelect={() => setSelectedCategories(item)}
+              onSelect={() => onSelect(item)}
               className={cn("flex justify-between cursor-pointer p-3", {
                 "bg-primary text-white rounded-none": isInSelectedCategories(
                   selectedCategories,

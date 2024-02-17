@@ -23,12 +23,6 @@ interface CategoriesTableProps<TData, TValue> {
   data: TData[];
 }
 
-declare module "@tanstack/table-core" {
-  interface TableMeta<TData extends RowData> {
-    updateData: () => boolean;
-  }
-}
-
 export function CategoriesTable<TData, TValue>({
   columns,
   data,
@@ -37,9 +31,6 @@ export function CategoriesTable<TData, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    meta: {
-      updateData: () => true,
-    },
   });
 
   return (

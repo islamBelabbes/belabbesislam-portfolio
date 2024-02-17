@@ -13,6 +13,7 @@ import { Link as LinkIcon, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 
 import CategoriesTag from "@/components/CategoriesTag";
+import Link from "next/link";
 type TTProjects = Partial<TProject>;
 export const columns: ColumnDef<TTProjects>[] = [
   {
@@ -56,9 +57,9 @@ export const columns: ColumnDef<TTProjects>[] = [
     },
   },
   {
-    id: "actions",
+    accessorKey: "actions",
     header: "actions",
-    cell: ({ row, table }) => {
+    cell: ({ row, table, column }) => {
       const data = row.original;
       const meta = table.options.meta;
 
@@ -73,8 +74,12 @@ export const columns: ColumnDef<TTProjects>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem>Edit Project</DropdownMenuItem>
-              <DropdownMenuItem>Delete Project</DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href={`create?${data.title}`}>Edit Project</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => meta?.handleDelete?.(row.id)}>
+                Delete Project
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 

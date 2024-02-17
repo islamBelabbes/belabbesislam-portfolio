@@ -11,9 +11,15 @@ type TImageUploaderProps = {
   image: string | null;
   setImage: (image: string | null) => void;
   className?: ClassValue;
+  [key: string]: any;
 };
 
-const ImageUploader = ({ image, setImage, className }: TImageUploaderProps) => {
+const ImageUploader = ({
+  image,
+  setImage,
+  className,
+  ...props
+}: TImageUploaderProps) => {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     maxFiles: 1,
     accept: {
@@ -45,7 +51,7 @@ const ImageUploader = ({ image, setImage, className }: TImageUploaderProps) => {
         className
       )}
     >
-      <input {...getInputProps({ className: "dropzone" })} />
+      <input {...getInputProps({ className: "dropzone", ...props })} />
       <div className="flex gap-2 flex-col items-center relative h-[360px] ">
         <div className="!absolute !z-10  flex flex-col gap-2 justify-center items-center overlay">
           <div className="flex gap-2">

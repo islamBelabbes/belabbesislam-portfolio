@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header/Header";
+import { RootProviders } from "@/components/Providers";
 
 export default async function RootLayout({
   children,
@@ -7,10 +8,10 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <RootProviders>
       <Header />
-      {children}
+      <>{children}</>
       <Footer />
-    </>
+    </RootProviders>
   );
 }

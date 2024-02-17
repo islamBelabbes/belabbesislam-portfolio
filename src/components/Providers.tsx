@@ -10,7 +10,7 @@ type Props = {
 };
 export function Providers({ children }: Props) {
   return (
-    <ThemeProvider attribute="class">
+    <>
       <ToastContainer />
       <Next13ProgressBar
         height="4px"
@@ -18,6 +18,13 @@ export function Providers({ children }: Props) {
         options={{ showSpinner: true }}
       />
       {children}
-    </ThemeProvider>
+    </>
+  );
+}
+export function RootProviders({ children }: Props) {
+  return (
+    <>
+      <ThemeProvider attribute="class">{children}</ThemeProvider>
+    </>
   );
 }
