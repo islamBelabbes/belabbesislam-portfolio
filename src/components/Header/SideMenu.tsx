@@ -20,10 +20,8 @@ function SideMenu({ isOpen, setIsOpen }: TSideMenuProps) {
         {/* menu items */}
         <nav className="flex flex-col gap-4 p-6 border-b dark:border-[#ffffff1f]">
           {NAV_ITEMS.map((item, index) => (
-            <SheetClose asChild>
-              <a key={index} href={`#${item.href}`}>
-                {item.name}
-              </a>
+            <SheetClose key={index} asChild>
+              <a href={`#${item.href}`}>{item.name}</a>
             </SheetClose>
           ))}
         </nav>
