@@ -1,7 +1,8 @@
-import ProjectForm from "@/components/Dashboard/forms/ProjectForm";
+import ProjectForm from "@/components/Dashboard/forms/projectForm/ProjectForm";
 import { createSupabaseServerClient } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import React from "react";
+export const revalidate = 0;
 
 async function page({ params }: { params: { id: string } }) {
   const supabase = createSupabaseServerClient();
@@ -14,7 +15,7 @@ async function page({ params }: { params: { id: string } }) {
   if (projectsError || !projects) throw "something went wrong";
   if (projects.length === 0) notFound();
 
-  return <ProjectForm {...projects[0]} />;
+  return <ProjectForm initialData={projects[0]} isUpdate />;
 }
 
 export default page;

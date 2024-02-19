@@ -14,6 +14,7 @@ import Image from "next/image";
 
 import CategoriesTag from "@/components/CategoriesTag";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 type TTProjects = Partial<TProject>;
 export const columns: ColumnDef<TTProjects>[] = [
   {
@@ -60,7 +61,13 @@ export const columns: ColumnDef<TTProjects>[] = [
     header: "Url",
     cell({ getValue }) {
       return (
-        <a href={getValue<string>()} target="_blank">
+        <a
+          className={cn({
+            "opacity-30 cursor-not-allowed": !getValue<string>(),
+          })}
+          href={!getValue<string>() ? undefined : getValue<string>()}
+          target="_blank"
+        >
           <LinkIcon />
         </a>
       );

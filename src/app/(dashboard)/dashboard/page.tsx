@@ -10,6 +10,8 @@ import { columns as projectsColumns } from "@/components/Dashboard/tables/projec
 import { ProjectsTable } from "@/components/Dashboard/tables/projectsTable/data-table";
 import { CategoriesTable } from "@/components/Dashboard/tables/categoriesTable/data-table";
 
+export const revalidate = 0;
+
 async function page() {
   const supabase = createSupabaseServerClient();
   const { data: projects, error: projectsError } = await supabase

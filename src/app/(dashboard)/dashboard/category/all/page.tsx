@@ -1,8 +1,9 @@
 import { columns } from "@/components/Dashboard/tables/categoriesTable/columns";
 import { CategoriesTable } from "@/components/Dashboard/tables/categoriesTable/data-table";
 import { createSupabaseServerClient } from "@/lib/supabase";
-import { categories } from "@/seed";
 import React from "react";
+
+export const revalidate = 0;
 
 async function page() {
   const supabase = createSupabaseServerClient();
