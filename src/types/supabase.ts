@@ -4,104 +4,104 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[];
+  | Json[]
 
 export type Database = {
   public: {
     Tables: {
       categories: {
         Row: {
-          created_at: string;
-          id: number;
-          image: string;
-          name: string;
-        };
+          created_at: string
+          id: number
+          image: string
+          name: string
+        }
         Insert: {
-          created_at?: string;
-          id?: number;
-          image?: string;
-          name?: string;
-        };
+          created_at?: string
+          id?: number
+          image?: string
+          name?: string
+        }
         Update: {
-          created_at?: string;
-          id?: number;
-          image?: string;
-          name?: string;
-        };
-        Relationships: [];
-      };
+          created_at?: string
+          id?: number
+          image?: string
+          name?: string
+        }
+        Relationships: []
+      }
       "project categories": {
         Row: {
-          category_id: number;
-          project_id: number;
-        };
+          category_id: number
+          project_id: number
+        }
         Insert: {
-          category_id: number;
-          project_id: number;
-        };
+          category_id: number
+          project_id: number
+        }
         Update: {
-          category_id?: number;
-          project_id?: number;
-        };
+          category_id?: number
+          project_id?: number
+        }
         Relationships: [
           {
-            foreignKeyName: "public_project categories_category_id_fkey";
-            columns: ["category_id"];
-            isOneToOne: false;
-            referencedRelation: "categories";
-            referencedColumns: ["id"];
+            foreignKeyName: "public_project categories_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "public_project categories_project_id_fkey";
-            columns: ["project_id"];
-            isOneToOne: false;
-            referencedRelation: "projects";
-            referencedColumns: ["id"];
+            foreignKeyName: "public_project categories_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
           }
-        ];
-      };
+        ]
+      }
       projects: {
         Row: {
-          created_at: string;
-          description: string | null;
-          id: number;
-          image: string;
-          title: string;
-          url: string | null;
-        };
+          created_at: string
+          description: string | null
+          id: number
+          image: string
+          title: string
+          url: string | null
+        }
         Insert: {
-          created_at?: string;
-          description?: string | null;
-          id?: number;
-          image?: string;
-          title?: string;
-          url?: string | null;
-        };
+          created_at?: string
+          description?: string | null
+          id?: number
+          image?: string
+          title?: string
+          url?: string | null
+        }
         Update: {
-          created_at?: string;
-          description?: string | null;
-          id?: number;
-          image?: string;
-          title?: string;
-          url?: string | null;
-        };
-        Relationships: [];
-      };
-    };
+          created_at?: string
+          description?: string | null
+          id?: number
+          image?: string
+          title?: string
+          url?: string | null
+        }
+        Relationships: []
+      }
+    }
     Views: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     Functions: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     Enums: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     CompositeTypes: {
-      [_ in never]: never;
-    };
-  };
-};
+      [_ in never]: never
+    }
+  }
+}
 
 export type Tables<
   PublicTableNameOrOptions extends
@@ -114,7 +114,7 @@ export type Tables<
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
       Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R;
+      Row: infer R
     }
     ? R
     : never
@@ -122,11 +122,11 @@ export type Tables<
       Database["public"]["Views"])
   ? (Database["public"]["Tables"] &
       Database["public"]["Views"])[PublicTableNameOrOptions] extends {
-      Row: infer R;
+      Row: infer R
     }
     ? R
     : never
-  : never;
+  : never
 
 export type TablesInsert<
   PublicTableNameOrOptions extends
@@ -137,17 +137,17 @@ export type TablesInsert<
     : never = never
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I;
+      Insert: infer I
     }
     ? I
     : never
   : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
   ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
-      Insert: infer I;
+      Insert: infer I
     }
     ? I
     : never
-  : never;
+  : never
 
 export type TablesUpdate<
   PublicTableNameOrOptions extends
@@ -158,17 +158,17 @@ export type TablesUpdate<
     : never = never
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U;
+      Update: infer U
     }
     ? U
     : never
   : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
   ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
-      Update: infer U;
+      Update: infer U
     }
     ? U
     : never
-  : never;
+  : never
 
 export type Enums<
   PublicEnumNameOrOptions extends
@@ -181,4 +181,4 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof Database["public"]["Enums"]
   ? Database["public"]["Enums"][PublicEnumNameOrOptions]
-  : never;
+  : never

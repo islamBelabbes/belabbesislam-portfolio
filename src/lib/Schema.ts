@@ -9,8 +9,8 @@ export const projectFormSchema = z.object({
   title: z
     .string({ required_error: "please enter a title" })
     .min(1, "please enter a title"),
-  description: z.string().min(1, "please enter a description"),
-  url: z.string().optional(),
-  categories: z.array(categoryFormSchema.extend({ id: z.string() })).min(1),
+  description: z.string().nullish(),
+  url: z.string().nullish(),
+  categories: z.array(categoryFormSchema.extend({ id: z.number() })).min(1),
   image: z.string(),
 });

@@ -31,6 +31,9 @@ export function CategoriesTable<TData, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    initialState: {
+      columnVisibility: { id: false },
+    },
   });
 
   return (

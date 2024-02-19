@@ -17,34 +17,44 @@ import Link from "next/link";
 type TTProjects = Partial<TProject>;
 export const columns: ColumnDef<TTProjects>[] = [
   {
-    accessorKey: "title",
-    header: "Title",
+    id: "id",
+    enableHiding: true,
   },
   {
     accessorKey: "image",
     header: "Image",
     cell({ getValue }) {
       return (
-        <div className="w-fit h-fit">
-          <Image src={getValue<string>()} alt="image" width={50} height={50} />
+        <div className="w-full h-[150px] relative rounded">
+          <Image
+            src={getValue<string>()}
+            alt="image"
+            fill
+            className="object-cover rounded"
+          />
         </div>
       );
     },
   },
   {
-    accessorKey: "categories",
-    header: "Categories",
-    cell({ getValue }) {
-      const categories = getValue<TCategory[]>();
-      return (
-        <div className="flex gap-3">
-          {categories.map((category) => (
-            <CategoriesTag key={category.id} item={category} />
-          ))}
-        </div>
-      );
-    },
+    accessorKey: "title",
+    header: "Title",
   },
+
+  // {
+  //   accessorKey: "categories",
+  //   header: "Categories",
+  //   cell({ getValue }) {
+  //     const categories = getValue<TCategory[]>();
+  //     return (
+  //       <div className="flex gap-3">
+  //         {categories.map((category) => (
+  //           <CategoriesTag key={category.id} item={category} />
+  //         ))}
+  //       </div>
+  //     );
+  //   },
+  // },
   {
     accessorKey: "url",
     header: "Url",
@@ -57,8 +67,7 @@ export const columns: ColumnDef<TTProjects>[] = [
     },
   },
   {
-    accessorKey: "actions",
-    header: "actions",
+    id: "actions",
     cell: ({ row, table, column }) => {
       const data = row.original;
       const meta = table.options.meta;
@@ -75,7 +84,7 @@ export const columns: ColumnDef<TTProjects>[] = [
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem>
-                <Link href={`create?${data.title}`}>Edit Project</Link>
+                <Link href={`/dashboard/project/${data.id}`}>Edit Project</Link>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => meta?.handleDelete?.(row.id)}>
                 Delete Project

@@ -10,6 +10,13 @@ export type TDashboardMenuItems = {
   subMenu?: TDashboardMenuItems[] | null;
 };
 
-export type TProject = z.infer<typeof projectFormSchema>;
+export type TProject = z.infer<typeof projectFormSchema> & { id: number };
 
-export type TCategory = z.infer<typeof categoryFormSchema> & { id: string };
+export type TCategory = z.infer<typeof categoryFormSchema> & { id: number };
+
+export type TTryCatch<T> = (promise: Promise<T>) => {
+  data: T | null;
+  error: Error | null;
+};
+
+export type TToken = { token: string | null };

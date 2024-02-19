@@ -50,6 +50,9 @@ export function ProjectsTable<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
     meta: tableMeta,
+    initialState: {
+      columnVisibility: { id: false },
+    },
   });
 
   return (
@@ -70,7 +73,11 @@ export function ProjectsTable<TData, TValue>({
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    data-is={header.index}
+                    key={header.id}
+                    style={{ width: header.index === 0 ? 300 : "" }}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(

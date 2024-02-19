@@ -1,33 +1,68 @@
 "use client";
+import React from "react";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import { v4 as uuidv4 } from "uuid";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+
 import BlockUi from "@/components/BlockUi";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import React, { useEffect, useState } from "react";
 import ImageUploader from "../ImageUploader";
 import { Button } from "@/components/ui/button";
 import { TCategory } from "@/types";
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { categoryFormSchema } from "@/lib/Schema";
-import { cn } from "@/lib/utils";
-import { toast } from "react-toastify";
-import Image from "next/image";
+import { cn, urlToBlob } from "@/lib/utils";
+import useSupabaseWithAuth from "@/hooks/useSupabaseWithAuth";
 
 type TCategoryFormProps = {
   initialData?: TCategory;
   isUpdate?: boolean;
 };
 
+type TForm = Omit<TCategory, "id">;
+
 function CategoryForm({ initialData, isUpdate = false }: TCategoryFormProps) {
-  const { register, control, formState, handleSubmit, getValues } = useForm<
-    Omit<TCategory, "id">
-  >({
-    resolver: zodResolver(categoryFormSchema),
+  const createSupabaseClient = useSupabaseWithAuth();
+  const { register, control, formState, handleSubmit, getValues } =
+    useForm<TForm>({
+      resolver: zodResolver(categoryFormSchema),
+      defaultValues: initialData,
+    });
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: async (data: TForm) => {
+      const supabase = await createSupabaseClient;
+
+      const imageToUpload = await urlToBlob(data.image);
+      if (!imageToUpload) throw new Error("image not found");
+
+      const { data: mediaData, error: mediaError } = await supabase.storage
+        .from("media")
+        .upload(`category/${uuidv4()}.jpg`, imageToUpload);
+
+      if (mediaError) throw mediaError;
+
+      const { error } = await supabase.from("categories").insert({
+        name: data.name,
+        image: `${process.env.NEXT_PUBLIC_SUPABASE_MEDIA_URL}/${mediaData.path}`,
+      });
+
+      if (error) throw error;
+      return true;
+    },
   });
 
-  const onSubmit = () => {
-    toast.success("nice");
+  const onSubmit = async (data: TForm) => {
+    await toast.promise(mutateAsync(data), {
+      error: "something went wrong",
+      success: "success",
+      pending: "pending",
+    });
   };
+
   return (
     <div>
       <h2>Create Category</h2>
@@ -48,7 +83,9 @@ function CategoryForm({ initialData, isUpdate = false }: TCategoryFormProps) {
               />
             </div>
 
-            <Button className="w-full mt-3">Create</Button>
+            <Button disabled={isPending} className="w-full mt-3">
+              Create
+            </Button>
           </div>
 
           <Controller

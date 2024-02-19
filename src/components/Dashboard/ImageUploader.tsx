@@ -8,8 +8,8 @@ import { toast } from "react-toastify";
 import { TOAST_IDs } from "@/constants/constants";
 
 type TImageUploaderProps = {
-  image: string | null;
-  setImage: (image: string | null) => void;
+  image: null | string;
+  setImage: (image: null | string) => void;
   className?: ClassValue;
   [key: string]: any;
 };
@@ -24,6 +24,7 @@ const ImageUploader = ({
     maxFiles: 1,
     accept: {
       "image/png": [".png"],
+      "image/jpeg": [".jpeg"],
     },
     onDropRejected: (fileRejections) => {
       return toast.error(fileRejections[0].errors[0].message, {

@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import DashboardSideBarToggle from "./DashboardSideBarToggle";
 import { HEADER_HEIGHT } from "@/constants/constants";
+import { UserButton } from "@clerk/nextjs";
 
 function DashboardHeader() {
   return (
@@ -32,10 +33,7 @@ function DashboardHeader() {
           <Button>Search</Button>
         </div>
         <div className="flex gap-2">
-          <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+          <UserButton />
           <DashboardSideBarToggle />
         </div>
       </div>

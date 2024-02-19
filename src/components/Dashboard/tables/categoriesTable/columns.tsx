@@ -13,14 +13,15 @@ import { TCategory } from "@/types";
 import { CellContext, ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { ClipLoader } from "react-spinners";
 
 type TTCategory = Partial<TCategory>;
 
 export const columns: ColumnDef<TTCategory>[] = [
   {
-    accessorKey: "name",
-    header: "Name",
+    id: "id",
+    enableHiding: true,
   },
   {
     accessorKey: "image",
@@ -33,6 +34,11 @@ export const columns: ColumnDef<TTCategory>[] = [
       );
     },
   },
+  {
+    accessorKey: "name",
+    header: "Name",
+  },
+
   {
     id: "actions",
     header: "actions",
@@ -51,7 +57,11 @@ export const columns: ColumnDef<TTCategory>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem>Edit Category</DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href={`/dashboard/category/${data.id}`}>
+                  Edit category
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuItem>Delete Category</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

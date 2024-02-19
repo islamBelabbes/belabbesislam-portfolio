@@ -1,35 +1,77 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
+
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { v4 as uuidv4 } from "uuid";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import ImageUploader from "../ImageUploader";
+import ImageUploader from "@/components/Dashboard/ImageUploader";
 import { Button } from "@/components/ui/button";
 import BlockUi from "@/components/BlockUi";
-import CategoriesSelect from "../CategoriesSelect";
-import { supabase } from "@/lib/supabase";
-import { TCategory, TODO, TProject } from "@/types";
-import { Controller, useForm, useWatch } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import CategoriesSelect from "@/components/Dashboard/CategoriesSelect";
+import { TCategory, TProject } from "@/types";
 import { projectFormSchema } from "@/lib/Schema";
-import { cn, isInSelectedCategories } from "@/lib/utils";
+import { cn, isInSelectedCategories, urlToBlob } from "@/lib/utils";
+import useSupabaseWithAuth from "@/hooks/useSupabaseWithAuth";
 
-type ProjectFormProps = {
-  projectImg?: string | null;
-};
-const ProjectForm = ({ projectImg = null }: ProjectFormProps) => {
-  const { register, handleSubmit, formState, control, getValues, watch } =
+type ProjectFormProps = Partial<TProject>;
+
+const ProjectForm = ({
+  categories,
+  description,
+  image,
+  title,
+  url,
+}: ProjectFormProps) => {
+  const createSupabaseClient = useSupabaseWithAuth();
+  const { register, handleSubmit, formState, control, reset } =
     useForm<TProject>({
       resolver: zodResolver(projectFormSchema),
       defaultValues: {
         categories: [],
-        ...(projectImg && { image: projectImg }),
+        description,
+        image,
+        title,
+        url,
       },
     });
 
-  const onSubmit = () => {
-    console.log("ok");
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: async (data: TProject) => {
+      const supabase = await createSupabaseClient;
+
+      const imageToUpload = await urlToBlob(data.image);
+      if (!imageToUpload) throw new Error("image not found");
+
+      const { data: mediaData, error: mediaError } = await supabase.storage
+        .from("media")
+        .upload(`projects/${uuidv4()}.jpg`, imageToUpload);
+
+      if (mediaError) throw mediaError;
+
+      const { error } = await supabase.from("projects").insert({
+        description: data.description,
+        image: `${process.env.NEXT_PUBLIC_SUPABASE_MEDIA_URL}/${mediaData.path}`,
+        title: data.title,
+        url: data.url,
+      });
+      if (error) throw error;
+
+      return true;
+    },
+  });
+
+  const onSubmit = async (data: TProject) => {
+    await toast.promise(mutateAsync(data), {
+      error: "something went wrong",
+      success: "success",
+      pending: "pending",
+    });
   };
 
   const onSelect = (
@@ -93,7 +135,7 @@ const ProjectForm = ({ projectImg = null }: ProjectFormProps) => {
               control={control}
               render={({ field: { onChange, value } }) => (
                 <CategoriesSelect
-                  onSelect={(selectedValue: TODO) => {
+                  onSelect={(selectedValue: TCategory) => {
                     return onSelect(selectedValue, onChange, value);
                   }}
                   selectedCategories={value}
@@ -125,7 +167,7 @@ const ProjectForm = ({ projectImg = null }: ProjectFormProps) => {
             ></Controller>
           </div>
 
-          <Button>Create Project</Button>
+          <Button disabled={isPending}>Create Project</Button>
         </form>
       </BlockUi>
     </div>
