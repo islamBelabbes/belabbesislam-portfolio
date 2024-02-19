@@ -5,6 +5,7 @@ import { boolean } from "zod";
 export default authMiddleware({
   publicRoutes: ["/"],
   afterAuth: async (auth, req, res) => {
+    console.log("here");
     if (!auth.userId && !auth.isPublicRoute) {
       return redirectToSignIn({ returnBackUrl: req.url });
     }
@@ -18,5 +19,5 @@ export default authMiddleware({
 });
 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/dashboard", "/(api|trpc)(.*)"],
+  matcher: ["/dashboard/:path*"],
 };
