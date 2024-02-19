@@ -6,7 +6,7 @@ import { TCategory } from "@/types";
 function ProjectItem() {
   const title = "wahaj";
   const description = "Sa Based Saas";
-  const categories: TCategory[] = [{ id: "0", image: "", name: "reactjs" }];
+  const categories: TCategory[] = [{ id: 0, image: "", name: "reactjs" }];
   const url = "#";
   const image = "/project.png";
   return (
