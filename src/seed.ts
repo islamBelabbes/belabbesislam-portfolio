@@ -2,22 +2,22 @@ import { TCategory, TProject } from "./types";
 
 export const categories: TCategory[] = [
   {
-    id: "0",
+    id: 0,
     image: "/icon-tailwindcss.png",
     name: "tailwindcss",
   },
   {
-    id: "1",
+    id: 1,
     image: "/icon-nextjs.png",
     name: "nextjs",
   },
   {
-    id: "2",
+    id: 2,
     image: "/icon-wordpress.png",
     name: "wordpress",
   },
   {
-    id: "3",
+    id: 3,
     image: "/icon-woo.png",
     name: "woocommerce",
   },
@@ -25,6 +25,7 @@ export const categories: TCategory[] = [
 
 export const projects: TProject[] = [
   {
+    id: 0,
     title: "wahaj",
     description: "suida arabia based learning platform",
     image: "/project.png",
@@ -32,6 +33,7 @@ export const projects: TProject[] = [
     url: "https://wahaj.co/",
   },
   {
+    id: 1,
     title: "wahaj",
     description: "suida arabia based learning platform",
     image: "/project.png",
@@ -39,6 +41,7 @@ export const projects: TProject[] = [
     url: "https://wahaj.co/",
   },
   {
+    id: 2,
     title: "wahaj",
     description: "suida arabia based learning platform",
     image: "/project.png",
@@ -46,6 +49,7 @@ export const projects: TProject[] = [
     url: "https://wahaj.co/",
   },
   {
+    id: 3,
     title: "wahaj",
     description: "suida arabia based learning platform",
     image: "/project.png",
