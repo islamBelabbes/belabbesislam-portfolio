@@ -18,7 +18,7 @@ const CONTACT = [
 function GetInTouch() {
   const copyHandler = (text: string) => {
     navigator.clipboard.writeText(text);
-    toast.success("Text Copied successfully", { autoClose: 1000 });
+    toast.success(`${text} Copied successfully`, { autoClose: 1000 });
   };
 
   return (

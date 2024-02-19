@@ -17,7 +17,7 @@ type TUseProjectForm = {
 
 const useProjectForm = ({ initialData, isUpdate }: TUseProjectForm) => {
   const router = useRouter();
-  const createSupabaseClient = useSupabaseWithAuth();
+  const { createSupabaseClient } = useSupabaseWithAuth();
   const { register, handleSubmit, formState, control } = useForm<TProject>({
     resolver: zodResolver(projectFormSchema),
     defaultValues: { ...initialData, categories: [] },
@@ -25,7 +25,7 @@ const useProjectForm = ({ initialData, isUpdate }: TUseProjectForm) => {
 
   const { mutateAsync: createAsync, isPending: isCreating } = useMutation({
     mutationFn: async (data: TProject) => {
-      const supabase = await createSupabaseClient;
+      const supabase = await createSupabaseClient();
 
       const imageToUpload = await urlToBlob(data.image);
       if (!imageToUpload) throw new Error("image not found");
@@ -55,7 +55,7 @@ const useProjectForm = ({ initialData, isUpdate }: TUseProjectForm) => {
     mutationFn: async (data: TProject) => {
       if (!initialData?.id) throw new Error("id not found");
 
-      const supabase = await createSupabaseClient;
+      const supabase = await createSupabaseClient();
       // check if the image have been changed!!
       if (data.image !== initialData?.image) {
         console.log("update the image"); // TODO : update the image
@@ -82,12 +82,14 @@ const useProjectForm = ({ initialData, isUpdate }: TUseProjectForm) => {
 
     router.push(`/dashboard/project/${res[0].id}`);
   };
-  const onUpdate = (data: TProject) => {
-    toast.promise(updateAsync(data), {
+  const onUpdate = async (data: TProject) => {
+    await toast.promise(updateAsync(data), {
       error: "something went wrong",
       success: "success",
       pending: "pending",
     });
+
+    router.refresh();
   };
 
   const onSelect = (

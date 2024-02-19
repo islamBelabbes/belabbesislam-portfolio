@@ -5,11 +5,12 @@ import { Next13ProgressBar } from "next13-progressbar";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import React from "react";
 
 const queryClient = new QueryClient();
 
 type Props = {
-  children: JSX.Element[] | JSX.Element;
+  children: React.ReactNode;
 };
 export function Providers({ children }: Props) {
   return (
