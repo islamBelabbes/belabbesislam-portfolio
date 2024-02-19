@@ -1,11 +1,9 @@
-import { auth, authMiddleware, redirectToSignIn } from "@clerk/nextjs";
+import { authMiddleware, redirectToSignIn } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
-import { boolean } from "zod";
 
 export default authMiddleware({
   publicRoutes: ["/"],
-  afterAuth: async (auth, req, res) => {
-    console.log("here");
+  afterAuth: async (auth, req) => {
     if (!auth.userId && !auth.isPublicRoute) {
       return redirectToSignIn({ returnBackUrl: req.url });
     }

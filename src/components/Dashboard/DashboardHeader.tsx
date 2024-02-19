@@ -20,7 +20,7 @@ function DashboardHeader() {
     >
       <div className="px-[33px] py-2 flex justify-between items-center w-full gap-1">
         <div className="flex gap-3">
-          <div className="relative">
+          <div className="relative hidden lg:block">
             <Search
               className="absolute top-[50%] left-2 translate-y-[-50%] "
               size={16}

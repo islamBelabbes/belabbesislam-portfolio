@@ -76,7 +76,7 @@ export function ProjectsTable<TData, TValue>({
                   <TableHead
                     data-is={header.index}
                     key={header.id}
-                    style={{ width: header.index === 0 ? 300 : "" }}
+                    style={{ width: header.getSize() }}
                   >
                     {header.isPlaceholder
                       ? null

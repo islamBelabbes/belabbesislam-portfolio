@@ -24,6 +24,7 @@ export const columns: ColumnDef<TTProjects>[] = [
   {
     accessorKey: "image",
     header: "Image",
+    size: 300,
     cell({ getValue }) {
       return (
         <div className="w-full h-[150px] relative rounded">
@@ -40,6 +41,7 @@ export const columns: ColumnDef<TTProjects>[] = [
   {
     accessorKey: "title",
     header: "Title",
+    size: 300,
   },
 
   // {
@@ -59,6 +61,7 @@ export const columns: ColumnDef<TTProjects>[] = [
   {
     accessorKey: "url",
     header: "Url",
+    size: 500,
     cell({ getValue }) {
       return (
         <a
@@ -75,12 +78,12 @@ export const columns: ColumnDef<TTProjects>[] = [
   },
   {
     id: "actions",
-    cell: ({ row, table, column }) => {
+    cell: ({ row, table }) => {
       const data = row.original;
       const meta = table.options.meta;
 
       return (
-        <div className="w-full flex justify-between">
+        <div className="w-full flex justify-center">
           <DropdownMenu modal>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
