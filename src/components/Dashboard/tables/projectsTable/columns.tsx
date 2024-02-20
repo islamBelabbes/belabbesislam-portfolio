@@ -7,12 +7,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { TCategory, TProject } from "@/types";
+import { TProject } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { Link as LinkIcon, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 
-import CategoriesTag from "@/components/CategoriesTag";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ClipLoader } from "react-spinners";
@@ -28,9 +27,11 @@ export const columns: ColumnDef<TProject>[] = [
     size: 300,
     cell({ getValue }) {
       return (
-        <div className="w-full h-[150px] relative rounded">
+        <div className="w-full h-[200px] relative rounded">
           <Image
-            src={getValue<string>()}
+            src={`${
+              process.env.NEXT_PUBLIC_SUPABASE_MEDIA_URL
+            }/projects/${getValue<string>()}`}
             alt="image"
             fill
             className="object-cover rounded"

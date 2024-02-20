@@ -36,18 +36,20 @@ const useProjectForm = ({ initialData, isUpdate }: TUseProjectForm) => {
 
       if (mediaError) throw mediaError;
 
-      const { error, data: project } = await supabase
-        .from("projects")
-        .insert({
-          description: data.description,
+      const { error, data: project } = await supabase.rpc(
+        "insert_project_with_categories",
+        {
+          description: data.description!,
           image: `${process.env.NEXT_PUBLIC_SUPABASE_MEDIA_URL}/${mediaData.path}`,
           title: data.title,
-          url: data.url,
-        })
-        .select();
+          url: data.url!,
+          categories: [],
+        }
+      );
+
       if (error) throw error;
 
-      return project;
+      return { id: project };
     },
   });
 
@@ -74,13 +76,13 @@ const useProjectForm = ({ initialData, isUpdate }: TUseProjectForm) => {
   });
 
   const onCreate = async (data: TProject) => {
-    const res = await toast.promise(createAsync(data), {
+    const { id } = await toast.promise(createAsync(data), {
       error: "something went wrong",
       success: "success",
       pending: "pending",
     });
 
-    router.push(`/dashboard/project/${res[0].id}`);
+    router.push(`/dashboard/project/${id}`);
   };
   const onUpdate = async (data: TProject) => {
     await toast.promise(updateAsync(data), {

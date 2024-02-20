@@ -31,7 +31,7 @@ const useCategoryForm = ({ initialData, isUpdate }: TUseCategoryForm) => {
 
       const { data: mediaData, error: mediaError } = await supabase.storage
         .from("media")
-        .upload(`category/${uuidv4()}.jpg`, imageToUpload);
+        .upload(`categories/${uuidv4()}.jpg`, imageToUpload);
 
       if (mediaError) throw mediaError;
 
@@ -39,7 +39,7 @@ const useCategoryForm = ({ initialData, isUpdate }: TUseCategoryForm) => {
         .from("categories")
         .insert({
           name: data.name,
-          image: `${process.env.NEXT_PUBLIC_SUPABASE_MEDIA_URL}/${mediaData.path}`,
+          image: mediaData.path,
         })
         .select();
 
@@ -51,17 +51,35 @@ const useCategoryForm = ({ initialData, isUpdate }: TUseCategoryForm) => {
   const { mutateAsync: updateAsync, isPending: isUpdating } = useMutation({
     mutationFn: async (data: TCategory) => {
       if (!initialData?.id) throw new Error("id not found");
-
+      let newImage: string | null = null;
       const supabase = await createSupabaseClient();
       // check if the image have been changed!!
       if (data.image !== initialData?.image) {
-        console.log("update the image"); // TODO : update the image
+        // remove old image
+        const { error } = await supabase.storage
+          .from("media")
+          .remove([`categories/${initialData?.image}`]);
+        if (error) throw error;
+
+        // upload new one
+        const imageToUpload = await urlToBlob(data.image);
+        if (!imageToUpload) throw new Error("image not found");
+
+        const { data: mediaData, error: mediaError } = await supabase.storage
+          .from("media")
+          .upload(`categories/${uuidv4()}.jpg`, imageToUpload);
+
+        if (mediaError) throw mediaError;
+        newImage = mediaData.path;
       }
 
       const { error } = await supabase
         .from("categories")
         .update({
           name: data.name,
+          image: newImage
+            ? newImage?.split("/")[1]
+            : initialData?.image.split("/categories/")[1],
         })
         .eq("id", initialData?.id);
 

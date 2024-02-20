@@ -10,7 +10,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import { Separator } from "../ui/separator";
 import { DASHBOARD_NAV_ITEMS } from "@/constants/constants";
-import { TODO, TDashboardMenuItems } from "@/types";
+import { TDashboardMenuItems } from "@/types";
 import { cn } from "@/lib/utils";
 import useDashboardSideBar from "@/hooks/useSideMenu";
 import DashboardSideBarToggle from "./DashboardSideBarToggle";
@@ -43,6 +43,7 @@ function DashboardSideBar() {
     e.preventDefault();
     setIsToggled(false);
     router.push(href);
+    router.refresh();
   };
 
   return (
@@ -81,9 +82,18 @@ const MenuItems = ({
   currentPath,
   handleNavigation,
 }: TMenuItemProps) => {
+  const parentPatch = currentPath.split("/").filter(Boolean);
+
   return items.map((item: TDashboardMenuItems) =>
     item.subMenu ? (
-      <SubMenu key={item.href} icon={item.icon} label={item.name}>
+      <SubMenu
+        key={item.href}
+        icon={item.icon}
+        label={item.name}
+        className={cn({
+          "bg-[#E1F8FD]": parentPatch[1] === item.name,
+        })}
+      >
         <MenuItems
           currentPath={currentPath}
           items={item.subMenu}
@@ -92,6 +102,7 @@ const MenuItems = ({
       </SubMenu>
     ) : (
       <MenuItem
+        data-test={currentPath}
         key={item.href}
         className={cn({
           "bg-[#E1F8FD]": currentPath === item.href,

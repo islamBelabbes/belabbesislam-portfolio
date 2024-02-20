@@ -7,15 +7,19 @@ export const revalidate = 0;
 async function page({ params }: { params: { id: string } }) {
   const supabase = createSupabaseServerClient();
 
-  const { data: projects, error: projectsError } = await supabase
+  const { data: project, error: projectsError } = await supabase
     .from("projects")
     .select("*")
-    .eq("id", params.id);
+    .eq("id", params.id)
+    .single();
 
-  if (projectsError || !projects) throw "something went wrong";
-  if (projects.length === 0) notFound();
+  if (projectsError) throw "something went wrong";
 
-  return <ProjectForm initialData={projects[0]} isUpdate />;
+  const mappedProject = {
+    ...project,
+    image: `${process.env.NEXT_PUBLIC_SUPABASE_MEDIA_URL}/projects/${project.image}`,
+  };
+  return <ProjectForm initialData={mappedProject} isUpdate />;
 }
 
 export default page;

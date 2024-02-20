@@ -26,8 +26,15 @@ export const columns: ColumnDef<TCategory>[] = [
     header: "Image",
     cell({ getValue }) {
       return (
-        <div className="w-fit h-fit">
-          <Image src={getValue<string>()} alt="image" width={50} height={50} />
+        <div className="w-[50px] h-[50px] relative">
+          <Image
+            src={`${
+              process.env.NEXT_PUBLIC_SUPABASE_MEDIA_URL
+            }/categories/${getValue<string>()}`}
+            alt="image"
+            fill
+            className="object-contain"
+          />
         </div>
       );
     },
@@ -39,13 +46,12 @@ export const columns: ColumnDef<TCategory>[] = [
 
   {
     id: "actions",
-    header: "actions",
     cell: ({ row, table }) => {
       const data = row.original;
       const meta = table.options.meta;
 
       return (
-        <div className="w-full flex justify-between">
+        <div className="w-full flex justify-between items-center">
           <DropdownMenu modal>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">

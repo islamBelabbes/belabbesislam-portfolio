@@ -80,7 +80,11 @@ const ImageUploader = ({
         </div>
         <div className="w-full flex relative h-full">
           {image ? (
-            <Image src={image} alt="project" fill className="object-cover" />
+            <img
+              src={image}
+              alt="project"
+              className="object-cover w-full h-full"
+            />
           ) : null}
         </div>
       </div>

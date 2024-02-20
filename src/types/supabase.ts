@@ -30,7 +30,7 @@ export type Database = {
         }
         Relationships: []
       }
-      "project categories": {
+      project_categories: {
         Row: {
           category_id: number
           project_id: number
@@ -92,7 +92,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      insert_project_with_categories: {
+        Args: {
+          categories: number[]
+          title: string
+          url: string
+          description: string
+          image: string
+        }
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never

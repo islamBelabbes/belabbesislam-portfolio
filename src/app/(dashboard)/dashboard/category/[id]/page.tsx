@@ -9,15 +9,20 @@ export const revalidate = 0;
 async function page({ params }: { params: { id: string } }) {
   const supabase = createSupabaseServerClient();
 
-  const { data: categories, error: categoriesError } = await supabase
+  const { data: category, error: categoryError } = await supabase
     .from("categories")
     .select("*")
-    .eq("id", params.id);
+    .eq("id", params.id)
+    .single();
 
-  if (!categories || categories.length === 0) notFound();
-  if (categoriesError) throw "something went wrong";
+  if (categoryError) notFound();
 
-  return <CategoryForm initialData={categories[0]} isUpdate />;
+  const mappedCategory = {
+    ...category,
+    image: `${process.env.NEXT_PUBLIC_SUPABASE_MEDIA_URL}/categories/${category.image}`,
+  };
+
+  return <CategoryForm initialData={mappedCategory} isUpdate />;
 }
 
 export default page;
