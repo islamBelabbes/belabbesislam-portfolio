@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { use, useState } from "react";
 
 import {
   ColumnDef,
@@ -19,30 +19,38 @@ import {
 } from "@/components/ui/table";
 import DeleteModal from "@/components/Modals/DeleteModal";
 
+import useDelete from "@/hooks/useDelete";
+
 interface ProjectsTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-type TDeleteModal = {
-  isOpen: boolean;
-  targetId: string | null;
-};
-
 export function ProjectsTable<TData, TValue>({
   columns,
   data,
 }: ProjectsTableProps<TData, TValue>) {
-  const [deleteModal, setDeleteModal] = useState<TDeleteModal>({
-    isOpen: false,
-    targetId: null,
+  const [paddingColumns, setPaddingColumns] = useState<number[]>([]);
+
+  const { deleteModal, onDelete, setDeleteModal } = useDelete({
+    table: "projects",
+    onMutate: ({ id }: { id: number }) => {
+      return setPaddingColumns((prev) => {
+        return [...prev, id];
+      });
+    },
+    onSettled: ({ id }: { id: number }) => {
+      return setPaddingColumns((prev) => {
+        return prev.filter((col) => col !== id);
+      });
+    },
   });
 
   const tableMeta = {
-    handleDelete: (id: string) =>
-      setDeleteModal((prev) => {
-        return { isOpen: true, targetId: id };
-      }),
+    handleDelete: (id: number) => {
+      return setDeleteModal({ isOpen: true, targetId: id });
+    },
+    paddingColumns,
   };
 
   const table = useReactTable({
@@ -54,7 +62,6 @@ export function ProjectsTable<TData, TValue>({
       columnVisibility: { id: false },
     },
   });
-
   return (
     <div className="rounded-md border">
       <DeleteModal
@@ -64,7 +71,7 @@ export function ProjectsTable<TData, TValue>({
             return { ...prev, isOpen: open };
           })
         }
-        onDelete={() => console.log(deleteModal.targetId)}
+        onDelete={onDelete}
       />
 
       <Table>

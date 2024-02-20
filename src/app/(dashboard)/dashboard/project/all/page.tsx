@@ -9,7 +9,9 @@ async function page() {
   const supabase = createSupabaseServerClient();
   const { data, error } = await supabase.from("projects").select("*");
 
-  return <ProjectsTable columns={columns} data={data || []} />;
+  const mapped = data?.map((project) => ({ ...project, categories: [] }));
+
+  return <ProjectsTable columns={columns} data={mapped || []} />;
 }
 
 export default page;

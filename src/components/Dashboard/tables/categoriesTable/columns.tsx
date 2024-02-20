@@ -16,9 +16,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ClipLoader } from "react-spinners";
 
-type TTCategory = Partial<TCategory>;
-
-export const columns: ColumnDef<TTCategory>[] = [
+export const columns: ColumnDef<TCategory>[] = [
   {
     id: "id",
     enableHiding: true,
@@ -62,11 +60,13 @@ export const columns: ColumnDef<TTCategory>[] = [
                   Edit category
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>Delete Category</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => meta?.handleDelete?.(data.id)}>
+                Delete category
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* <ClipLoader size={14} /> */}
+          {meta?.paddingColumns?.includes(data.id) && <ClipLoader size={14} />}
         </div>
       );
     },

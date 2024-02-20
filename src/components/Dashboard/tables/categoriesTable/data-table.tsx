@@ -17,6 +17,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import useDelete from "@/hooks/useDelete";
+import DeleteModal from "@/components/Modals/DeleteModal";
+import { useState } from "react";
 
 interface CategoriesTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -27,6 +30,29 @@ export function CategoriesTable<TData, TValue>({
   columns,
   data,
 }: CategoriesTableProps<TData, TValue>) {
+  const [paddingColumns, setPaddingColumns] = useState<number[]>([]);
+
+  const { deleteModal, onDelete, setDeleteModal } = useDelete({
+    table: "categories",
+    onMutate: ({ id }) => {
+      return setPaddingColumns((prev) => {
+        return [...prev, id];
+      });
+    },
+    onSettled: ({ id }) => {
+      return setPaddingColumns((prev) => {
+        return prev.filter((col) => col !== id);
+      });
+    },
+  });
+
+  const tableMeta = {
+    handleDelete: (id: number) => {
+      return setDeleteModal({ isOpen: true, targetId: id });
+    },
+    paddingColumns,
+  };
+
   const table = useReactTable({
     data,
     columns,
@@ -34,10 +60,21 @@ export function CategoriesTable<TData, TValue>({
     initialState: {
       columnVisibility: { id: false },
     },
+    meta: tableMeta,
   });
 
   return (
     <div className="rounded-md border">
+      <DeleteModal
+        isOpen={deleteModal.isOpen}
+        setIsOpen={(open) =>
+          setDeleteModal((prev) => {
+            return { ...prev, isOpen: open };
+          })
+        }
+        onDelete={onDelete}
+      />
+
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (

@@ -15,8 +15,9 @@ import Image from "next/image";
 import CategoriesTag from "@/components/CategoriesTag";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-type TTProjects = Partial<TProject>;
-export const columns: ColumnDef<TTProjects>[] = [
+import { ClipLoader } from "react-spinners";
+
+export const columns: ColumnDef<TProject>[] = [
   {
     id: "id",
     enableHiding: true,
@@ -83,7 +84,7 @@ export const columns: ColumnDef<TTProjects>[] = [
       const meta = table.options.meta;
 
       return (
-        <div className="w-full flex justify-center">
+        <div className="w-full flex justify-between items-center">
           <DropdownMenu modal>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
@@ -96,13 +97,13 @@ export const columns: ColumnDef<TTProjects>[] = [
               <DropdownMenuItem>
                 <Link href={`/dashboard/project/${data.id}`}>Edit Project</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => meta?.handleDelete?.(row.id)}>
+              <DropdownMenuItem onClick={() => meta?.handleDelete?.(data.id)}>
                 Delete Project
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* <ClipLoader size={14} /> */}
+          {meta?.paddingColumns?.includes(data.id) && <ClipLoader size={14} />}
         </div>
       );
     },

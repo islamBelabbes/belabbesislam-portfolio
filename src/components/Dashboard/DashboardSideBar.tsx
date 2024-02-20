@@ -99,6 +99,7 @@ const MenuItems = ({
         icon={item.icon}
         component={
           <Link
+            prefetch={false}
             href={item.href}
             onClick={(e) => handleNavigation(e, item.href)}
           />

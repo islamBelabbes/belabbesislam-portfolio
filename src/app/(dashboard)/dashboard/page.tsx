@@ -21,6 +21,11 @@ async function page() {
     .from("categories")
     .select("*");
 
+  const mappedProjects = projects?.map((project) => ({
+    ...project,
+    categories: [],
+  }));
+
   return (
     <div>
       <div className="flex gap-2 px-5">
@@ -52,7 +57,10 @@ async function page() {
       <div className="mt-4 flex flex-col gap-3">
         <div className="flex flex-col gap-2">
           <Badge className="w-fit font-semibold text-sm">last Projects</Badge>
-          <ProjectsTable columns={projectsColumns} data={projects || []} />
+          <ProjectsTable
+            columns={projectsColumns}
+            data={mappedProjects || []}
+          />
         </div>
         <div className="flex flex-col gap-2">
           <Badge className="w-fit font-semibold text-sm">last Categories</Badge>
