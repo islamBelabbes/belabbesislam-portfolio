@@ -14,6 +14,15 @@ export type TProject = z.infer<typeof projectFormSchema> & { id: number };
 
 export type TCategory = z.infer<typeof categoryFormSchema> & { id: number };
 
+export type TPostForm = {
+  initialData?: TProject;
+  isUpdate: boolean;
+};
+export type TCategoryForm = {
+  initialData?: TCategory;
+  isUpdate: boolean;
+};
+
 export type TTryCatch<T> = (promise: Promise<T>) => {
   data: T | null;
   error: Error | null;

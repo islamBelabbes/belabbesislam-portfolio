@@ -10,16 +10,11 @@ import ImageUploader from "@/components/Dashboard/ImageUploader";
 import { Button } from "@/components/ui/button";
 import BlockUi from "@/components/BlockUi";
 import CategoriesSelect from "@/components/Dashboard/CategoriesSelect";
-import { TCategory, TProject } from "@/types";
+import { TCategory, TPostForm, TProject } from "@/types";
 import { cn } from "@/lib/utils";
 import useProjectForm from "./useProjectForm";
 
-type TProjectFormProps = {
-  initialData?: Partial<TProject>;
-  isUpdate?: boolean;
-};
-
-const ProjectForm = ({ initialData, isUpdate = false }: TProjectFormProps) => {
+const ProjectForm = ({ initialData, isUpdate = false }: TPostForm) => {
   const {
     register,
     handleSubmit,

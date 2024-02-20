@@ -6,15 +6,10 @@ import { useForm } from "react-hook-form";
 import { categoryFormSchema } from "@/lib/Schema";
 import { urlToBlob } from "@/lib/utils";
 import useSupabaseWithAuth from "@/hooks/useSupabaseWithAuth";
-import { TCategory } from "@/types";
+import { TCategory, TCategoryForm } from "@/types";
 import { useRouter } from "next/navigation";
 
-type TUseCategoryForm = {
-  initialData?: TCategory;
-  isUpdate: boolean;
-};
-
-const useCategoryForm = ({ initialData, isUpdate }: TUseCategoryForm) => {
+const useCategoryForm = ({ initialData, isUpdate }: TCategoryForm) => {
   const router = useRouter();
   const { createSupabaseClient } = useSupabaseWithAuth();
   const { register, control, formState, handleSubmit } = useForm<TCategory>({
@@ -55,31 +50,12 @@ const useCategoryForm = ({ initialData, isUpdate }: TUseCategoryForm) => {
       const supabase = await createSupabaseClient();
       // check if the image have been changed!!
       if (data.image !== initialData?.image) {
-        // remove old image
-        const { error } = await supabase.storage
-          .from("media")
-          .remove([`categories/${initialData?.image}`]);
-        if (error) throw error;
-
-        // upload new one
-        const imageToUpload = await urlToBlob(data.image);
-        if (!imageToUpload) throw new Error("image not found");
-
-        const { data: mediaData, error: mediaError } = await supabase.storage
-          .from("media")
-          .upload(`categories/${uuidv4()}.jpg`, imageToUpload);
-
-        if (mediaError) throw mediaError;
-        newImage = mediaData.path;
       }
 
       const { error } = await supabase
         .from("categories")
         .update({
           name: data.name,
-          image: newImage
-            ? newImage?.split("/")[1]
-            : initialData?.image.split("/categories/")[1],
         })
         .eq("id", initialData?.id);
 

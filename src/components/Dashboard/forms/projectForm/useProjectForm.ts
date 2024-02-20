@@ -7,15 +7,10 @@ import { useForm } from "react-hook-form";
 import { projectFormSchema } from "@/lib/Schema";
 import { isInSelectedCategories, urlToBlob } from "@/lib/utils";
 import useSupabaseWithAuth from "@/hooks/useSupabaseWithAuth";
-import { TCategory, TProject } from "@/types";
+import { TCategory, TPostForm, TProject } from "@/types";
 import { useRouter } from "next/navigation";
 
-type TUseProjectForm = {
-  initialData?: Partial<TProject>;
-  isUpdate: boolean;
-};
-
-const useProjectForm = ({ initialData, isUpdate }: TUseProjectForm) => {
+const useProjectForm = ({ initialData, isUpdate }: TPostForm) => {
   const router = useRouter();
   const { createSupabaseClient } = useSupabaseWithAuth();
   const { register, handleSubmit, formState, control } = useForm<TProject>({
@@ -55,15 +50,15 @@ const useProjectForm = ({ initialData, isUpdate }: TUseProjectForm) => {
 
   const { mutateAsync: updateAsync, isPending: isUpdating } = useMutation({
     mutationFn: async (data: TProject) => {
+      let newImage: string | null = null;
       if (!initialData?.id) throw new Error("id not found");
 
       const supabase = await createSupabaseClient();
       // check if the image have been changed!!
       if (data.image !== initialData?.image) {
-        console.log("update the image"); // TODO : update the image
       }
 
-      const { image, categories, ...rest } = data;
+      const { categories, ...rest } = data;
 
       const { error } = await supabase
         .from("projects")

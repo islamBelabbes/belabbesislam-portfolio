@@ -8,16 +8,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import ImageUploader from "../../ImageUploader";
 import { Button } from "@/components/ui/button";
-import { TCategory } from "@/types";
+import { TCategoryForm } from "@/types";
 import { cn } from "@/lib/utils";
 import useCategoryForm from "./useCategoryForm";
 
-type TCategoryFormProps = {
-  initialData?: TCategory;
-  isUpdate?: boolean;
-};
-
-function CategoryForm({ initialData, isUpdate = false }: TCategoryFormProps) {
+function CategoryForm({ initialData, isUpdate = false }: TCategoryForm) {
   const { register, control, formState, handleSubmit, onSubmit, isLoading } =
     useCategoryForm({
       initialData,
