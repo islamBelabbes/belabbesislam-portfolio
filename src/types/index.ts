@@ -23,9 +23,10 @@ export type TCategoryForm = {
   isUpdate: boolean;
 };
 
-export type TTryCatch<T> = (promise: Promise<T>) => {
-  data: T | null;
-  error: Error | null;
-};
+export type TTryCatchReturn<T> =
+  | { data: T; error: null }
+  | { data: null; error: unknown };
+
+export type TTryCatch = <T>(promise: Promise<T>) => Promise<TTryCatchReturn<T>>;
 
 export type TToken = { token: string | null };

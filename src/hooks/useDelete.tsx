@@ -48,9 +48,7 @@ const useDelete = ({ table, onSettled, onMutate }: TUseDelete) => {
   const onDelete = async () => {
     if (!deleteModal.targetId) return;
 
-    const [__, error] = await tryCatch(
-      mutateAsync({ id: deleteModal.targetId })
-    );
+    const { error } = await tryCatch(mutateAsync({ id: deleteModal.targetId }));
 
     if (error) toast.error("something went wrong");
     router.refresh();

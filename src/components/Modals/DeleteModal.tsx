@@ -15,11 +15,7 @@ type TDeleteModalProps = {
   setIsOpen: (open: boolean) => void;
   onDelete?: React.MouseEventHandler<HTMLButtonElement> | undefined;
 };
-const DeleteModal = <T,>({
-  isOpen,
-  setIsOpen,
-  onDelete,
-}: TDeleteModalProps) => {
+const DeleteModal = ({ isOpen, setIsOpen, onDelete }: TDeleteModalProps) => {
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogContent>

@@ -1,3 +1,4 @@
+import { tryCatch } from "./lib/utils";
 import { TCategory, TProject } from "./types";
 
 export const categories: TCategory[] = [

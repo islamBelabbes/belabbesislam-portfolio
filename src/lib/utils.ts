@@ -1,4 +1,4 @@
-import { TCategory } from "@/types";
+import { TCategory, TTryCatch } from "@/types";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -13,12 +13,18 @@ export const isInSelectedCategories = (
   return selectedCategories?.some((item) => item.id === category?.id);
 };
 
-export const tryCatch = async <T>(Promise: Promise<T>) => {
+export const tryCatch: TTryCatch = async (promise) => {
   try {
-    const data: any = await Promise;
-    return [data, null];
+    const data = await promise;
+    return {
+      data,
+      error: null,
+    };
   } catch (error) {
-    return [null, error];
+    return {
+      data: null,
+      error: error,
+    };
   }
 };
 
