@@ -35,7 +35,7 @@ const useProjectForm = ({ initialData, isUpdate }: TPostForm) => {
         "insert_project_with_categories",
         {
           description: data.description!,
-          image: `${process.env.NEXT_PUBLIC_SUPABASE_MEDIA_URL}/${mediaData.path}`,
+          image: mediaData.path.split("projects/")[1],
           title: data.title,
           url: data.url!,
           categories: [],
@@ -58,12 +58,14 @@ const useProjectForm = ({ initialData, isUpdate }: TPostForm) => {
       if (data.image !== initialData?.image) {
       }
 
-      const { categories, ...rest } = data;
-
-      const { error } = await supabase
-        .from("projects")
-        .update(rest)
-        .eq("id", initialData?.id);
+      const { error } = await supabase.rpc("update_project", {
+        categories: [],
+        description: data?.description || "",
+        id: initialData?.id,
+        title: data.title,
+        url: data?.url || "",
+        image: initialData?.image.split("/projects/")[1],
+      });
 
       if (error) throw error;
       return true;

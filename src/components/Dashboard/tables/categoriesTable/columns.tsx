@@ -49,12 +49,16 @@ export const columns: ColumnDef<TCategory>[] = [
     cell: ({ row, table }) => {
       const data = row.original;
       const meta = table.options.meta;
-
+      const isLoading = meta?.paddingColumns?.includes(data.id);
       return (
         <div className="w-full flex justify-between items-center">
           <DropdownMenu modal>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
+              <Button
+                variant="ghost"
+                className="h-8 w-8 p-0"
+                disabled={isLoading}
+              >
                 <span className="sr-only">Open menu</span>
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
@@ -72,7 +76,7 @@ export const columns: ColumnDef<TCategory>[] = [
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {meta?.paddingColumns?.includes(data.id) && <ClipLoader size={14} />}
+          {isLoading && <ClipLoader size={14} />}
         </div>
       );
     },

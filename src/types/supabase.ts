@@ -92,6 +92,25 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      delete_category: {
+        Args: {
+          id: number
+        }
+        Returns: undefined
+      }
+      delete_project: {
+        Args: {
+          id: number
+        }
+        Returns: undefined
+      }
+      insert_project_categories: {
+        Args: {
+          categories: number[]
+          project_id: number
+        }
+        Returns: boolean
+      }
       insert_project_with_categories: {
         Args: {
           categories: number[]
@@ -99,6 +118,25 @@ export type Database = {
           url: string
           description: string
           image: string
+        }
+        Returns: number
+      }
+      update_category: {
+        Args: {
+          name: string
+          image: string
+          id: number
+        }
+        Returns: number
+      }
+      update_project: {
+        Args: {
+          categories: number[]
+          title: string
+          url: string
+          description: string
+          image: string
+          id: number
         }
         Returns: number
       }

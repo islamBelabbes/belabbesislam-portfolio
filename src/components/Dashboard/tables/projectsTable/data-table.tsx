@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/table";
 import DeleteModal from "@/components/Modals/DeleteModal";
 
-import useDelete from "@/hooks/useDelete";
+import useDeleteEntry from "@/hooks/useDeleteEntry";
 
 interface ProjectsTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -32,8 +32,8 @@ export function ProjectsTable<TData, TValue>({
 }: ProjectsTableProps<TData, TValue>) {
   const [paddingColumns, setPaddingColumns] = useState<number[]>([]);
 
-  const { deleteModal, onDelete, setDeleteModal } = useDelete({
-    table: "projects",
+  const { deleteModal, onDelete, setDeleteModal } = useDeleteEntry({
+    endpoint: "delete_project",
     onMutate: ({ id }: { id: number }) => {
       return setPaddingColumns((prev) => {
         return [...prev, id];

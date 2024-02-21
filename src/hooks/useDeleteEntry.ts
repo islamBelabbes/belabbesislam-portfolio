@@ -9,8 +9,8 @@ type TDeleteModal = {
   targetId: number | null;
 };
 
-type TUseDelete = {
-  table: "projects" | "categories";
+type TUseDeleteEntry = {
+  endpoint: "delete_category" | "delete_project";
   onSettled?: (data: mutateData) => void;
   onMutate?: (data: mutateData) => void;
 };
@@ -18,7 +18,7 @@ type TUseDelete = {
 type mutateData = {
   id: number;
 };
-const useDelete = ({ table, onSettled, onMutate }: TUseDelete) => {
+const useDeleteEntry = ({ endpoint, onSettled, onMutate }: TUseDeleteEntry) => {
   const [deleteModal, setDeleteModal] = useState<TDeleteModal>({
     isOpen: false,
     targetId: null,
@@ -30,7 +30,7 @@ const useDelete = ({ table, onSettled, onMutate }: TUseDelete) => {
   const { mutateAsync } = useMutation({
     async mutationFn(data: mutateData) {
       const supabase = await createSupabaseClient();
-      const { error } = await supabase.from(table).delete().eq("id", data.id);
+      const { error } = await supabase.rpc(endpoint, { id: data.id });
 
       if (error) throw error;
       return true;
@@ -61,4 +61,4 @@ const useDelete = ({ table, onSettled, onMutate }: TUseDelete) => {
   };
 };
 
-export default useDelete;
+export default useDeleteEntry;

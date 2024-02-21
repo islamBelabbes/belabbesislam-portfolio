@@ -34,7 +34,7 @@ const useCategoryForm = ({ initialData, isUpdate }: TCategoryForm) => {
         .from("categories")
         .insert({
           name: data.name,
-          image: mediaData.path,
+          image: mediaData.path.split("categories/")[1],
         })
         .select();
 
@@ -52,12 +52,11 @@ const useCategoryForm = ({ initialData, isUpdate }: TCategoryForm) => {
       if (data.image !== initialData?.image) {
       }
 
-      const { error } = await supabase
-        .from("categories")
-        .update({
-          name: data.name,
-        })
-        .eq("id", initialData?.id);
+      const { error } = await supabase.rpc("update_category", {
+        id: initialData?.id,
+        name: data.name,
+        image: data.image.split("/categories/")[1],
+      });
 
       if (error) throw error;
       return true;

@@ -17,7 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import useDelete from "@/hooks/useDelete";
+import useDeleteEntry from "@/hooks/useDeleteEntry";
 import DeleteModal from "@/components/Modals/DeleteModal";
 import { useState } from "react";
 
@@ -32,8 +32,8 @@ export function CategoriesTable<TData, TValue>({
 }: CategoriesTableProps<TData, TValue>) {
   const [paddingColumns, setPaddingColumns] = useState<number[]>([]);
 
-  const { deleteModal, onDelete, setDeleteModal } = useDelete({
-    table: "categories",
+  const { deleteModal, onDelete, setDeleteModal } = useDeleteEntry({
+    endpoint: "delete_category",
     onMutate: ({ id }) => {
       return setPaddingColumns((prev) => {
         return [...prev, id];
