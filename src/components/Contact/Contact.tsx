@@ -3,10 +3,10 @@ import GetInTouch from "./GetInTouch";
 
 function Contact() {
   return (
-    <section id="contact">
+    <>
       <GetInTouch />
       <FindMe />
-    </section>
+    </>
   );
 }
 

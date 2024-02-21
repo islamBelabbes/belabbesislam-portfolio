@@ -6,10 +6,21 @@ import Skills from "@/components/Skills/Skills";
 export default function Home() {
   return (
     <>
-      <Hero />
-      <Skills />
-      <Projects />
-      <Contact />
+      <section className="bg-WhitePrimary dark:bg-BlackPrimary py-10 min-h-[500px] flex items-center">
+        <Hero />
+      </section>
+
+      <section className="bg-WhiteSecondary dark:bg-BlackSecondary py-10">
+        <Skills />
+      </section>
+
+      <section className="bg-WhitePrimary dark:bg-BlackPrimary py-10">
+        <Projects />
+      </section>
+
+      <section id="contact">
+        <Contact />
+      </section>
     </>
   );
 }
