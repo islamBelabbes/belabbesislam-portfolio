@@ -18,7 +18,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import DeleteModal from "@/components/Modals/DeleteModal";
-
 import useDeleteEntry from "@/hooks/useDeleteEntry";
 
 interface ProjectsTableProps<TData, TValue> {

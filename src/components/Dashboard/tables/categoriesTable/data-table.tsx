@@ -17,9 +17,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import useDeleteEntry from "@/hooks/useDeleteEntry";
 import DeleteModal from "@/components/Modals/DeleteModal";
 import { useState } from "react";
+import useDeleteEntry from "@/hooks/useDeleteEntry";
 
 interface CategoriesTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
