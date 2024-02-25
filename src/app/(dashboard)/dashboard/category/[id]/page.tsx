@@ -2,12 +2,12 @@ import React from "react";
 import { notFound } from "next/navigation";
 
 import CategoryForm from "@/components/Dashboard/forms/CategoryForm/CategoryForm";
-import { createSupabaseServerClient } from "@/lib/supabase";
+import { createSupabaseClient } from "@/lib/supabase";
 
 export const revalidate = 0;
 
 async function page({ params }: { params: { id: string } }) {
-  const supabase = createSupabaseServerClient();
+  const supabase = createSupabaseClient();
 
   const { data: category, error: categoryError } = await supabase
     .from("categories")

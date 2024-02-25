@@ -7,7 +7,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { TProject } from "@/types";
+import { TCategory, TProject } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { Link as LinkIcon, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
@@ -15,6 +15,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ClipLoader } from "react-spinners";
+import CategoriesTag from "@/components/CategoriesTag";
 
 export const columns: ColumnDef<TProject>[] = [
   {
@@ -46,20 +47,40 @@ export const columns: ColumnDef<TProject>[] = [
     size: 300,
   },
 
-  // {
-  //   accessorKey: "categories",
-  //   header: "Categories",
-  //   cell({ getValue }) {
-  //     const categories = getValue<TCategory[]>();
-  //     return (
-  //       <div className="flex gap-3">
-  //         {categories.map((category) => (
-  //           <CategoriesTag key={category.id} item={category} />
-  //         ))}
-  //       </div>
-  //     );
-  //   },
-  // },
+  {
+    accessorKey: "categories",
+    header: "Categories",
+    cell({ getValue }) {
+      let categories = getValue<TCategory[]>();
+
+      const take = 4;
+      let Remaining = 0;
+
+      if (categories.length > take) {
+        Remaining = categories.length - take;
+        categories = categories.slice(0, take);
+      }
+
+      return (
+        <div className="flex gap-2">
+          {categories
+            .filter((__, index) => (Remaining ? index !== 0 : true))
+            .map((category) => (
+              <CategoriesTag key={category.id} item={category} />
+            ))}
+
+          {Remaining ? (
+            <div className="relative">
+              <span className="absolute w-full h-full bg-white opacity-[0.9] font-bold flex justify-center items-center ">
+                + {Remaining}
+              </span>
+              <CategoriesTag key={categories[0].id} item={categories[0]} />
+            </div>
+          ) : null}
+        </div>
+      );
+    },
+  },
   {
     accessorKey: "url",
     header: "Url",

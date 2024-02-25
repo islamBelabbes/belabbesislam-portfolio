@@ -1,11 +1,11 @@
 import ProjectForm from "@/components/Dashboard/forms/projectForm/ProjectForm";
-import { createSupabaseServerClient } from "@/lib/supabase";
+import { createSupabaseClient } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import React from "react";
 export const revalidate = 0;
 
 async function page({ params }: { params: { id: string } }) {
-  const supabase = createSupabaseServerClient();
+  const supabase = createSupabaseClient();
 
   const { data: project, error: projectsError } = await supabase
     .from("projects")

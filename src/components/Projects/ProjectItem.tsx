@@ -2,13 +2,13 @@
 import { motion } from "framer-motion";
 import CategoriesTag from "@/components/CategoriesTag";
 import Image from "next/image";
-import { TCategory } from "@/types";
-function ProjectItem() {
-  const title = "wahaj";
-  const description = "Sa Based Saas";
-  const categories: TCategory[] = [{ id: 0, image: "", name: "reactjs" }];
-  const url = "#";
-  const image = "/project.png";
+import { TCategory, TProject } from "@/types";
+import { cn } from "@/lib/utils";
+function ProjectItem({
+  item: { categories, image, title, url, description },
+}: {
+  item: TProject;
+}) {
   return (
     <motion.div className="shadow_sm  rounded-[32px] flex flex-col transition-all duration-300 h-full">
       <div className="w-full flex relative" style={{ minHeight: "356px" }}>
@@ -35,8 +35,10 @@ function ProjectItem() {
           </div>
 
           <a
-            className="flex gap-3 cursor-not-allowed opacity-40"
-            href="url"
+            className={cn("flex gap-3", {
+              "cursor-not-allowed opacity-40": !url,
+            })}
+            href={url || ""}
             target="_blank"
           >
             View Project

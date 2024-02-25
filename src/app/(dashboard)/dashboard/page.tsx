@@ -4,7 +4,7 @@ import { Users2Icon } from "lucide-react";
 
 import DashboardStatus from "@/components/Dashboard/DashboardStatus";
 import { Badge } from "@/components/ui/badge";
-import { createSupabaseServerClient } from "@/lib/supabase";
+import { createSupabaseClient } from "@/lib/supabase";
 import { columns } from "@/components/Dashboard/tables/categoriesTable/columns";
 import { columns as projectsColumns } from "@/components/Dashboard/tables/projectsTable/columns";
 import { ProjectsTable } from "@/components/Dashboard/tables/projectsTable/data-table";
@@ -13,7 +13,7 @@ import { CategoriesTable } from "@/components/Dashboard/tables/categoriesTable/d
 export const revalidate = 0;
 
 async function page() {
-  const supabase = createSupabaseServerClient();
+  const supabase = createSupabaseClient();
   const projectsPromise = supabase.from("projects").select("*").limit(3);
   const categoriesPromise = supabase.from("categories").select("*").limit(3);
 

@@ -1,10 +1,10 @@
 import { Database } from "@/types/supabase";
-import { createServerClient } from "@supabase/ssr";
+import { createBrowserClient } from "@supabase/ssr";
 
-export const createSupabaseServerClient = (token: string | null = null) => {
+export const createSupabaseClient = (token: string | null = null) => {
   const authToken = token ? { Authorization: `Bearer ${token}` } : null;
 
-  return createServerClient<Database>(
+  return createBrowserClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
