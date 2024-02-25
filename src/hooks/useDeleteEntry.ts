@@ -1,8 +1,10 @@
 import { useState } from "react";
-import useSupabaseWithAuth from "./useSupabaseWithAuth";
-import { useRouter } from "next/navigation";
+
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next13-progressbar";
+
+import useSupabaseWithAuth from "./useSupabaseWithAuth";
 import { tryCatch } from "@/lib/utils";
 type TDeleteModal = {
   isOpen: boolean;

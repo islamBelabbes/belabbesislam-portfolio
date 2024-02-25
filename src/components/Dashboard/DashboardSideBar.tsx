@@ -1,12 +1,13 @@
 "use client";
 
 import React from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 import { MenuIcon, XCircle } from "lucide-react";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRouter } from "next13-progressbar";
 
 import { Separator } from "../ui/separator";
 import { DASHBOARD_NAV_ITEMS } from "@/constants/constants";
