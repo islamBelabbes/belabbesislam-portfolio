@@ -24,7 +24,7 @@ function Projects() {
     queryFn: async () => {
       const query = supabase.from("projects").select(
         `
-      * , categories!inner(*)
+      * , selected:categories!inner(*) , categories:categories(*)
     `
       );
 
