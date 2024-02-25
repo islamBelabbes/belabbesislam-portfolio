@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Check, MousePointerSquare } from "lucide-react";
+import { MousePointerSquare } from "lucide-react";
 
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import {
@@ -12,11 +12,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { TCategory, TODO } from "@/types";
 import { cn, isInSelectedCategories } from "@/lib/utils";
-import { categories } from "@/seed";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import CategoriesTag from "@/components/CategoriesTag";
 import { ClassValue } from "clsx";
+import useSupabaseWithAuth from "@/hooks/useSupabaseWithAuth";
+import { useQuery } from "@tanstack/react-query";
+import { useDebounce } from "@/hooks/useDebounce";
 
 type TCategoriesSelectProps = {
   selectedCategories: TCategory[];
@@ -27,7 +29,8 @@ type TCategoriesSelectProps = {
 };
 
 type TSearchResult = TCategoriesSelectProps & {
-  search: string;
+  searchResult: TCategory[] | undefined;
+  isLoading: boolean;
 };
 
 const CategoriesSelect = ({
@@ -37,6 +40,23 @@ const CategoriesSelect = ({
 }: TCategoriesSelectProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const value = useDebounce(search, 500);
+  const { createSupabaseClient } = useSupabaseWithAuth();
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["categories", value],
+    queryFn: async () => {
+      const supabase = await createSupabaseClient();
+      const { data, error } = await supabase
+        .from("categories")
+        .select("*")
+        .ilike("name", `%${value}%`);
+
+      if (error) throw error;
+      return data;
+    },
+    enabled: Boolean(value),
+  });
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -44,12 +64,20 @@ const CategoriesSelect = ({
         <Button
           variant="outline"
           role="combobox"
-          className={cn("w-full justify-between", className?.PopoverTrigger)}
+          className={cn(
+            "w-full justify-between h-auto",
+            className?.PopoverTrigger
+          )}
         >
           {selectedCategories?.length ? (
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               {selectedCategories.map((item) => (
-                <CategoriesTag item={item} key={item.id} />
+                <CategoriesTag
+                  item={item}
+                  key={item.id}
+                  isRemovable
+                  onRemove={() => onSelect(item)}
+                />
               ))}
             </div>
           ) : (
@@ -72,9 +100,10 @@ const CategoriesSelect = ({
               value={search}
             />
             <SearchResult
-              search={search}
               selectedCategories={selectedCategories}
               onSelect={onSelect}
+              searchResult={data}
+              isLoading={isLoading}
             />
           </Command>
         </DialogContent>
@@ -84,36 +113,38 @@ const CategoriesSelect = ({
 };
 
 const SearchResult = ({
-  search,
   selectedCategories,
   onSelect,
+  searchResult,
+  isLoading,
 }: TSearchResult) => {
-  const [res, setRes] = useState<TCategory[]>(categories);
-  const [isLoading, setIsLoading] = useState(false);
+  const filtered = searchResult?.filter(
+    (item) => !isInSelectedCategories(selectedCategories, item)
+  );
   return (
     <ScrollArea className="max-h-[250px]" type="always">
       <CommandList className="overflow-hidden">
         {isLoading && (
-          <CommandItem className="__className_aaf875">Loading...</CommandItem>
+          <CommandItem className="__className_aaf875 flex justify-center">
+            Loading...
+          </CommandItem>
         )}
+
+        {filtered?.length === 0 && (
+          <CommandItem className="__className_aaf875 flex justify-center">
+            No result
+          </CommandItem>
+        )}
+
         {!isLoading &&
-          res.length > 0 &&
-          res.map((item) => (
+          filtered &&
+          filtered.map((item) => (
             <CommandItem
               key={item.id}
-              data-current={isInSelectedCategories(selectedCategories, item)}
               onSelect={() => onSelect(item)}
-              className={cn("flex justify-between cursor-pointer p-3", {
-                "bg-primary text-white rounded-none": isInSelectedCategories(
-                  selectedCategories,
-                  item
-                ),
-              })}
+              className={"flex justify-between cursor-pointer p-3"}
             >
               {item.name}
-              {isInSelectedCategories(selectedCategories, item) && (
-                <Check size={18} />
-              )}
             </CommandItem>
           ))}
       </CommandList>

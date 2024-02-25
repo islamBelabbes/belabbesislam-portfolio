@@ -10,7 +10,7 @@ import ImageUploader from "@/components/Dashboard/ImageUploader";
 import { Button } from "@/components/ui/button";
 import BlockUi from "@/components/BlockUi";
 import CategoriesSelect from "@/components/Dashboard/CategoriesSelect";
-import { TCategory, TPostForm, TProject } from "@/types";
+import { TCategory, TPostForm } from "@/types";
 import { cn } from "@/lib/utils";
 import useProjectForm from "./useProjectForm";
 

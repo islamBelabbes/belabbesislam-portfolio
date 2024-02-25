@@ -15,7 +15,10 @@ const useProjectForm = ({ initialData, isUpdate }: TPostForm) => {
   const { createSupabaseClient } = useSupabaseWithAuth();
   const { register, handleSubmit, formState, control } = useForm<TProject>({
     resolver: zodResolver(projectFormSchema),
-    defaultValues: { ...initialData, categories: [] },
+    defaultValues: {
+      ...initialData,
+      categories: initialData?.categories || [],
+    },
   });
 
   const { mutateAsync: createAsync, isPending: isCreating } = useMutation({
@@ -38,7 +41,7 @@ const useProjectForm = ({ initialData, isUpdate }: TPostForm) => {
           image: mediaData.path.split("projects/")[1],
           title: data.title,
           url: data.url!,
-          categories: [],
+          categories: data.categories.map((item) => item.id),
         }
       );
 
@@ -59,7 +62,7 @@ const useProjectForm = ({ initialData, isUpdate }: TPostForm) => {
       }
 
       const { error } = await supabase.rpc("update_project", {
-        categories: [],
+        categories: data.categories.map((item) => item.id),
         description: data?.description || "",
         id: initialData?.id,
         title: data.title,

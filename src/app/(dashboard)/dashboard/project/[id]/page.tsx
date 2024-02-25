@@ -9,7 +9,14 @@ async function page({ params }: { params: { id: string } }) {
 
   const { data: project, error: projectsError } = await supabase
     .from("projects")
-    .select("*")
+    .select(
+      `
+    *,
+    categories (
+      *
+    )
+  `
+    )
     .eq("id", params.id)
     .single();
 
@@ -18,7 +25,6 @@ async function page({ params }: { params: { id: string } }) {
   const mappedProject = {
     ...project,
     image: `${process.env.NEXT_PUBLIC_SUPABASE_MEDIA_URL}/projects/${project.image}`,
-    categories: [],
   };
   return <ProjectForm initialData={mappedProject} isUpdate />;
 }

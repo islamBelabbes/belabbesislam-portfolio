@@ -90,6 +90,6 @@
   z-index: 999; /* Specify a stack order in case you're using a different order for other elements */
 }
 
-[data-selected][data-current="true"] {
+/* [data-selected][data-current="true"] {
   @apply !bg-primary !text-white;
-}
+} */
