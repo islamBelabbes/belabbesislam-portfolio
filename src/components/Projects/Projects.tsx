@@ -60,7 +60,7 @@ function Projects() {
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
       />
-      <BlockUi isBlock={isLoading} classNames={{ container: "w-full bg-red" }}>
+      <BlockUi isBlock={isLoading} classNames={{ container: "w-full" }}>
         <ProjectsListing data={data || placeHolder} />
       </BlockUi>
     </div>
