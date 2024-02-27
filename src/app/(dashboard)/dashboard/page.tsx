@@ -14,7 +14,10 @@ export const revalidate = 0;
 
 async function page() {
   const supabase = createSupabaseClient();
-  const projectsPromise = supabase.from("projects").select("*").limit(3);
+  const projectsPromise = supabase
+    .from("projects")
+    .select(`* , categories (*)`)
+    .limit(3);
   const categoriesPromise = supabase.from("categories").select("*").limit(3);
 
   const totalProjectsPromise = supabase
@@ -32,11 +35,6 @@ async function page() {
       totalProjectsPromise,
       totalCategoriesPromise,
     ]);
-
-  const mappedProjects = projects?.data?.map((project) => ({
-    ...project,
-    categories: [],
-  }));
 
   return (
     <div>
@@ -69,10 +67,7 @@ async function page() {
       <div className="mt-4 flex flex-col gap-3">
         <div className="flex flex-col gap-2">
           <Badge className="w-fit font-semibold text-sm">last Projects</Badge>
-          <ProjectsTable
-            columns={projectsColumns}
-            data={mappedProjects || []}
-          />
+          <ProjectsTable columns={projectsColumns} data={projects.data || []} />
         </div>
         <div className="flex flex-col gap-2">
           <Badge className="w-fit font-semibold text-sm">last Categories</Badge>
