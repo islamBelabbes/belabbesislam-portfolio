@@ -1,5 +1,5 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import SectionEntry from "../SectionEntry";
 import Categories from "./Categories";
 import ProjectsListing from "./ProjectsListing";
@@ -13,11 +13,9 @@ function Projects() {
     null
   );
 
-  const [placeHolder, setPlaceHolder] = useState<TProject[]>([]);
-
   const supabase = useMemo(() => createSupabaseClient(), []);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isPlaceholderData } = useQuery({
     queryKey: ["projects", selectedCategory],
     queryFn: async () => {
       const query = supabase.from("projects").select(
@@ -34,14 +32,12 @@ function Projects() {
 
       if (error) throw new Error("Something went wrong");
 
-      const mappedData = data.map((item) => ({
+      return data.map((item) => ({
         ...item,
         image: `${process.env.NEXT_PUBLIC_SUPABASE_MEDIA_URL}/projects/${item.image}`,
       }));
-
-      setPlaceHolder(mappedData);
-      return mappedData;
     },
+    placeholderData: keepPreviousData,
   });
 
   return (
@@ -58,8 +54,11 @@ function Projects() {
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
       />
-      <BlockUi isBlock={isLoading} classNames={{ container: "w-full" }}>
-        <ProjectsListing data={data || placeHolder} />
+      <BlockUi
+        isBlock={isLoading || isPlaceholderData}
+        classNames={{ container: "w-full" }}
+      >
+        <ProjectsListing data={data || []} />
       </BlockUi>
     </div>
   );
