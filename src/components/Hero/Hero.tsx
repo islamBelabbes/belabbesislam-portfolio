@@ -1,4 +1,6 @@
 import React from "react";
+import { buttonVariants } from "../ui/button";
+import { cn } from "@/lib/utils";
 
 function Hero() {
   return (
@@ -11,10 +13,22 @@ function Hero() {
         Developer
       </p>
       <div className="flex flex-col w-full gap-3 lg:flex-row lg:w-auto">
-        <a className="button_primary capitalize text-center" href="#contact">
+        <a
+          className={cn(
+            buttonVariants({ variant: "default" }),
+            "capitalize text-center"
+          )}
+          href="#contact"
+        >
           get in touch
         </a>
-        <a className="button_secondary capitalize text-center" href="#projects">
+        <a
+          className={cn(
+            buttonVariants({ variant: "outline" }),
+            "capitalize text-center"
+          )}
+          href="#projects"
+        >
           view all works
         </a>
       </div>

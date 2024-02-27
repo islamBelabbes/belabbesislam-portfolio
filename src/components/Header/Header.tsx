@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import DarkModeButton from "../DarkModeButton";
 import SideMenu from "./SideMenu";
 import { Menu, MenuSquare } from "lucide-react";
+import { buttonVariants } from "../ui/button";
 
 function Header() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -27,15 +28,21 @@ function Header() {
     >
       <div className="flex items-center justify-between lg:max-w-[1280px] w-full lg:px-[80px] py-[15px] p-3 ">
         <div>
-          <span className="text-xl font-medium dark:text-WhitePrimary text-BlackPrimary ">
+          <a
+            href="#hero"
+            className="text-xl font-medium dark:text-WhitePrimary text-BlackPrimary "
+          >
             BelabbesIslam.
-          </span>
+          </a>
         </div>
         <div className="items-center hidden gap-6 lg:flex">
           <Navigation />
           <div className="flex items-center gap-6">
             <DarkModeButton />
-            <a className={`button_primary select-none`} href="#contact">
+            <a
+              className={buttonVariants({ variant: "outline" })}
+              href="#contact"
+            >
               Lets Talk
             </a>
           </div>
