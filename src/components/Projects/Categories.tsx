@@ -16,9 +16,7 @@ function Categories({
   selectedCategory,
   setSelectedCategory,
 }: CategoriesProps) {
-  const supabase = useMemo(() => {
-    return createSupabaseClient();
-  }, []);
+  const supabase = useMemo(() => createSupabaseClient(), []);
 
   const { data } = useQuery({
     queryKey: ["categories"],
@@ -34,7 +32,9 @@ function Categories({
       }));
     },
   });
+
   if (!data) return;
+
   return (
     <div className="flex justify-center ">
       <ul className="flex flex-wrap justify-center w-full gap-6">
@@ -57,7 +57,14 @@ function Category({
   category,
 }: CategoryProps) {
   return (
-    <button onClick={() => setSelectedCategory(category)}>
+    <button
+      onClick={() => {
+        if (selectedCategory?.id === category.id) {
+          return setSelectedCategory(null);
+        }
+        setSelectedCategory(category);
+      }}
+    >
       <li
         className={cn("w-10 h-10 cursor-pointer transition-all relative", {
           "opacity-20": selectedCategory?.id === category.id,

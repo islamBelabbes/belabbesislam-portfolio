@@ -15,9 +15,7 @@ function Projects() {
 
   const [placeHolder, setPlaceHolder] = useState<TProject[]>([]);
 
-  const supabase = useMemo(() => {
-    return createSupabaseClient();
-  }, []);
+  const supabase = useMemo(() => createSupabaseClient(), []);
 
   const { data, isLoading } = useQuery({
     queryKey: ["projects", selectedCategory],
