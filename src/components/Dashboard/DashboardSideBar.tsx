@@ -129,7 +129,9 @@ const MenuHeader = ({ isCollapsed, setIsCollapsed }: TMenuHeaderProps) => {
       {!isCollapsed && <DashboardSideBarToggle />}
       <AnimatePresence initial={false} mode="popLayout">
         {!isCollapsed && (
-          <motion.span
+          <motion.a
+            href="/"
+            target="_blank"
             layout
             initial={{
               opacity: 0,
@@ -147,7 +149,7 @@ const MenuHeader = ({ isCollapsed, setIsCollapsed }: TMenuHeaderProps) => {
             className="text-xl font-medium dark:text-WhitePrimary text-BlackPrimary "
           >
             BelabbesIslam.
-          </motion.span>
+          </motion.a>
         )}
       </AnimatePresence>
 
