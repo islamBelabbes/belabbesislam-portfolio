@@ -1,9 +1,6 @@
 "use client";
 
 import {
-  ColumnDef,
-  RowData,
-  TableMeta,
   flexRender,
   getCoreRowModel,
   useReactTable,
@@ -20,16 +17,20 @@ import {
 import DeleteModal from "@/components/Modals/DeleteModal";
 import { useState } from "react";
 import useDeleteEntry from "@/hooks/useDeleteEntry";
+import { columns } from "./columns";
+import { type TCategory } from "@/types";
 
-interface CategoriesTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-}
+type TCategoriesTableProps = {
+  initialData: {
+    data: TCategory[];
+    total: number;
+    hasNext: boolean;
+  };
+};
 
-export function CategoriesTable<TData, TValue>({
-  columns,
-  data,
-}: CategoriesTableProps<TData, TValue>) {
+export function CategoriesTable({ initialData }: TCategoriesTableProps) {
+  console.log(initialData);
+
   const [paddingColumns, setPaddingColumns] = useState<number[]>([]);
 
   const { deleteModal, onDelete, setDeleteModal } = useDeleteEntry({
@@ -54,7 +55,7 @@ export function CategoriesTable<TData, TValue>({
   };
 
   const table = useReactTable({
-    data,
+    data: initialData.data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     initialState: {

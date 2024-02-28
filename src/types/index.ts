@@ -30,3 +30,15 @@ export type TTryCatchReturn<T> =
 export type TTryCatch = <T>(promise: Promise<T>) => Promise<TTryCatchReturn<T>>;
 
 export type TToken = { token: string | null };
+
+export type TTableData = {
+  total: number;
+  hasNext: boolean;
+};
+export type TCategoryTableData = {
+  data: TCategory[];
+} & TTableData;
+
+export type TProjectsTableData = {
+  data: TProject[];
+} & TTableData;

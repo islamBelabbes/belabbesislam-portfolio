@@ -1,16 +1,23 @@
 import { columns } from "@/components/Dashboard/tables/categoriesTable/columns";
 import { CategoriesTable } from "@/components/Dashboard/tables/categoriesTable/data-table";
+import { fetchTableData } from "@/lib/api";
 import { createSupabaseClient } from "@/lib/supabase";
+import { tryCatch } from "@/lib/utils";
 import React from "react";
 
 export const revalidate = 0;
 
 async function page() {
-  const supabase = createSupabaseClient();
-  const { data, error } = await supabase.from("categories").select("*");
+  const { data, error } = await tryCatch(
+    fetchTableData({
+      index: 0,
+      limit: 3,
+    })
+  );
 
-  if (error) throw new Error("something went wrong");
-  return <CategoriesTable columns={columns} data={data || []} />;
+  if (error || !data) throw new Error("something went wrong");
+
+  return <CategoriesTable initialData={data} />;
 }
 
 export default page;
