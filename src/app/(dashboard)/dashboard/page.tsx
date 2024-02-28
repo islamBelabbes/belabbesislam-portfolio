@@ -9,6 +9,7 @@ import { columns } from "@/components/Dashboard/tables/categoriesTable/columns";
 import { columns as projectsColumns } from "@/components/Dashboard/tables/projectsTable/columns";
 import { ProjectsTable } from "@/components/Dashboard/tables/projectsTable/data-table";
 import { CategoriesTable } from "@/components/Dashboard/tables/categoriesTable/data-table";
+import { fetchTableData } from "@/lib/api";
 
 export const revalidate = 0;
 
@@ -18,7 +19,10 @@ async function page() {
     .from("projects")
     .select(`* , categories (*)`)
     .limit(3);
-  const categoriesPromise = supabase.from("categories").select("*").limit(3);
+  const categoriesPromise = fetchTableData({
+    index: 0,
+    limit: 3,
+  });
 
   const totalProjectsPromise = supabase
     .from("projects")
@@ -71,7 +75,7 @@ async function page() {
         </div>
         <div className="flex flex-col gap-2">
           <Badge className="w-fit font-semibold text-sm">last Categories</Badge>
-          <CategoriesTable columns={columns} data={categories.data || []} />
+          <CategoriesTable initialData={categories} />
         </div>
       </div>
     </div>
