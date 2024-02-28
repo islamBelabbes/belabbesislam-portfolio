@@ -23,8 +23,9 @@ const ImageUploader = ({
   disabled = false,
   ...props
 }: TImageUploaderProps) => {
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 1,
+    multiple: false,
     accept: {
       "image/png": [".png"],
       "image/jpeg": [".jpeg"],
@@ -34,14 +35,13 @@ const ImageUploader = ({
         toastId: TOAST_IDs.fileError,
       });
     },
-    onDropAccepted: () => toast.dismiss(TOAST_IDs.fileError),
+    onDropAccepted: (acceptedFiles) => {
+      if (acceptedFiles.length !== 0) {
+        setImage(URL.createObjectURL(acceptedFiles[0]));
+      }
+      return toast.dismiss(TOAST_IDs.fileError);
+    },
   });
-
-  useEffect(() => {
-    if (acceptedFiles.length !== 0) {
-      setImage(URL.createObjectURL(acceptedFiles[0]));
-    }
-  }, [acceptedFiles]);
 
   const handleRemove = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
