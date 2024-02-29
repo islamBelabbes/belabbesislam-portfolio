@@ -14,7 +14,14 @@ async function page() {
 
   if (error || !data) throw new Error("something went wrong");
 
-  return <ProjectsTable initialData={data} withPaginate />;
+  return (
+    <ProjectsTable
+      initialData={data}
+      withPaginate
+      limit={projectsTableDataLimit}
+      queryKey="table_projects"
+    />
+  );
 }
 
 export default page;

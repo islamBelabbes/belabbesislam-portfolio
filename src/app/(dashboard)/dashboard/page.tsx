@@ -10,14 +10,15 @@ import { fetchCategoriesTableData, fetchProjectsTableData } from "@/lib/api";
 
 export const revalidate = 0;
 
+const limit = 3;
 async function page() {
   const projectsPromise = fetchProjectsTableData({
     index: 0,
-    limit: 3,
+    limit: limit,
   });
   const categoriesPromise = fetchCategoriesTableData({
     index: 0,
-    limit: 3,
+    limit: limit,
   });
 
   const [projects, categories] = await Promise.all([
@@ -56,11 +57,19 @@ async function page() {
       <div className="mt-4 flex flex-col gap-3">
         <div className="flex flex-col gap-2">
           <Badge className="w-fit font-semibold text-sm">last Projects</Badge>
-          <ProjectsTable initialData={projects} />
+          <ProjectsTable
+            initialData={projects}
+            limit={limit}
+            queryKey="main_projects"
+          />
         </div>
         <div className="flex flex-col gap-2">
           <Badge className="w-fit font-semibold text-sm">last Categories</Badge>
-          <CategoriesTable initialData={categories} />
+          <CategoriesTable
+            initialData={categories}
+            limit={limit}
+            queryKey="main_categories"
+          />
         </div>
       </div>
     </div>

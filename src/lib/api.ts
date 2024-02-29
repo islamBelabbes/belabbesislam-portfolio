@@ -11,7 +11,8 @@ export const fetchCategoriesTableData: TFetchCategoriesTableData =
     const { error, data, count } = await supabase
       .from("categories")
       .select("*", { count: "exact" })
-      .range(index * limit, (index + 1) * limit - 1);
+      .range(index * limit, (index + 1) * limit - 1)
+      .order("created_at", { ascending: false });
 
     if (error) throw error;
 
@@ -37,7 +38,8 @@ export const fetchProjectsTableData: TFetchProjectsTableData = async function ({
   const { error, data, count } = await supabase
     .from("projects")
     .select(`* ,categories (*)`, { count: "exact" })
-    .range(index * limit, (index + 1) * limit - 1);
+    .range(index * limit, (index + 1) * limit - 1)
+    .order("created_at", { ascending: false });
 
   if (error) throw error;
 

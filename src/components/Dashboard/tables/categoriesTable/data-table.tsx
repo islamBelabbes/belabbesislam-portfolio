@@ -33,11 +33,15 @@ type TCategoriesTableProps = {
     hasNext: boolean;
   };
   withPaginate?: boolean;
+  limit?: number;
+  queryKey: string;
 };
 
 export function CategoriesTable({
   initialData,
   withPaginate = false,
+  limit = 3,
+  queryKey,
 }: TCategoriesTableProps) {
   const [paddingColumns, setPaddingColumns] = useState<number[]>([]);
 
@@ -60,11 +64,11 @@ export function CategoriesTable({
   });
 
   const { data, isPlaceholderData, isLoading } = useQuery({
-    queryKey: ["categories_table_data", page],
+    queryKey: [queryKey, page],
     queryFn: () =>
       fetchCategoriesTableData({
         index: page,
-        limit: categoriesTableDataLimit,
+        limit: limit,
       }),
     placeholderData: (prevData) => {
       return keepPreviousData(prevData ? prevData : initialData);
@@ -112,10 +116,16 @@ export function CategoriesTable({
         }
         onDelete={onDelete}
       />
-      <Table className="rounded-md border">
+      <Table className="rounded-md border relative">
+        {isMounted && isPlaceholderData && (
+          <div className="right-8 absolute top-[10px]">
+            <ClipLoader size={24} />
+          </div>
+        )}
+
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id} className="relative">
+            <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead key={header.id}>
@@ -128,12 +138,6 @@ export function CategoriesTable({
                   </TableHead>
                 );
               })}
-
-              {isMounted && isPlaceholderData && (
-                <div className="right-8 absolute top-[50%] translate-y-[-50%]">
-                  <ClipLoader size={24} />
-                </div>
-              )}
             </TableRow>
           ))}
         </TableHeader>
@@ -173,7 +177,7 @@ export function CategoriesTable({
           nextLabel="next >"
           onPageChange={(param) => setPage(param.selected)}
           pageRangeDisplayed={5}
-          pageCount={Math.round(tableData.total / categoriesTableDataLimit)}
+          pageCount={Math.round(tableData.total / limit)}
           previousLabel="< previous"
           renderOnZeroPageCount={null}
           disabledClassName="cursor-not-allowed opacity-40"

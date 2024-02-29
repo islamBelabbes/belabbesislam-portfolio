@@ -69,5 +69,5 @@ export const TOAST_IDs = {
   fileError: "toast_file_error",
 };
 
-export const categoriesTableDataLimit = 3;
-export const projectsTableDataLimit = 2;
+export const categoriesTableDataLimit = 10;
+export const projectsTableDataLimit = 10;

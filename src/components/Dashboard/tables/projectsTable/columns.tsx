@@ -16,6 +16,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ClipLoader } from "react-spinners";
 import CategoriesTag from "@/components/CategoriesTag";
+import Actions from "../Actions";
 
 export const columns: ColumnDef<TProject>[] = [
   {
@@ -106,29 +107,15 @@ export const columns: ColumnDef<TProject>[] = [
     cell: ({ row, table }) => {
       const data = row.original;
       const meta = table.options.meta;
-
+      const isLoading = meta?.paddingColumns?.includes(data.id) || false;
       return (
-        <div className="w-full flex justify-between items-center">
-          <DropdownMenu modal>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem>
-                <Link href={`/dashboard/project/${data.id}`}>Edit Project</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => meta?.handleDelete?.(data.id)}>
-                Delete Project
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {meta?.paddingColumns?.includes(data.id) && <ClipLoader size={14} />}
-        </div>
+        <Actions
+          id={data.id}
+          isLoading={isLoading}
+          onDelete={(id) => meta?.handleDelete?.(id)}
+          editPath="dashboard/project"
+          label="project"
+        />
       );
     },
   },

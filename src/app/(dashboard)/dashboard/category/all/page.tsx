@@ -17,7 +17,14 @@ async function page() {
 
   if (error || !data) throw new Error("something went wrong");
 
-  return <CategoriesTable initialData={data} withPaginate />;
+  return (
+    <CategoriesTable
+      initialData={data}
+      withPaginate
+      limit={categoriesTableDataLimit}
+      queryKey="table_categories"
+    />
+  );
 }
 
 export default page;
