@@ -19,16 +19,18 @@ import {
 } from "@/components/ui/table";
 import DeleteModal from "@/components/Modals/DeleteModal";
 import useDeleteEntry from "@/hooks/useDeleteEntry";
+import { type TProject } from "@/types";
+import { columns } from "./columns";
 
-interface ProjectsTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-}
+type TCategoriesTableProps = {
+  initialData: {
+    data: TProject[];
+    total: number;
+    hasNext: boolean;
+  };
+};
 
-export function ProjectsTable<TData, TValue>({
-  columns,
-  data,
-}: ProjectsTableProps<TData, TValue>) {
+export function ProjectsTable({ initialData }: TCategoriesTableProps) {
   const [paddingColumns, setPaddingColumns] = useState<number[]>([]);
 
   const { deleteModal, onDelete, setDeleteModal } = useDeleteEntry({
@@ -53,7 +55,7 @@ export function ProjectsTable<TData, TValue>({
   };
 
   const table = useReactTable({
-    data,
+    data: initialData.data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     meta: tableMeta,

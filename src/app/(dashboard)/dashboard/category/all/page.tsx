@@ -1,6 +1,6 @@
 import { columns } from "@/components/Dashboard/tables/categoriesTable/columns";
 import { CategoriesTable } from "@/components/Dashboard/tables/categoriesTable/data-table";
-import { fetchTableData } from "@/lib/api";
+import { fetchCategoriesTableData } from "@/lib/api";
 import { createSupabaseClient } from "@/lib/supabase";
 import { tryCatch } from "@/lib/utils";
 import React from "react";
@@ -9,7 +9,7 @@ export const revalidate = 0;
 
 async function page() {
   const { data, error } = await tryCatch(
-    fetchTableData({
+    fetchCategoriesTableData({
       index: 0,
       limit: 3,
     })
