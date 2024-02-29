@@ -8,6 +8,7 @@ import {
 } from "@tanstack/react-table";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import ReactPaginate from "react-paginate";
+import { ClipLoader } from "react-spinners";
 
 import {
   Table,
@@ -23,8 +24,6 @@ import { columns } from "./columns";
 import { type TCategory } from "@/types";
 import { fetchCategoriesTableData } from "@/lib/api";
 import { buttonVariants } from "@/components/ui/button";
-import { categoriesTableDataLimit } from "@/constants/constants";
-import { ClipLoader } from "react-spinners";
 
 type TCategoriesTableProps = {
   initialData: {

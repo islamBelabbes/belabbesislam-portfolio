@@ -1,13 +1,15 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { ClipLoader } from "react-spinners";
+import ReactPaginate from "react-paginate";
 
 import {
   Table,
@@ -21,12 +23,8 @@ import DeleteModal from "@/components/Modals/DeleteModal";
 import useDeleteEntry from "@/hooks/useDeleteEntry";
 import { type TProject } from "@/types";
 import { columns } from "./columns";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { fetchProjectsTableData } from "@/lib/api";
-import ReactPaginate from "react-paginate";
 import { buttonVariants } from "@/components/ui/button";
-import { projectsTableDataLimit } from "@/constants/constants";
-import { ClipLoader } from "react-spinners";
 
 type TCategoriesTableProps = {
   initialData: {

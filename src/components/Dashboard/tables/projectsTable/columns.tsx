@@ -1,20 +1,11 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { TCategory, TProject } from "@/types";
-import { ColumnDef } from "@tanstack/react-table";
-import { Link as LinkIcon, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 
-import Link from "next/link";
+import { ColumnDef } from "@tanstack/react-table";
+import { Link as LinkIcon } from "lucide-react";
+
+import { TCategory, TProject } from "@/types";
 import { cn } from "@/lib/utils";
-import { ClipLoader } from "react-spinners";
 import CategoriesTag from "@/components/CategoriesTag";
 import Actions from "../Actions";
 
