@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useState } from "react";
+import { use, useEffect, useState } from "react";
 
 import {
   ColumnDef,
@@ -21,6 +21,12 @@ import DeleteModal from "@/components/Modals/DeleteModal";
 import useDeleteEntry from "@/hooks/useDeleteEntry";
 import { type TProject } from "@/types";
 import { columns } from "./columns";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { fetchProjectsTableData } from "@/lib/api";
+import ReactPaginate from "react-paginate";
+import { buttonVariants } from "@/components/ui/button";
+import { projectsTableDataLimit } from "@/constants/constants";
+import { ClipLoader } from "react-spinners";
 
 type TCategoriesTableProps = {
   initialData: {
@@ -28,10 +34,18 @@ type TCategoriesTableProps = {
     total: number;
     hasNext: boolean;
   };
+  withPaginate?: boolean;
 };
 
-export function ProjectsTable({ initialData }: TCategoriesTableProps) {
+export function ProjectsTable({
+  initialData,
+  withPaginate = false,
+}: TCategoriesTableProps) {
   const [paddingColumns, setPaddingColumns] = useState<number[]>([]);
+
+  const [isMounted, setIsMounted] = useState(false);
+
+  const [page, setPage] = useState(0);
 
   const { deleteModal, onDelete, setDeleteModal } = useDeleteEntry({
     endpoint: "delete_project",
@@ -47,6 +61,14 @@ export function ProjectsTable({ initialData }: TCategoriesTableProps) {
     },
   });
 
+  const { data, isPlaceholderData, isLoading } = useQuery({
+    queryKey: ["projects_table_data", page],
+    queryFn: () =>
+      fetchProjectsTableData({ index: page, limit: projectsTableDataLimit }),
+    placeholderData: keepPreviousData,
+  });
+  const tableData = data;
+
   const tableMeta = {
     handleDelete: (id: number) => {
       return setDeleteModal({ isOpen: true, targetId: id });
@@ -55,7 +77,7 @@ export function ProjectsTable({ initialData }: TCategoriesTableProps) {
   };
 
   const table = useReactTable({
-    data: initialData.data,
+    data: tableData?.data || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     meta: tableMeta,
@@ -63,8 +85,20 @@ export function ProjectsTable({ initialData }: TCategoriesTableProps) {
       columnVisibility: { id: false },
     },
   });
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (isLoading)
+    return (
+      <div className="flex justify-center">
+        <ClipLoader />
+      </div>
+    );
+
   return (
-    <div className="rounded-md border">
+    <div>
       <DeleteModal
         isOpen={deleteModal.isOpen}
         setIsOpen={(open) =>
@@ -75,17 +109,13 @@ export function ProjectsTable({ initialData }: TCategoriesTableProps) {
         onDelete={onDelete}
       />
 
-      <Table>
+      <Table className="rounded-md border">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id} className="relative">
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead
-                    data-is={header.index}
-                    key={header.id}
-                    style={{ width: header.getSize() }}
-                  >
+                  <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -95,6 +125,12 @@ export function ProjectsTable({ initialData }: TCategoriesTableProps) {
                   </TableHead>
                 );
               })}
+
+              {isMounted && isPlaceholderData && (
+                <div className="right-8 absolute top-[50%] translate-y-[-50%]">
+                  <ClipLoader size={24} />
+                </div>
+              )}
             </TableRow>
           ))}
         </TableHeader>
@@ -106,7 +142,10 @@ export function ProjectsTable({ initialData }: TCategoriesTableProps) {
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell
+                    key={cell.id}
+                    className={cell.id.replace("0_", "")}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -121,6 +160,22 @@ export function ProjectsTable({ initialData }: TCategoriesTableProps) {
           )}
         </TableBody>
       </Table>
+      {withPaginate && tableData?.total && (
+        <ReactPaginate
+          className="flex gap-4 items-center justify-end py-2"
+          nextLinkClassName={buttonVariants({ variant: "default" })}
+          previousLinkClassName={buttonVariants({ variant: "default" })}
+          activeClassName="text-secondary"
+          breakLabel="..."
+          nextLabel="next >"
+          onPageChange={(param) => setPage(param.selected)}
+          pageRangeDisplayed={5}
+          pageCount={Math.round(tableData?.total / projectsTableDataLimit)}
+          previousLabel="< previous"
+          renderOnZeroPageCount={null}
+          disabledClassName="cursor-not-allowed opacity-40"
+        />
+      )}
     </div>
   );
 }

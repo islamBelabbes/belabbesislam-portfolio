@@ -19,29 +19,28 @@ import { ClipLoader } from "react-spinners";
 export const columns: ColumnDef<TCategory>[] = [
   {
     id: "id",
+    accessorKey: "id",
     enableHiding: true,
   },
   {
-    accessorKey: "image",
     header: "Image",
+    accessorKey: "image",
     cell({ getValue }) {
+      const url = `${
+        process.env.NEXT_PUBLIC_SUPABASE_MEDIA_URL
+      }/categories/${getValue<string>()}`;
+
       return (
         <div className="w-[50px] h-[50px] relative">
-          <Image
-            src={`${
-              process.env.NEXT_PUBLIC_SUPABASE_MEDIA_URL
-            }/categories/${getValue<string>()}`}
-            alt="image"
-            fill
-            className="object-contain"
-          />
+          <Image src={url} alt="image" fill className="object-contain" />
         </div>
       );
     },
   },
   {
-    accessorKey: "name",
+    id: "name",
     header: "Name",
+    accessorKey: "name",
   },
 
   {

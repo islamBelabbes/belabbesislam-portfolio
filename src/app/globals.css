@@ -93,3 +93,16 @@
 /* [data-selected][data-current="true"] {
   @apply !bg-primary !text-white;
 } */
+
+td.image {
+  width: 300px;
+}
+td.title {
+  width: 20%;
+}
+td.url {
+  width: 10%;
+}
+td.actions {
+  width: 10%;
+}

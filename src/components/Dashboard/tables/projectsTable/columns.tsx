@@ -44,7 +44,7 @@ export const columns: ColumnDef<TProject>[] = [
   {
     accessorKey: "title",
     header: "Title",
-    size: 300,
+    size: 100,
   },
 
   {
@@ -53,6 +53,7 @@ export const columns: ColumnDef<TProject>[] = [
     cell({ getValue }) {
       let categories = getValue<TCategory[]>();
 
+      if (!categories) return;
       const take = 4;
       let Remaining = 0;
 
@@ -84,7 +85,7 @@ export const columns: ColumnDef<TProject>[] = [
   {
     accessorKey: "url",
     header: "Url",
-    size: 500,
+    size: 100,
     cell({ getValue }) {
       return (
         <a
@@ -101,6 +102,7 @@ export const columns: ColumnDef<TProject>[] = [
   },
   {
     id: "actions",
+    size: 100,
     cell: ({ row, table }) => {
       const data = row.original;
       const meta = table.options.meta;

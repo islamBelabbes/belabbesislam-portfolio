@@ -1,10 +1,13 @@
 "use client";
+import { useEffect, useState } from "react";
 
 import {
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import ReactPaginate from "react-paginate";
 
 import {
   Table,
@@ -15,10 +18,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import DeleteModal from "@/components/Modals/DeleteModal";
-import { useState } from "react";
 import useDeleteEntry from "@/hooks/useDeleteEntry";
 import { columns } from "./columns";
 import { type TCategory } from "@/types";
+import { fetchCategoriesTableData } from "@/lib/api";
+import { buttonVariants } from "@/components/ui/button";
+import { categoriesTableDataLimit } from "@/constants/constants";
+import { ClipLoader } from "react-spinners";
 
 type TCategoriesTableProps = {
   initialData: {
@@ -26,12 +32,18 @@ type TCategoriesTableProps = {
     total: number;
     hasNext: boolean;
   };
+  withPaginate?: boolean;
 };
 
-export function CategoriesTable({ initialData }: TCategoriesTableProps) {
-  console.log(initialData);
-
+export function CategoriesTable({
+  initialData,
+  withPaginate = false,
+}: TCategoriesTableProps) {
   const [paddingColumns, setPaddingColumns] = useState<number[]>([]);
+
+  const [isMounted, setIsMounted] = useState(false);
+
+  const [page, setPage] = useState(0);
 
   const { deleteModal, onDelete, setDeleteModal } = useDeleteEntry({
     endpoint: "delete_category",
@@ -47,6 +59,18 @@ export function CategoriesTable({ initialData }: TCategoriesTableProps) {
     },
   });
 
+  const { data, isPlaceholderData, isLoading } = useQuery({
+    queryKey: ["categories_table_data", page],
+    queryFn: () =>
+      fetchCategoriesTableData({
+        index: page,
+        limit: categoriesTableDataLimit,
+      }),
+    placeholderData: (prevData) => {
+      return keepPreviousData(prevData ? prevData : initialData);
+    },
+  });
+
   const tableMeta = {
     handleDelete: (id: number) => {
       return setDeleteModal({ isOpen: true, targetId: id });
@@ -54,8 +78,10 @@ export function CategoriesTable({ initialData }: TCategoriesTableProps) {
     paddingColumns,
   };
 
+  const tableData = data ? data : initialData;
+
   const table = useReactTable({
-    data: initialData.data,
+    data: tableData.data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     initialState: {
@@ -64,8 +90,19 @@ export function CategoriesTable({ initialData }: TCategoriesTableProps) {
     meta: tableMeta,
   });
 
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (isLoading)
+    return (
+      <div className="flex justify-center">
+        <ClipLoader />
+      </div>
+    );
+
   return (
-    <div className="rounded-md border">
+    <div>
       <DeleteModal
         isOpen={deleteModal.isOpen}
         setIsOpen={(open) =>
@@ -75,11 +112,10 @@ export function CategoriesTable({ initialData }: TCategoriesTableProps) {
         }
         onDelete={onDelete}
       />
-
-      <Table>
+      <Table className="rounded-md border">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id} className="relative">
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead key={header.id}>
@@ -92,6 +128,12 @@ export function CategoriesTable({ initialData }: TCategoriesTableProps) {
                   </TableHead>
                 );
               })}
+
+              {isMounted && isPlaceholderData && (
+                <div className="right-8 absolute top-[50%] translate-y-[-50%]">
+                  <ClipLoader size={24} />
+                </div>
+              )}
             </TableRow>
           ))}
         </TableHeader>
@@ -103,7 +145,10 @@ export function CategoriesTable({ initialData }: TCategoriesTableProps) {
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell
+                    key={cell.id}
+                    className={cell.id.replace("0_", "")}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -118,6 +163,22 @@ export function CategoriesTable({ initialData }: TCategoriesTableProps) {
           )}
         </TableBody>
       </Table>
+      {withPaginate && (
+        <ReactPaginate
+          className="flex gap-4 items-center justify-end py-2"
+          nextLinkClassName={buttonVariants({ variant: "default" })}
+          previousLinkClassName={buttonVariants({ variant: "default" })}
+          activeClassName="text-secondary"
+          breakLabel="..."
+          nextLabel="next >"
+          onPageChange={(param) => setPage(param.selected)}
+          pageRangeDisplayed={5}
+          pageCount={Math.round(tableData.total / categoriesTableDataLimit)}
+          previousLabel="< previous"
+          renderOnZeroPageCount={null}
+          disabledClassName="cursor-not-allowed opacity-40"
+        />
+      )}
     </div>
   );
 }

@@ -68,3 +68,6 @@ export const HEADER_HEIGHT: string = "60";
 export const TOAST_IDs = {
   fileError: "toast_file_error",
 };
+
+export const categoriesTableDataLimit = 3;
+export const projectsTableDataLimit = 2;

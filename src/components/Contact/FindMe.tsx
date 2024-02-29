@@ -14,10 +14,10 @@ const FIND: findData[] = [
     to: "#",
     logo: "/Picalica-Logo.png",
   },
-  {
-    to: "#",
-    logo: "/github-Logo.png",
-  },
+  // {
+  //   to: "#",
+  //   logo: "/github-Logo.png",
+  // },
 ];
 function FindMe() {
   return (

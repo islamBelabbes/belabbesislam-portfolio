@@ -4,7 +4,7 @@ import DashboardHeader from "@/components/Dashboard/DashboardHeader";
 import DashboardProvider from "@/components/Dashboard/DashboardProvider";
 import { HEADER_HEIGHT } from "@/constants/constants";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Suspense } from "react";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -37,6 +37,7 @@ export default function DashboardLayout({
           </main>
         </div>
       </div>
+      <ReactQueryDevtools initialIsOpen={false} />
     </DashboardProvider>
   );
 }
