@@ -16,7 +16,7 @@ function SkillsListing({ data }: { data: SkillsListingProps }) {
 
 function Skill({ item: { image, name } }: { item: SkillProps }) {
   return (
-    <li className="flex flex-col items-center justify-center gap-2">
+    <li className="flex flex-col items-center justify-center gap-2 capitalize">
       <div className="w-[64px] h-[64px] relative  ">
         <Image className="object-contain" src={image} alt={name} fill />
       </div>
