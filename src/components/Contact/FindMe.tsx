@@ -1,25 +1,33 @@
-import React from "react";
+"use client";
+
+import { useTheme } from "next-themes";
+
 import SectionEntry from "../SectionEntry";
+import Image from "next/image";
 
 type findData = {
   to: string;
   logo: string;
+  logo_dark?: string;
 };
 const FIND: findData[] = [
   {
-    to: "#",
+    to: "https://mostaql.com/u/islamalg",
     logo: "/Mostaql-Logo.png",
   },
   {
-    to: "#",
+    to: "https://picalica.com/u/islam_belabbes",
     logo: "/Picalica-Logo.png",
   },
-  // {
-  //   to: "#",
-  //   logo: "/github-Logo.png",
-  // },
+  {
+    to: "https://github.com/islamBelabbes",
+    logo: "/Github-Logo-dark.png",
+    logo_dark: "/Github-Logo.png",
+  },
 ];
 function FindMe() {
+  const { theme } = useTheme();
+
   return (
     <section className="bg-WhitePrimary dark:bg-BlackPrimary py-10">
       <div className="lg:max-w-[1280px] mx-auto px-8 flex flex-col gap-7  justify-center items-center">
@@ -30,11 +38,21 @@ function FindMe() {
         />
         <ul className="flex flex-wrap justify-center gap-3 ">
           {FIND.map((item, index) => (
-            <li className="lg:w-[9rem] w-[90px]" key={index}>
-              <a target="_blank" href={item.to}>
-                <img
-                  className="object-contain w-full h-full white_filter"
-                  src={item.logo}
+            <li key={index}>
+              <a
+                target="_blank"
+                href={item.to}
+                className="lg:w-[9rem] w-[90px] relative block aspect-video"
+              >
+                <Image
+                  className="object-contain w-full h-full"
+                  src={
+                    theme === "dark" && item.logo_dark
+                      ? item.logo_dark
+                      : item.logo
+                  }
+                  fill
+                  alt={item.logo}
                 />
               </a>
             </li>
