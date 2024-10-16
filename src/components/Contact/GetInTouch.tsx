@@ -1,26 +1,20 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import SectionEntry from "../SectionEntry";
-import { toast } from "react-toastify";
-import Image from "next/image";
+import { Check, Copy, Mail, Phone } from "lucide-react";
 
 const CONTACT = [
   {
     detail: "belabbesislam2@gmail.com",
-    icon: "/email.png",
+    Icon: Mail,
   },
   {
     detail: "+213 667749742",
-    icon: "/phone.png",
+    Icon: Phone,
   },
 ];
 
 function GetInTouch() {
-  const copyHandler = (text: string) => {
-    navigator.clipboard.writeText(text);
-    toast.success(`${text} Copied successfully`, { autoClose: 1000 });
-  };
-
   return (
     <section className="bg-WhiteSecondary dark:bg-BlackSecondary py-10">
       <div className="lg:max-w-[1280px] mx-auto px-8 flex flex-col gap-7  justify-center items-center">
@@ -35,12 +29,10 @@ function GetInTouch() {
                 key={item.detail}
                 className="flex items-center justify-center w-full gap-5"
               >
-                <Image src={item.icon} width={30} height={30} alt="copy" />
+                <item.Icon height={30} />
                 <p>{item.detail}</p>
 
-                <button onClick={() => copyHandler(item.detail)}>
-                  <Image src="/copy.png" width={30} height={30} alt="copy" />
-                </button>
+                <CopyButton detail={item.detail} />
               </li>
             ))}
           </ul>
@@ -49,5 +41,23 @@ function GetInTouch() {
     </section>
   );
 }
+
+const CopyButton = ({ detail }: { detail: string }) => {
+  const [hasCopied, setHasCopied] = useState(false);
+
+  const copyHandler = (text: string) => {
+    if (hasCopied) return;
+    navigator.clipboard.writeText(text);
+    setHasCopied(true);
+    setTimeout(() => {
+      setHasCopied(false);
+    }, 500);
+  };
+  return (
+    <button onClick={() => copyHandler(detail)}>
+      {hasCopied ? <Check height={30} /> : <Copy height={30} />}
+    </button>
+  );
+};
 
 export default GetInTouch;
