@@ -41,18 +41,6 @@ async function page() {
           status={categories?.total || 0}
           title="Total Categories"
         />
-        <DashboardStatus
-          Icon={<Users2Icon color="#EC3263" />}
-          iconBackground="bg-[#FFF5F7]"
-          status={200}
-          title="Total Users"
-        />
-        <DashboardStatus
-          Icon={<Users2Icon color="#EC3263" />}
-          iconBackground="bg-[#FFF5F7]"
-          status={200}
-          title="Total Users"
-        />
       </div>
       <div className="mt-4 flex flex-col gap-3">
         <div className="flex flex-col gap-2">
