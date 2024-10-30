@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model categories {
+  id                 BigInt               @id @default(autoincrement())
+  created_at         DateTime             @default(now()) @db.Timestamptz(6)
+  name               String               @default("")
+  image              String               @default("")
+  project_categories project_categories[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model project_categories {
+  project_id  BigInt
+  category_id BigInt
+  categories  categories @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "public_project categories_category_id_fkey")
+  projects    projects   @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "public_project categories_project_id_fkey")
+
+  @@id([project_id, category_id])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model projects {
+  id                 BigInt               @id @default(autoincrement())
+  created_at         DateTime             @default(now()) @db.Timestamptz(6)
+  title              String               @default("")
+  url                String?
+  description        String?
+  image              String               @default("")
+  project_categories project_categories[]
+}
