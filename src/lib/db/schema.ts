@@ -8,6 +8,7 @@ import {
   primaryKey,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
+import { relations } from "drizzle-orm/relations";
 
 export const categoriesTable = pgTable(
   "categories",
@@ -98,3 +99,29 @@ export const projectCategoriesTable = pgTable(
     }),
   ]
 );
+
+export const projectCategoriesRelations = relations(
+  projectCategoriesTable,
+  ({ one }) => ({
+    category: one(categoriesTable, {
+      fields: [projectCategoriesTable.categoryId],
+      references: [categoriesTable.id],
+    }),
+    project: one(projectsTable, {
+      fields: [projectCategoriesTable.projectId],
+      references: [projectsTable.id],
+    }),
+  })
+);
+
+export const categoriesRelations = relations(categoriesTable, ({ many }) => ({
+  projectCategories: many(projectCategoriesTable),
+}));
+
+export const projectsRelations = relations(projectsTable, ({ many }) => ({
+  projectCategories: many(projectCategoriesTable),
+}));
+
+export type Project = typeof projectsTable.$inferSelect;
+export type Category = typeof categoriesTable.$inferSelect;
+export type ProjectCategory = typeof projectCategoriesTable.$inferSelect;

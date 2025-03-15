@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next13-progressbar";
 
-import { projectFormSchema } from "@/lib/Schema";
+import { projectFormSchema } from "@/lib/schema";
 import { isInSelectedCategories, urlToBlob } from "@/lib/utils";
 import useSupabaseWithAuth from "@/hooks/useSupabaseWithAuth";
 import { TCategory, TPostForm, TProject } from "@/types";

@@ -1,4 +1,4 @@
-import { categoryFormSchema, projectFormSchema } from "@/lib/Schema";
+import { categoryFormSchema, projectFormSchema } from "@/lib/schema";
 import { z } from "zod";
 
 export type TODO = any; // this is placeholder type

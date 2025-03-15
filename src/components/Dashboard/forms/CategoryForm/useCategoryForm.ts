@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next13-progressbar";
 
-import { categoryFormSchema } from "@/lib/Schema";
+import { categoryFormSchema } from "@/lib/schema";
 import useSupabaseWithAuth from "@/hooks/useSupabaseWithAuth";
 import { TCategory, TCategoryForm } from "@/types";
 import { urlToBlob } from "@/lib/utils";

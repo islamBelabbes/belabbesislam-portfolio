@@ -14,3 +14,14 @@ export const projectFormSchema = z.object({
   categories: z.array(categoryFormSchema.extend({ id: z.number() })).min(1),
   image: z.string(),
 });
+
+export const PageSchema = z.coerce.number().int().min(1).catch(1);
+
+export const PaginationSchema = z.object({
+  page: PageSchema,
+  limit: PageSchema.removeCatch()
+    .or(z.coerce.number().pipe(z.literal(-1)))
+    .catch(5),
+});
+
+export type TPaginationSchema = z.infer<typeof PaginationSchema>;
