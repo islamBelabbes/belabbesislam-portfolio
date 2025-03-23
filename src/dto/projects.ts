@@ -1,11 +1,10 @@
-import { Category, Project } from "@/lib/db/schema";
+import { category } from "@/schema/category";
+import { Project } from "@/schema/project";
 
 type TProject = Project & {
-  categories: Category[];
+  categories: category[];
 };
 
-export const postsDtoMapper = (Project: TProject) => {
-  return { ...Project };
+export const projectDtoMapper = (project: TProject) => {
+  return { ...project };
 };
-
-export type TPost = ReturnType<typeof postsDtoMapper>;

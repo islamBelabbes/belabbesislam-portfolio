@@ -1,4 +1,4 @@
-import { postsDtoMapper } from "@/dto/projects";
+import { projectDtoMapper } from "@/dto/projects";
 import db from "@/lib/db";
 
 export const getProjects = async () => {
@@ -24,7 +24,7 @@ export const getProjects = async () => {
     };
   });
 
-  return mapped.map(postsDtoMapper);
+  return mapped.map(projectDtoMapper);
 };
 export const getProjectById = async () => {};
 export const createProject = async () => {};

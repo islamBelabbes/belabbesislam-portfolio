@@ -122,6 +122,6 @@ export const projectsRelations = relations(projectsTable, ({ many }) => ({
   projectCategories: many(projectCategoriesTable),
 }));
 
-export type Project = typeof projectsTable.$inferSelect;
-export type Category = typeof categoriesTable.$inferSelect;
-export type ProjectCategory = typeof projectCategoriesTable.$inferSelect;
+export type ProjectTable = typeof projectsTable;
+export type CategoryTable = typeof categoriesTable;
+export type ProjectCategoryTable = typeof projectCategoriesTable;
