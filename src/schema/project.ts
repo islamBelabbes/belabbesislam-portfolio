@@ -1,11 +1,9 @@
-import { projectsTable, ProjectTable } from "@/lib/db/schema";
+import { projectsTable } from "@/lib/db/schema";
 
 import generateZodSchema from "@/lib/generate-zod-schema";
 import { z } from "zod";
 
-const { insert, select, update } = new generateZodSchema<ProjectTable>(
-  projectsTable
-);
+const { insert, select, update } = new generateZodSchema(projectsTable);
 
 const ProjectSchema = select.required();
 const createProjectSchema = insert.omit({
