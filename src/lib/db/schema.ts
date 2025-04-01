@@ -14,19 +14,22 @@ export const categoriesTable = pgTable(
   "categories",
   {
     // You can use { mode: "bigint" } if numbers are exceeding js number limitations
-    id: bigint({ mode: "number" }).primaryKey().generatedByDefaultAsIdentity({
-      name: "categories_id_seq",
-      startWith: 1,
-      increment: 1,
-      minValue: 1,
-      maxValue: 9223372036854775807,
-      cache: 1,
-    }),
+    id: bigint({ mode: "number" })
+      .primaryKey()
+      .generatedByDefaultAsIdentity({
+        name: "categories_id_seq",
+        startWith: 1,
+        increment: 1,
+        minValue: 1,
+        maxValue: 9223372036854775807,
+        cache: 1,
+      })
+      .notNull(),
     createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
       .defaultNow()
       .notNull(),
-    name: text().default("").notNull(),
-    image: text().default("").notNull(),
+    name: text().notNull(),
+    image: text().notNull(),
   },
   (table) => [
     pgPolicy("Enable read access for all users", {
@@ -53,10 +56,10 @@ export const projectsTable = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
       .defaultNow()
       .notNull(),
-    title: text().default("").notNull(),
+    title: text().notNull(),
     url: text(),
     description: text(),
-    image: text().default("").notNull(),
+    image: text().notNull(),
   },
   (table) => [
     pgPolicy("Enable read access for all users", {

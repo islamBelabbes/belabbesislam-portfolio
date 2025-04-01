@@ -1,20 +1,23 @@
 import { projectsTable } from "@/lib/db/schema";
 
-import generateZodSchema from "@/lib/generate-zod-schema";
 import { z } from "zod";
+import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 
-const { insert, select, update } = new generateZodSchema(projectsTable);
-
-const ProjectSchema = select.required();
-const createProjectSchema = insert.omit({
-  id: true,
+const createProjectSchema = createInsertSchema(projectsTable, {
+  url: z.string().url().optional(),
+  description: z.string().optional(),
+}).omit({
   createdAt: true,
-});
-const updateProjectSchema = update.omit({
   id: true,
+});
+
+const updateProjectSchema = createUpdateSchema(projectsTable, {
+  id: z.number(),
+  url: z.string().url().optional(),
+  description: z.string().optional(),
+}).omit({
   createdAt: true,
 });
 
 export type CreateProject = z.infer<typeof createProjectSchema>;
 export type UpdateProject = z.infer<typeof updateProjectSchema>;
-export type Project = z.infer<typeof ProjectSchema>;

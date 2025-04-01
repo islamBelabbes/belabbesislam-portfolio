@@ -1,22 +1,20 @@
-import { categoriesTable, CategoryTable } from "@/lib/db/schema";
+import { categoriesTable } from "@/lib/db/schema";
 
-import generateZodSchema from "@/lib/generate-zod-schema";
 import { z } from "zod";
+import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 
-const { insert, select, update } = new generateZodSchema<CategoryTable>(
-  categoriesTable
-);
-
-const CategorySchema = select.required();
-const CreateCategorySchema = insert.omit({
+const CreateCategorySchema = createInsertSchema(categoriesTable, {
+  name: z.string(),
+  image: z.string(),
+}).omit({
   id: true,
   createdAt: true,
 });
-const updateCategorySchema = update.omit({
-  id: true,
+const updateCategorySchema = createUpdateSchema(categoriesTable, {
+  id: z.number(),
+}).omit({
   createdAt: true,
 });
 
 export type CreateCategory = z.infer<typeof CreateCategorySchema>;
 export type UpdateCategory = z.infer<typeof updateCategorySchema>;
-export type category = z.infer<typeof CategorySchema>;
