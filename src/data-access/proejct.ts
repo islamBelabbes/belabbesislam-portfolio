@@ -1,6 +1,7 @@
 import { projectDtoMapper } from "@/dto/projects";
 import db from "@/lib/db";
 import { projectsTable } from "@/lib/db/schema";
+import { Id } from "@/lib/schema";
 import { CreateProject, UpdateProject } from "@/schema/project";
 import { eq } from "drizzle-orm";
 
@@ -30,7 +31,7 @@ export const getProjects = async () => {
   return mapped.map(projectDtoMapper);
 };
 
-export const getProjectById = async (id: number) => {
+export const getProjectById = async (id: Id) => {
   const post = await db.query.projectsTable.findFirst({
     with: {
       projectCategories: {
@@ -61,6 +62,6 @@ export const updateProject = async ({ id, ...data }: UpdateProject) => {
   return db.update(projectsTable).set(data).where(eq(projectsTable.id, id));
 };
 
-export const deleteProject = async (id: number) => {
+export const deleteProject = async (id: Id) => {
   return db.delete(projectsTable).where(eq(projectsTable.id, id));
 };

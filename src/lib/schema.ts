@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export const idSchema = z.number();
+
 export const categoryFormSchema = z.object({
   name: z.string().min(1, "please provide a category name"),
   image: z.string(),
@@ -25,3 +27,4 @@ export const PaginationSchema = z.object({
 });
 
 export type TPaginationSchema = z.infer<typeof PaginationSchema>;
+export type Id = z.infer<typeof idSchema>;
