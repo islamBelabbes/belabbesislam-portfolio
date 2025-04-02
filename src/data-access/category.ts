@@ -19,11 +19,16 @@ export const getCategoryById = async (id: Id) => {
   return categoryDtoMapper(category);
 };
 
-export const createCategory = async (data: CreateCategory) => {
+export const createCategory = async (
+  data: Omit<CreateCategory, "image"> & { image: string }
+) => {
   return db.insert(categoriesTable).values(data);
 };
 
-export const updateCategory = async ({ id, ...data }: UpdateCategory) => {
+export const updateCategory = async ({
+  id,
+  ...data
+}: Omit<UpdateCategory, "image"> & { image?: string }) => {
   return db.update(categoriesTable).set(data).where(eq(categoriesTable.id, id));
 };
 

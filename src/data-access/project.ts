@@ -54,11 +54,16 @@ export const getProjectById = async (id: Id) => {
   });
 };
 
-export const createProject = async (data: CreateProject) => {
+export const createProject = async (
+  data: Omit<CreateProject, "image"> & { image: string }
+) => {
   return db.insert(projectsTable).values(data);
 };
 
-export const updateProject = async ({ id, ...data }: UpdateProject) => {
+export const updateProject = async ({
+  id,
+  ...data
+}: Omit<UpdateProject, "image"> & { image?: string }) => {
   return db.update(projectsTable).set(data).where(eq(projectsTable.id, id));
 };
 

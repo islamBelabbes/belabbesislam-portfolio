@@ -1,4 +1,60 @@
-export const getCategoriesUseCase = async () => {};
-export const getCategoryByIdUseCase = async () => {};
-export const createCategoryUseCase = async () => {};
-export const updateCategoryUseCase = async () => {};
+import {
+  createCategory,
+  deleteCategory,
+  getCategories,
+  getCategoryById,
+  updateCategory,
+} from "@/data-access/category";
+import { AppError, NotFoundError } from "@/lib/error";
+import { Id } from "@/lib/schema";
+import { utapi } from "@/lib/upload-thing";
+import { CreateCategory, UpdateCategory } from "@/schema/category";
+
+export const getCategoriesUseCase = async () => {
+  const categories = await getCategories();
+  return categories;
+};
+
+export const getCategoryByIdUseCase = async (id: Id) => {
+  const category = await getCategoryById(id);
+  if (!category) throw new NotFoundError();
+  return category;
+};
+
+export const createCategoryUseCase = async (data: CreateCategory) => {
+  const { image, ...rest } = data;
+  const { data: udata, error } = await utapi.uploadFiles(image);
+  if (error) throw new AppError("Error uploading image");
+
+  await createCategory({
+    ...rest,
+    image: udata.key,
+  });
+};
+export const updateCategoryUseCase = async (data: UpdateCategory) => {
+  const category = await getCategoryByIdUseCase(data.id); // this will throw if not found
+  const { image, ...rest } = data;
+
+  let _image: string | undefined;
+  if (image) {
+    const [_, newImage] = await Promise.all([
+      utapi.deleteFiles(category.image),
+      utapi.uploadFiles(image),
+    ]);
+
+    if (newImage.error) throw new AppError("Error uploading image");
+    _image = newImage.data.key;
+  }
+
+  await updateCategory({
+    ...rest,
+    image: _image,
+  });
+};
+
+export const deleteCategoryUseCase = async (id: Id) => {
+  const category = await getCategoryByIdUseCase(id);
+
+  await Promise.all([utapi.deleteFiles(category.image), deleteCategory(id)]);
+  return true;
+};
