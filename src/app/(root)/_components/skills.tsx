@@ -21,11 +21,14 @@ async function Skills({ skills }: { skills: Category[] }) {
           <div className="w-full">
             <ul className="grid  grid-cols-[repeat(auto-fit,minmax(130px,1fr))] gap-x-3 gap-y-7 items-center ">
               {skills.map((item) => (
-                <li className="flex flex-col items-center justify-center gap-2 capitalize">
+                <li
+                  className="flex flex-col items-center justify-center gap-2 capitalize"
+                  key={item.id}
+                >
                   <div className="w-[64px] h-[64px] relative">
                     <Image
                       className="object-contain"
-                      src={MEDIA_URL + item.image}
+                      src={`${MEDIA_URL}/${item.image}`}
                       alt={item.name}
                       fill
                     />

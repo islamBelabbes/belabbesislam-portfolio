@@ -1,4 +1,7 @@
+import { TApiResponse } from "@/lib/api-response";
+import { Pagination } from "@/lib/generate-pagination";
 import { categoryFormSchema, projectFormSchema } from "@/lib/schema";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 export type TODO = any; // this is placeholder type
@@ -43,9 +46,18 @@ export type TProjectsTableData = {
   data: TProject[];
 } & TTableData;
 
-export type TPaginationQuery = {
+export type PaginationQuery = {
   page?: number;
   limit?: number;
 };
 
-export type TQueryWithPagination<T extends object> = TPaginationQuery & T;
+export type QueryWithPagination<T extends object> = PaginationQuery & T;
+
+export type DataWithPagination<T> = Pagination & {
+  data: T;
+};
+
+export type TApiHandler<T extends object> = (
+  req: NextRequest,
+  params: T
+) => Promise<NextResponse<TApiResponse<unknown>> | Response>;

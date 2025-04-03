@@ -1,17 +1,18 @@
 import { PAGINATION } from "@/constants/constants";
 import { projectDtoMapper } from "@/dto/projects";
 import db from "@/lib/db";
-import { projectsTable } from "@/lib/db/schema";
+import { projectCategoriesTable, projectsTable } from "@/lib/db/schema";
 import { Id } from "@/lib/schema";
-import { CreateProject, UpdateProject } from "@/schema/project";
-import { TQueryWithPagination } from "@/types";
-import { eq } from "drizzle-orm";
+import { CreateProject, GetProjects, UpdateProject } from "@/schema/project";
+import { QueryWithPagination } from "@/types";
+import { and, eq, exists, count as drizzleCount } from "drizzle-orm";
 
 export const getProjects = async ({
   limit = PAGINATION.LIMIT,
   page = PAGINATION.PAGE,
-}: TQueryWithPagination<{}> = {}) => {
-  const posts = await db.query.projectsTable.findMany({
+  categoryId,
+}: QueryWithPagination<GetProjects> = {}) => {
+  const projects = await db.query.projectsTable.findMany({
     with: {
       projectCategories: {
         columns: {
@@ -25,9 +26,23 @@ export const getProjects = async ({
     },
     limit,
     offset: (page - 1) * limit,
+    ...(categoryId && {
+      where: (project, { eq, exists, and }) =>
+        exists(
+          db
+            .select()
+            .from(projectCategoriesTable)
+            .where(
+              and(
+                eq(projectCategoriesTable.projectId, project.id),
+                eq(projectCategoriesTable.categoryId, categoryId)
+              )
+            )
+        ),
+    }),
   });
 
-  const mapped = posts.map((item) => {
+  const mapped = projects.map((item) => {
     const { projectCategories, ...rest } = item;
     return {
       ...rest,
@@ -78,7 +93,25 @@ export const deleteProject = async (id: Id) => {
   return db.delete(projectsTable).where(eq(projectsTable.id, id));
 };
 
-export const countProjects = async () => {
-  const count = await db.$count(projectsTable);
-  return count;
+export const countProjects = async ({ categoryId }: GetProjects = {}) => {
+  const countP = db.select({ value: drizzleCount() }).from(projectsTable);
+
+  if (categoryId) {
+    countP.where(
+      exists(
+        db
+          .select()
+          .from(projectCategoriesTable)
+          .where(
+            and(
+              eq(projectCategoriesTable.projectId, projectsTable.id),
+              eq(projectCategoriesTable.categoryId, categoryId)
+            )
+          )
+      )
+    );
+  }
+
+  const count = await countP;
+  return count[0]?.value || 0;
 };

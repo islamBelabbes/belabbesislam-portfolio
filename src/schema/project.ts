@@ -4,7 +4,7 @@ import { z } from "zod";
 import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { ImageSchema, idSchema } from "@/lib/schema";
 
-const createProjectSchema = createInsertSchema(projectsTable, {
+export const createProjectSchema = createInsertSchema(projectsTable, {
   url: z.string().url().optional(),
   description: z.string().optional(),
   image: ImageSchema,
@@ -13,7 +13,7 @@ const createProjectSchema = createInsertSchema(projectsTable, {
   id: true,
 });
 
-const updateProjectSchema = createUpdateSchema(projectsTable, {
+export const updateProjectSchema = createUpdateSchema(projectsTable, {
   id: idSchema,
   url: z.string().url().optional(),
   description: z.string().optional(),
@@ -22,5 +22,10 @@ const updateProjectSchema = createUpdateSchema(projectsTable, {
   createdAt: true,
 });
 
+export const getProjectsSchema = z.object({
+  categoryId: idSchema.optional(),
+});
+
 export type CreateProject = z.infer<typeof createProjectSchema>;
 export type UpdateProject = z.infer<typeof updateProjectSchema>;
+export type GetProjects = z.infer<typeof getProjectsSchema>;

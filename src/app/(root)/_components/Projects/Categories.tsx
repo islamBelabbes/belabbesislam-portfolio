@@ -1,4 +1,5 @@
 "use client";
+import { MEDIA_URL } from "@/constants/constants";
 import { Category } from "@/dto/categories";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -6,7 +7,7 @@ import React from "react";
 
 type CategoriesProps = {
   selectedCategory: Category | null;
-  setSelectedCategory: React.Dispatch<React.SetStateAction<Category | null>>;
+  setSelectedCategory: React.Dispatch<React.SetStateAction<Category>>;
   categories: Category[];
 };
 
@@ -16,16 +17,14 @@ function Categories({
   categories,
 }: CategoriesProps) {
   return (
-    <div className="flex justify-center ">
+    <div className="flex justify-center">
       <ul className="flex flex-wrap justify-center w-full gap-6">
         {categories.map((category) => (
           <button
             onClick={() => {
-              if (selectedCategory?.id === category.id) {
-                return setSelectedCategory(null);
-              }
               setSelectedCategory(category);
             }}
+            key={category.id}
           >
             <li
               className={cn(
@@ -39,7 +38,7 @@ function Categories({
                 fill
                 className="object-contain"
                 alt="category"
-                src={category.image}
+                src={`${MEDIA_URL}/${category.image}`}
               />
             </li>
           </button>

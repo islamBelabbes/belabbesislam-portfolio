@@ -8,14 +8,14 @@ import {
   GetCategories,
   UpdateCategory,
 } from "@/schema/category";
-import { TQueryWithPagination } from "@/types";
+import { QueryWithPagination } from "@/types";
 import { count as drizzleCount, eq, exists } from "drizzle-orm";
 
 export const getCategories = async ({
   limit = PAGINATION.LIMIT,
   page = PAGINATION.PAGE,
   showEmpty = false,
-}: TQueryWithPagination<GetCategories> = {}) => {
+}: QueryWithPagination<GetCategories> = {}) => {
   const categories = await db.query.categoriesTable.findMany({
     limit,
     offset: (page - 1) * limit,

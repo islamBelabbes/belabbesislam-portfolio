@@ -1,5 +1,14 @@
 import { createSupabaseClient } from "./supabase";
-import { TProjectsTableData, type TCategoryTableData } from "@/types";
+import {
+  TProjectsTableData,
+  type TCategoryTableData,
+  QueryWithPagination,
+  DataWithPagination,
+} from "@/types";
+import { generateSearchParams } from "./utils";
+import { Project } from "@/dto/projects";
+import { AppError } from "./error";
+import { GetProjects } from "@/schema/project";
 type TFetchCategoriesTableData = (params: {
   limit: number;
   index: number;
@@ -50,4 +59,21 @@ export const fetchProjectsTableData: TFetchProjectsTableData = async function ({
     total: total,
     hasNext: (index + 1) * limit < total,
   };
+};
+
+export const getProjects = async (
+  query: QueryWithPagination<GetProjects> = {}
+) => {
+  const searchParams = generateSearchParams({
+    ...query,
+    "category-id": query.categoryId,
+  });
+
+  const response = await fetch(`/api/projects?${searchParams.toString()}`);
+  if (!response.ok) {
+    throw new AppError("something went wrong", response.status);
+  }
+
+  const data = await response.json();
+  return data?.data as DataWithPagination<Project[]>;
 };

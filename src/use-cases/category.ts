@@ -15,11 +15,11 @@ import {
   GetCategories,
   UpdateCategory,
 } from "@/schema/category";
-import { TQueryWithPagination } from "@/types";
+import { QueryWithPagination } from "@/types";
 import generatePagination from "@/lib/generate-pagination";
 
 export const getCategoriesUseCase = async (
-  query: TQueryWithPagination<GetCategories> = {}
+  query: QueryWithPagination<GetCategories> = {}
 ) => {
   const categoriesP = getCategories(query);
   const countCategoriesP = countCategories(query);

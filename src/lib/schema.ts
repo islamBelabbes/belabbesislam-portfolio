@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const idSchema = z.number();
+export const idSchema = z.coerce.number();
 
 export const categoryFormSchema = z.object({
   name: z.string().min(1, "please provide a category name"),
