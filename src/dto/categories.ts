@@ -1,8 +1,8 @@
 import { CategoryTable } from "@/lib/db/schema";
 
-type TCategory = CategoryTable["$inferSelect"];
-
-export const categoryDtoMapper = (category: TCategory) => {
+export const categoryDtoMapper = (category: CategoryTable["$inferSelect"]) => {
   // TODO : design DTO
   return { ...category };
 };
+
+export type Category = ReturnType<typeof categoryDtoMapper>;
