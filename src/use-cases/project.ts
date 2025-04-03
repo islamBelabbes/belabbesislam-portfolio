@@ -1,4 +1,6 @@
+import { PAGINATION } from "@/constants/constants";
 import {
+  countProjects,
   createProject,
   deleteProject,
   getProjectById,
@@ -10,10 +12,25 @@ import { AppError, AuthError, NotFoundError } from "@/lib/error";
 import { Id } from "@/lib/schema";
 import { utapi } from "@/lib/upload-thing";
 import { CreateProject, UpdateProject } from "@/schema/project";
+import { TQueryWithPagination } from "@/types";
+import generatePagination from "@/lib/generate-pagination";
 
-export const getProjectsUseCase = async () => {
-  const projects = await getProjects();
-  return projects;
+export const getProjectsUseCase = async ({
+  limit = PAGINATION.LIMIT,
+  page = PAGINATION.PAGE,
+}: TQueryWithPagination<{}> = {}) => {
+  const projectP = getProjects({ limit, page });
+  const countProjectsP = countProjects();
+  const [count, projects] = await Promise.all([countProjectsP, projectP]);
+
+  return {
+    data: projects,
+    ...generatePagination({
+      limit,
+      page,
+      total: count,
+    }),
+  };
 };
 
 export const getProjectByIdUseCase = async (id: Id) => {

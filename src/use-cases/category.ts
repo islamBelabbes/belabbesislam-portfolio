@@ -1,4 +1,5 @@
 import {
+  countCategories,
   createCategory,
   deleteCategory,
   getCategories,
@@ -9,11 +10,32 @@ import { User } from "@/dto/users";
 import { AppError, AuthError, NotFoundError } from "@/lib/error";
 import { Id } from "@/lib/schema";
 import { utapi } from "@/lib/upload-thing";
-import { CreateCategory, UpdateCategory } from "@/schema/category";
+import {
+  CreateCategory,
+  GetCategories,
+  UpdateCategory,
+} from "@/schema/category";
+import { TQueryWithPagination } from "@/types";
+import generatePagination from "@/lib/generate-pagination";
 
-export const getCategoriesUseCase = async () => {
-  const categories = await getCategories();
-  return categories;
+export const getCategoriesUseCase = async (
+  query: TQueryWithPagination<GetCategories>
+) => {
+  const categoriesP = getCategories(query);
+  const countCategoriesP = countCategories(query);
+  const [count, categories] = await Promise.all([
+    countCategoriesP,
+    categoriesP,
+  ]);
+
+  return {
+    data: categories,
+    ...generatePagination({
+      limit: query.limit,
+      page: query.page,
+      total: count,
+    }),
+  };
 };
 
 export const getCategoryByIdUseCase = async (id: Id) => {

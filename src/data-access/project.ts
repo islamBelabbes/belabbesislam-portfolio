@@ -1,11 +1,16 @@
+import { PAGINATION } from "@/constants/constants";
 import { projectDtoMapper } from "@/dto/projects";
 import db from "@/lib/db";
 import { projectsTable } from "@/lib/db/schema";
 import { Id } from "@/lib/schema";
 import { CreateProject, UpdateProject } from "@/schema/project";
+import { TQueryWithPagination } from "@/types";
 import { eq } from "drizzle-orm";
 
-export const getProjects = async () => {
+export const getProjects = async ({
+  limit = PAGINATION.LIMIT,
+  page = PAGINATION.PAGE,
+}: TQueryWithPagination<{}> = {}) => {
   const posts = await db.query.projectsTable.findMany({
     with: {
       projectCategories: {
@@ -18,6 +23,8 @@ export const getProjects = async () => {
         },
       },
     },
+    limit,
+    offset: (page - 1) * limit,
   });
 
   const mapped = posts.map((item) => {
@@ -69,4 +76,9 @@ export const updateProject = async ({
 
 export const deleteProject = async (id: Id) => {
   return db.delete(projectsTable).where(eq(projectsTable.id, id));
+};
+
+export const countProjects = async () => {
+  const count = await db.$count(projectsTable);
+  return count;
 };

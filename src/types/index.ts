@@ -42,3 +42,10 @@ export type TCategoryTableData = {
 export type TProjectsTableData = {
   data: TProject[];
 } & TTableData;
+
+export type TPaginationQuery = {
+  page?: number;
+  limit?: number;
+};
+
+export type TQueryWithPagination<T extends object> = TPaginationQuery & T;
