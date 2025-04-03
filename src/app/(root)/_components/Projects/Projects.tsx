@@ -104,8 +104,8 @@ function Projects({ categories }: { categories: Category[] }) {
 
                   <div className="flex flex-col gap-4 mt-auto">
                     <div className="flex flex-wrap gap-2">
-                      {categories.map((item) => (
-                        <CategoriesTag item={item} key={item.id} />
+                      {item.categories.map((category) => (
+                        <CategoriesTag item={category} key={category.id} />
                       ))}
                     </div>
 

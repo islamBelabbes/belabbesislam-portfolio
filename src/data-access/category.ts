@@ -26,6 +26,7 @@ export const getCategories = async ({
             .select({ id: projectCategoriesTable.projectId })
             .from(projectCategoriesTable)
             .where(eq(projectCategoriesTable.categoryId, categories.id))
+            .limit(1)
         );
       },
     }),
@@ -61,7 +62,6 @@ export const deleteCategory = async (id: Id) => {
 };
 
 export const countCategories = async ({ showEmpty }: GetCategories = {}) => {
-  // Count only categories that have projects
   const countP = db.select({ count: drizzleCount() }).from(categoriesTable);
 
   if (!showEmpty) {
@@ -71,6 +71,7 @@ export const countCategories = async ({ showEmpty }: GetCategories = {}) => {
           .select({ id: projectCategoriesTable.projectId })
           .from(projectCategoriesTable)
           .where(eq(projectCategoriesTable.categoryId, categoriesTable.id))
+          .limit(1)
       )
     );
   }
