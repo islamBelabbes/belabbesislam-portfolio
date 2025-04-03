@@ -1,18 +1,16 @@
 "use client";
-import {
-  keepPreviousData,
-  useInfiniteQuery,
-  useQuery,
-} from "@tanstack/react-query";
-import SectionEntry from "../SectionEntry";
+import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
 import Categories from "./Categories";
 import ProjectsListing from "./ProjectsListing";
 import { createSupabaseClient } from "@/lib/supabase";
 import { useMemo, useState } from "react";
-import { TCategory, TProject } from "@/types";
-import BlockUi from "../BlockUi";
-import { Button } from "../ui/button";
+import { TProject } from "@/types";
+
 import { ClipLoader } from "react-spinners";
+import { Category } from "@/dto/categories";
+import SectionEntry from "@/components/SectionEntry";
+import BlockUi from "@/components/BlockUi";
+import { Button } from "@/components/ui/button";
 
 const limit = 4;
 
@@ -21,8 +19,8 @@ type TLoadMoreButtonProps = {
   fetchNextPage: () => void;
 };
 
-function Projects() {
-  const [selectedCategory, setSelectedCategory] = useState<TCategory | null>(
+function Projects({ categories }: { categories: Category[] }) {
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null
   );
 
@@ -79,33 +77,36 @@ function Projects() {
   }, [] as TProject[]);
 
   return (
-    <div
+    <section
+      className="bg-WhitePrimary dark:bg-BlackPrimary py-10"
       id="projects"
-      className="lg:max-w-[1280px] mx-auto px-8 flex flex-col gap-12  justify-center items-center"
     >
-      <SectionEntry
-        heading="Projects"
-        description="Some Of The Projects i have done:"
-        variant="Secondary"
-      />
-      <Categories
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
-      />
-      <BlockUi
-        isBlock={isLoading || isPlaceholderData}
-        classNames={{ container: "w-full" }}
-      >
-        <ProjectsListing data={projects || []} />
+      <div className="lg:max-w-[1280px] mx-auto px-8 flex flex-col gap-12  justify-center items-center">
+        <SectionEntry
+          heading="Projects"
+          description="Some Of The Projects i have done:"
+          variant="Secondary"
+        />
+        <Categories
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          categories={categories}
+        />
+        <BlockUi
+          isBlock={isLoading || isPlaceholderData}
+          classNames={{ container: "w-full" }}
+        >
+          <ProjectsListing data={projects || []} />
 
-        {projects && hasNextPage && (
-          <LoadMoreButton
-            fetchNextPage={fetchNextPage}
-            isFetchingNextPage={isFetchingNextPage}
-          />
-        )}
-      </BlockUi>
-    </div>
+          {projects && hasNextPage && (
+            <LoadMoreButton
+              fetchNextPage={fetchNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+            />
+          )}
+        </BlockUi>
+      </div>
+    </section>
   );
 }
 

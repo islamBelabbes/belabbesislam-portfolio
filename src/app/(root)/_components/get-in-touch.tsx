@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import SectionEntry from "../SectionEntry";
 import { Check, Copy, Mail, Phone } from "lucide-react";
+import SectionEntry from "@/components/SectionEntry";
 
 const CONTACT = [
   {

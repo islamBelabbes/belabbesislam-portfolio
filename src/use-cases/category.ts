@@ -19,7 +19,7 @@ import { TQueryWithPagination } from "@/types";
 import generatePagination from "@/lib/generate-pagination";
 
 export const getCategoriesUseCase = async (
-  query: TQueryWithPagination<GetCategories>
+  query: TQueryWithPagination<GetCategories> = {}
 ) => {
   const categoriesP = getCategories(query);
   const countCategoriesP = countCategories(query);

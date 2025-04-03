@@ -1,23 +1,17 @@
-import Contact from "@/components/Contact/Contact";
-import Hero from "@/components/Hero/Hero";
-import Projects from "@/components/Projects/Projects";
-import Skills from "@/components/Skills/Skills";
+import { Contact } from "lucide-react";
+import Projects from "./_components/Projects/Projects";
+import Hero from "./_components/hero";
+import Skills from "./_components/skills";
+import { getCategoriesUseCase } from "@/use-cases/category";
 
-export default function Home() {
+export default async function Home() {
+  const skills = await getCategoriesUseCase({ showEmpty: false });
+  const categories = await getCategoriesUseCase();
   return (
     <>
-      <section className="bg-WhitePrimary dark:bg-BlackPrimary py-10 min-h-[500px] flex items-center">
-        <Hero />
-      </section>
-
-      <section className="bg-WhiteSecondary dark:bg-BlackSecondary py-10">
-        <Skills />
-      </section>
-
-      <section className="bg-WhitePrimary dark:bg-BlackPrimary py-10">
-        <Projects />
-      </section>
-
+      <Hero />
+      <Skills skills={skills.data} />
+      <Projects categories={categories.data} />
       <section id="contact">
         <Contact />
       </section>

@@ -1,8 +1,8 @@
 "use client";
 
+import SectionEntry from "@/components/SectionEntry";
 import { useTheme } from "next-themes";
 
-import SectionEntry from "../SectionEntry";
 import Image from "next/image";
 
 type findData = {
