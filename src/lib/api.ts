@@ -69,7 +69,9 @@ export const getProjects = async (
     "category-id": query.categoryId,
   });
 
-  const response = await fetch(`/api/projects?${searchParams.toString()}`);
+  const response = await fetch(`/api/projects?${searchParams.toString()}`, {
+    next: { revalidate: 3600 * 24 },
+  });
   if (!response.ok) {
     throw new AppError("something went wrong", response.status);
   }
