@@ -5,7 +5,8 @@ import {
   getCategoryById,
   updateCategory,
 } from "@/data-access/category";
-import { AppError, NotFoundError } from "@/lib/error";
+import { User } from "@/dto/users";
+import { AppError, AuthError, NotFoundError } from "@/lib/error";
 import { Id } from "@/lib/schema";
 import { utapi } from "@/lib/upload-thing";
 import { CreateCategory, UpdateCategory } from "@/schema/category";
@@ -21,7 +22,12 @@ export const getCategoryByIdUseCase = async (id: Id) => {
   return category;
 };
 
-export const createCategoryUseCase = async (data: CreateCategory) => {
+export const createCategoryUseCase = async (
+  data: CreateCategory,
+  user?: User
+) => {
+  if (!user?.isAdmin) throw new AuthError();
+
   const { image, ...rest } = data;
   const { data: udata, error } = await utapi.uploadFiles(image);
   if (error) throw new AppError("Error uploading image");
@@ -31,7 +37,12 @@ export const createCategoryUseCase = async (data: CreateCategory) => {
     image: udata.key,
   });
 };
-export const updateCategoryUseCase = async (data: UpdateCategory) => {
+export const updateCategoryUseCase = async (
+  data: UpdateCategory,
+  user?: User
+) => {
+  if (!user?.isAdmin) throw new AuthError();
+
   const category = await getCategoryByIdUseCase(data.id); // this will throw if not found
   const { image, ...rest } = data;
 
@@ -52,7 +63,8 @@ export const updateCategoryUseCase = async (data: UpdateCategory) => {
   });
 };
 
-export const deleteCategoryUseCase = async (id: Id) => {
+export const deleteCategoryUseCase = async (id: Id, user?: User) => {
+  if (!user?.isAdmin) throw new AuthError();
   const category = await getCategoryByIdUseCase(id);
 
   await Promise.all([utapi.deleteFiles(category.image), deleteCategory(id)]);

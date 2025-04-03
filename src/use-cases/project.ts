@@ -5,7 +5,8 @@ import {
   getProjects,
   updateProject,
 } from "@/data-access/project";
-import { AppError, NotFoundError } from "@/lib/error";
+import { User } from "@/dto/users";
+import { AppError, AuthError, NotFoundError } from "@/lib/error";
 import { Id } from "@/lib/schema";
 import { utapi } from "@/lib/upload-thing";
 import { CreateProject, UpdateProject } from "@/schema/project";
@@ -22,7 +23,12 @@ export const getProjectByIdUseCase = async (id: Id) => {
   return project;
 };
 
-export const createProjectUseCase = async (data: CreateProject) => {
+export const createProjectUseCase = async (
+  data: CreateProject,
+  user?: User
+) => {
+  if (!user?.isAdmin) throw new AuthError();
+
   const { image, ...rest } = data;
   const uploadedImage = await utapi.uploadFiles(image);
   if (uploadedImage.error) throw new AppError("Error uploading image");
@@ -33,7 +39,12 @@ export const createProjectUseCase = async (data: CreateProject) => {
   });
 };
 
-export const updateProjectUseCase = async (data: UpdateProject) => {
+export const updateProjectUseCase = async (
+  data: UpdateProject,
+  user?: User
+) => {
+  if (!user?.isAdmin) throw new AuthError();
+
   const project = await getProjectByIdUseCase(data.id); // this will throw if not found
   const { image, ...rest } = data;
 
@@ -54,7 +65,9 @@ export const updateProjectUseCase = async (data: UpdateProject) => {
   });
 };
 
-export const deleteProjectUseCase = async (id: Id) => {
+export const deleteProjectUseCase = async (id: Id, user?: User) => {
+  if (!user?.isAdmin) throw new AuthError();
+
   const project = await getProjectByIdUseCase(id);
 
   await Promise.all([utapi.deleteFiles(project.image), deleteProject(id)]);
