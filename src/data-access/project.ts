@@ -72,9 +72,11 @@ export const getProjectById = async (id: Id) => {
   });
 
   if (!post) return null;
+
+  const { projectCategories, ...rest } = post;
   return projectDtoMapper({
-    ...post,
-    categories: post.projectCategories.map((item) => item.category),
+    ...rest,
+    categories: projectCategories.map((item) => item.category),
   });
 };
 
