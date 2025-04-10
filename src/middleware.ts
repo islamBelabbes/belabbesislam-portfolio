@@ -10,7 +10,7 @@ export default authMiddleware({
 
     if (!auth.isPublicRoute && auth.userId) {
       const { sessionClaims } = auth;
-      if (sessionClaims?.is_admin !== "true")
+      if (sessionClaims?.isAdmin !== "true")
         return NextResponse.redirect(new URL(req.url).origin);
     }
   },
