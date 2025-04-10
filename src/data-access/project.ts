@@ -26,6 +26,8 @@ export const getProjects = async ({
     },
     limit,
     offset: (page - 1) * limit,
+    orderBy: (fields, { desc }) => desc(fields.createdAt),
+
     ...(categoryId && {
       where: (project, { eq, exists, and }) =>
         exists(

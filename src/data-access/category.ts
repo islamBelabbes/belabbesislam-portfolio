@@ -19,6 +19,8 @@ export const getCategories = async ({
   const categories = await db.query.categoriesTable.findMany({
     limit,
     offset: (page - 1) * limit,
+    orderBy: (fields, { desc }) => desc(fields.createdAt),
+
     ...(!showEmpty && {
       where: (categories, { exists }) => {
         return exists(
