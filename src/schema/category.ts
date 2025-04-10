@@ -4,14 +4,14 @@ import { z } from "zod";
 import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { ImageSchema, PaginationSchema, idSchema } from "@/lib/schema";
 
-const CreateCategorySchema = createInsertSchema(categoriesTable, {
+export const CreateCategorySchema = createInsertSchema(categoriesTable, {
   name: z.string(),
   image: ImageSchema,
 }).omit({
   id: true,
   createdAt: true,
 });
-const updateCategorySchema = createUpdateSchema(categoriesTable, {
+export const updateCategorySchema = createUpdateSchema(categoriesTable, {
   id: idSchema,
   image: ImageSchema.optional(),
 }).omit({
@@ -19,7 +19,10 @@ const updateCategorySchema = createUpdateSchema(categoriesTable, {
 });
 
 export const getCategoriesSchema = z.object({
-  showEmpty: z.boolean().optional(),
+  showEmpty: z
+    .union([z.literal("true"), z.literal("false")])
+    .transform((val) => val === "true")
+    .optional(),
 });
 
 export type CreateCategory = z.infer<typeof CreateCategorySchema>;
