@@ -1,8 +1,10 @@
+import { User } from "@/dto/users";
 import apiResponse from "@/lib/api-response";
 import { PaginationSchema } from "@/lib/schema";
+import withAuth from "@/lib/with-auth";
 import withErrorHandler from "@/lib/with-error-handling";
-import { getProjectsSchema } from "@/schema/project";
-import { getProjectsUseCase } from "@/use-cases/project";
+import { createProjectSchema, getProjectsSchema } from "@/schema/project";
+import { createProjectUseCase, getProjectsUseCase } from "@/use-cases/project";
 import { NextRequest, NextResponse } from "next/server";
 
 async function getHandler(req: NextRequest) {
@@ -25,4 +27,27 @@ async function getHandler(req: NextRequest) {
   return NextResponse.json(response, { status: response.status });
 }
 
+async function postHandler(req: NextRequest, _: any, user: User) {
+  const formData = await req.formData();
+  const body = {
+    title: formData.get("title"),
+    image: formData.get("image"),
+    url: formData.get("url"),
+    description: formData.get("description"),
+  };
+
+  const validatedBody = createProjectSchema.parse(body);
+
+  const post = await createProjectUseCase({ ...validatedBody }, user);
+
+  const response = apiResponse({
+    success: true,
+    message: "post created successfully",
+    status: 201,
+    data: post,
+  });
+  return NextResponse.json(response, { status: response.status });
+}
+
 export const GET = withErrorHandler(getHandler);
+export const POST = withErrorHandler(withAuth(postHandler));
