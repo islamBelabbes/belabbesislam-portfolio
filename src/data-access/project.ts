@@ -104,7 +104,7 @@ export const updateProject = async ({
   ...data
 }: Omit<UpdateProject, "image"> & { image?: string }) => {
   return db.transaction(async (tx) => {
-    await db
+    await tx
       .delete(projectCategoriesTable)
       .where(eq(projectCategoriesTable.projectId, id));
 
