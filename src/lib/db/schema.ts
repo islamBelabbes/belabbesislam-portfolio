@@ -21,7 +21,6 @@ export const categoriesTable = pgTable(
         startWith: 1,
         increment: 1,
         minValue: 1,
-        maxValue: 9223372036854775807,
         cache: 1,
       })
       .notNull(),
@@ -50,7 +49,6 @@ export const projectsTable = pgTable(
       startWith: 1,
       increment: 1,
       minValue: 1,
-      maxValue: 9223372036854775807,
       cache: 1,
     }),
     createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
@@ -84,12 +82,12 @@ export const projectCategoriesTable = pgTable(
       columns: [table.categoryId],
       foreignColumns: [categoriesTable.id],
       name: "public_project categories_category_id_fkey",
-    }),
+    }).onDelete("cascade"),
     foreignKey({
       columns: [table.projectId],
       foreignColumns: [projectsTable.id],
       name: "public_project categories_project_id_fkey",
-    }),
+    }).onDelete("cascade"),
     primaryKey({
       columns: [table.projectId, table.categoryId],
       name: "project_categories_pkey",
