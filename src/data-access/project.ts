@@ -100,6 +100,7 @@ export const createProject = async (
 
 export const updateProject = async ({
   id,
+  categories,
   ...data
 }: Omit<UpdateProject, "image"> & { image?: string }) => {
   return db.transaction(async (tx) => {
@@ -108,11 +109,13 @@ export const updateProject = async ({
       .where(eq(projectCategoriesTable.projectId, id));
 
     await tx.insert(projectCategoriesTable).values(
-      data.categories.map((category) => ({
+      categories.map((category) => ({
         projectId: id,
         categoryId: category,
       }))
     );
+
+    await tx.update(projectsTable).set(data).where(eq(projectsTable.id, id));
   });
 };
 
