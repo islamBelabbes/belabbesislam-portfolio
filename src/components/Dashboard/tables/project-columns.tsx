@@ -4,15 +4,16 @@ import Image from "next/image";
 import { ColumnDef } from "@tanstack/react-table";
 import { Link as LinkIcon } from "lucide-react";
 
-import { TCategory, TProject } from "@/types";
 import { cn } from "@/lib/utils";
 import CategoriesTag from "@/components/CategoriesTag";
-import Actions from "../Actions";
+import { MEDIA_URL } from "@/constants/constants";
+import { Category } from "@/dto/categories";
+import { Project } from "@/dto/projects";
+import Actions from "./actions";
 
-export const columns: ColumnDef<TProject>[] = [
+export const columns: ColumnDef<Project>[] = [
   {
     id: "id",
-    enableHiding: true,
   },
   {
     accessorKey: "image",
@@ -22,9 +23,7 @@ export const columns: ColumnDef<TProject>[] = [
       return (
         <div className="w-full h-[200px] relative rounded">
           <Image
-            src={`${
-              process.env.NEXT_PUBLIC_SUPABASE_MEDIA_URL
-            }/projects/${getValue<string>()}`}
+            src={`${MEDIA_URL}/${getValue<string>()}`}
             alt="image"
             fill
             className="object-cover rounded"
@@ -36,16 +35,15 @@ export const columns: ColumnDef<TProject>[] = [
   {
     accessorKey: "title",
     header: "Title",
-    size: 100,
+    size: 200,
   },
 
   {
     accessorKey: "categories",
     header: "Categories",
     cell({ getValue }) {
-      let categories = getValue<TCategory[]>();
+      let categories = getValue<Category[]>();
 
-      if (!categories) return;
       const take = 4;
       let Remaining = 0;
 
@@ -95,17 +93,12 @@ export const columns: ColumnDef<TProject>[] = [
   {
     id: "actions",
     size: 100,
-    cell: ({ row, table }) => {
+    cell: ({ row }) => {
       const data = row.original;
-      const meta = table.options.meta;
-      const isLoading = meta?.paddingColumns?.includes(data.id) || false;
       return (
         <Actions
-          id={data.id}
-          isLoading={isLoading}
-          onDelete={(id) => meta?.handleDelete?.(id)}
-          editPath="dashboard/project"
-          label="project"
+          deleteRoute={`projects/${data.id}`}
+          updateRoute={`/dashboard/project/${data.id}`}
         />
       );
     },

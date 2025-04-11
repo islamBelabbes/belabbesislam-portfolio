@@ -1,25 +1,29 @@
 import React from "react";
 
-import { ProjectsTable } from "@/components/Dashboard/tables/projectsTable/data-table";
-import { projectsTableDataLimit } from "@/constants/constants";
-import { fetchProjectsTableData } from "@/lib/api";
-import { tryCatch } from "@/lib/utils";
+import { getProjectsUseCase } from "@/use-cases/project";
+import { DataTable } from "@/components/Dashboard/tables/data-table";
+import { columns } from "@/components/Dashboard/tables/project-columns";
+import { PageSchema } from "@/lib/schema";
 
 export const revalidate = 0;
 
-async function page() {
-  const { data, error } = await tryCatch(
-    fetchProjectsTableData({ index: 0, limit: projectsTableDataLimit })
-  );
-
-  if (error || !data) throw new Error("something went wrong");
+const LIMIT = 10;
+async function page({
+  searchParams,
+}: {
+  searchParams: Promise<{ page: string }>;
+}) {
+  const _page = (await searchParams).page;
+  const page = PageSchema.parse(_page);
+  const projects = await getProjectsUseCase({ limit: LIMIT, page });
 
   return (
-    <ProjectsTable
-      initialData={data}
-      withPaginate
-      limit={projectsTableDataLimit}
-      queryKey="table_projects"
+    <DataTable
+      data={projects.data}
+      columns={columns}
+      withPagination
+      total={projects.total}
+      limit={LIMIT}
     />
   );
 }
