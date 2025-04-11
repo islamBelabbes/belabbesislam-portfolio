@@ -29,11 +29,13 @@ async function getHandler(req: NextRequest) {
 
 async function postHandler(req: NextRequest, _: any, user: User) {
   const formData = await req.formData();
+  const categories = formData.getAll("categories");
   const body = {
     title: formData.get("title"),
     image: formData.get("image"),
-    url: formData.get("url"),
+    url: formData.get("url") || undefined,
     description: formData.get("description"),
+    categories: categories,
   };
 
   const validatedBody = createProjectSchema.parse(body);

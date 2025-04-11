@@ -83,14 +83,37 @@ export const getProjectById = async (id: Id) => {
 export const createProject = async (
   data: Omit<CreateProject, "image"> & { image: string }
 ) => {
-  return db.insert(projectsTable).values(data);
+  return db.transaction(async (tx) => {
+    const [id] = await tx
+      .insert(projectsTable)
+      .values(data)
+      .returning({ id: projectsTable.id });
+
+    await tx.insert(projectCategoriesTable).values(
+      data.categories.map((category) => ({
+        projectId: id.id,
+        categoryId: category,
+      }))
+    );
+  });
 };
 
 export const updateProject = async ({
   id,
   ...data
 }: Omit<UpdateProject, "image"> & { image?: string }) => {
-  return db.update(projectsTable).set(data).where(eq(projectsTable.id, id));
+  return db.transaction(async (tx) => {
+    await db
+      .delete(projectCategoriesTable)
+      .where(eq(projectCategoriesTable.projectId, id));
+
+    await tx.insert(projectCategoriesTable).values(
+      data.categories.map((category) => ({
+        projectId: id,
+        categoryId: category,
+      }))
+    );
+  });
 };
 
 export const deleteProject = async (id: Id) => {

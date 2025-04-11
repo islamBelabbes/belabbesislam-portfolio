@@ -8,19 +8,27 @@ export const createProjectSchema = createInsertSchema(projectsTable, {
   url: z.string().url().optional(),
   description: z.string().optional(),
   image: ImageSchema,
-}).omit({
-  createdAt: true,
-  id: true,
-});
+})
+  .omit({
+    createdAt: true,
+    id: true,
+  })
+  .extend({
+    categories: z.array(idSchema).min(1),
+  });
 
 export const updateProjectSchema = createUpdateSchema(projectsTable, {
   id: idSchema,
   url: z.string().url().optional(),
   description: z.string().optional(),
   image: ImageSchema.optional(),
-}).omit({
-  createdAt: true,
-});
+})
+  .omit({
+    createdAt: true,
+  })
+  .extend({
+    categories: z.array(idSchema).min(1),
+  });
 
 export const getProjectsSchema = z.object({
   categoryId: idSchema.optional(),

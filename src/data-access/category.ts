@@ -46,6 +46,14 @@ export const getCategoryById = async (id: Id) => {
   return categoryDtoMapper(category);
 };
 
+export const getCategoriesByIds = async (ids: Id[]) => {
+  const categories = await db.query.categoriesTable.findMany({
+    where: (table, { inArray }) => inArray(table.id, ids),
+  });
+
+  return categories.map(categoryDtoMapper);
+};
+
 export const createCategory = async (
   data: Omit<CreateCategory, "image"> & { image: string }
 ) => {

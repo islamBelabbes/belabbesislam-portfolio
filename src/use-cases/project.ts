@@ -14,6 +14,7 @@ import { utapi } from "@/lib/upload-thing";
 import { CreateProject, GetProjects, UpdateProject } from "@/schema/project";
 import { QueryWithPagination } from "@/types";
 import generatePagination from "@/lib/generate-pagination";
+import { getCategoriesByIds } from "@/data-access/category";
 
 export const getProjectsUseCase = async ({
   limit = PAGINATION.LIMIT,
@@ -47,6 +48,12 @@ export const createProjectUseCase = async (
 ) => {
   if (!user?.isAdmin) throw new AuthError();
 
+  const categories = await getCategoriesByIds(data.categories);
+
+  if (categories.length !== data.categories.length) {
+    throw new AppError("one or more Invalid categories", 400);
+  }
+
   const { image, ...rest } = data;
   const uploadedImage = await utapi.uploadFiles(image);
   if (uploadedImage.error) throw new AppError("Error uploading image");
@@ -62,9 +69,15 @@ export const updateProjectUseCase = async (
   user?: User
 ) => {
   if (!user?.isAdmin) throw new AuthError();
-
-  const project = await getProjectByIdUseCase(data.id); // this will throw if not found
   const { image, ...rest } = data;
+
+  const project = await getProjectByIdUseCase(rest.id); // this will throw if not found
+
+  const categories = await getCategoriesByIds(data.categories);
+
+  if (categories.length !== data.categories.length) {
+    throw new AppError("one or more Invalid categories", 400);
+  }
 
   let _image: string | undefined;
   if (image) {
