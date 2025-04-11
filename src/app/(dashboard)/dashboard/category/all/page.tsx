@@ -15,7 +15,11 @@ async function page({
 }) {
   const _page = (await searchParams).page;
   const page = PageSchema.parse(_page);
-  const categories = await getCategoriesUseCase({ limit: LIMIT, page });
+  const categories = await getCategoriesUseCase({
+    limit: LIMIT,
+    page,
+    showEmpty: true,
+  });
 
   return (
     <DataTable

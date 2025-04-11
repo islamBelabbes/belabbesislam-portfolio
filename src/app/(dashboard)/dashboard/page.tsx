@@ -20,6 +20,7 @@ async function page() {
   });
   const categoriesPromise = getCategoriesUseCase({
     limit: limit,
+    showEmpty: true,
   });
 
   const [projects, categories] = await Promise.all([
