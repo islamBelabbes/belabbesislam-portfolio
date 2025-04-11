@@ -8,6 +8,7 @@ import { GetProjects } from "@/schema/project";
 export const deleteEntry = async (route: string) => {
   const response = await fetch(`/api/${route}`, {
     method: "DELETE",
+    credentials: "include",
   });
 
   if (!response.ok) {
