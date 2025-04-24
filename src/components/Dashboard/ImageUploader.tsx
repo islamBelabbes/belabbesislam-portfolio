@@ -1,53 +1,41 @@
-import React, { useEffect } from "react";
+import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { Button } from "../ui/button";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { ClassValue } from "clsx";
-import { toast } from "react-toastify";
-import { TOAST_IDs } from "@/constants/constants";
-import { boolean } from "zod";
+import { MEDIA_URL } from "@/constants/constants";
 
-type TImageUploaderProps = {
-  image: null | string;
-  setImage: (image: null | string) => void;
-  className?: ClassValue;
+type ImageUploadProps = {
+  image: File | null;
+  setImage: (image: File | null) => void;
+  placeholder?: string;
+  className?: string;
   disabled?: boolean;
-  [key: string]: any;
 };
 
 const ImageUploader = ({
   image,
   setImage,
   className,
+  placeholder,
   disabled = false,
-  ...props
-}: TImageUploaderProps) => {
+}: ImageUploadProps) => {
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    if (!acceptedFiles[0]) return;
+    setImage(acceptedFiles[0]);
+  }, []);
+
   const { getRootProps, getInputProps } = useDropzone({
-    maxFiles: 1,
-    multiple: false,
+    onDrop,
     accept: {
-      "image/png": [".png"],
-      "image/jpeg": [".jpeg"],
+      "image/png": [".png", ".jpg", ".jpeg"],
     },
-    onDropRejected: (fileRejections) => {
-      return toast.error(fileRejections[0].errors[0].message, {
-        toastId: TOAST_IDs.fileError,
-      });
-    },
-    onDropAccepted: (acceptedFiles) => {
-      if (acceptedFiles.length !== 0) {
-        setImage(URL.createObjectURL(acceptedFiles[0]));
-      }
-      return toast.dismiss(TOAST_IDs.fileError);
-    },
+    multiple: true,
   });
 
   const handleRemove = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
     setImage(null);
   };
-
   return (
     <div
       {...getRootProps({
@@ -58,7 +46,7 @@ const ImageUploader = ({
         className
       )}
     >
-      <input {...getInputProps({ className: "dropzone", ...props })} disabled />
+      <input {...getInputProps({ className: "dropzone" })} disabled />
       <div className="flex gap-2 flex-col items-center relative h-[360px] ">
         <div className="!absolute !z-10  flex flex-col gap-2 justify-center items-center overlay">
           <div className="flex gap-2">
@@ -79,9 +67,9 @@ const ImageUploader = ({
           <span className="text-white">or drag and drop</span>
         </div>
         <div className="w-full flex relative h-full">
-          {image ? (
+          {image || placeholder ? (
             <img
-              src={image}
+              src={image ? URL.createObjectURL(image) : placeholder}
               alt="project"
               className="object-cover w-full h-full"
             />
