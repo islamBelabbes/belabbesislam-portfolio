@@ -4,7 +4,7 @@ import { z } from "zod";
 import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { ImageSchema, PaginationSchema, idSchema } from "@/lib/schema";
 
-export const CreateCategorySchema = createInsertSchema(categoriesTable, {
+export const createCategorySchema = createInsertSchema(categoriesTable, {
   name: z.string(),
   image: ImageSchema,
 }).omit({
@@ -25,6 +25,6 @@ export const getCategoriesSchema = z.object({
     .optional(),
 });
 
-export type CreateCategory = z.infer<typeof CreateCategorySchema>;
+export type CreateCategory = z.infer<typeof createCategorySchema>;
 export type UpdateCategory = z.infer<typeof updateCategorySchema>;
 export type GetCategories = z.infer<typeof getCategoriesSchema>;
