@@ -56,8 +56,6 @@ function TableActions({ deleteRoute, updateRoute }: TTableActionsProps) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-
-      {/* <ClipLoader size={14} /> */}
     </div>
   );
 }
