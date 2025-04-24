@@ -3,7 +3,7 @@ import apiResponse from "@/lib/api-response";
 import { PaginationSchema } from "@/lib/schema";
 import withAuth from "@/lib/with-auth";
 import withErrorHandler from "@/lib/with-error-handling";
-import { CreateCategorySchema, getCategoriesSchema } from "@/schema/category";
+import { createCategorySchema, getCategoriesSchema } from "@/schema/category";
 import {
   createCategoryUseCase,
   getCategoriesUseCase,
@@ -39,13 +39,13 @@ async function postHandler(req: NextRequest, _: any, user: User) {
     image: formData.get("image"),
   };
 
-  const validatedBody = CreateCategorySchema.parse(body);
-  const category = await createCategoryUseCase({ ...validatedBody }, user);
+  const validatedBody = createCategorySchema.parse(body);
+  const created = await createCategoryUseCase({ ...validatedBody }, user);
   const response = apiResponse({
     success: true,
     message: "category created successfully",
     status: 201,
-    data: category,
+    data: created,
   });
   return NextResponse.json(response, { status: response.status });
 }

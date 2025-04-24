@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
-import { deleteEntry } from "../api";
+import { createCategory, deleteEntry, updateCategory } from "../api";
+import { CreateCategory, UpdateCategory } from "@/schema/category";
 
 export const useDeleteEntryMutation = () => {
   return useMutation({
@@ -7,5 +8,17 @@ export const useDeleteEntryMutation = () => {
       return deleteEntry(route);
     },
     mutationKey: ["delete-entry"],
+  });
+};
+
+export const useCreateCategoryMutation = () => {
+  return useMutation({
+    mutationFn: (data: CreateCategory) => createCategory(data),
+  });
+};
+
+export const useUpdateCategoryMutation = () => {
+  return useMutation({
+    mutationFn: (data: UpdateCategory) => updateCategory(data),
   });
 };

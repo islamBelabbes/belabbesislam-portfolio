@@ -1,99 +1,68 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { v4 as uuidv4 } from "uuid";
-import { useMutation } from "@tanstack/react-query";
-import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next13-progressbar";
 
-import { categoryFormSchema } from "@/lib/schema";
-import useSupabaseWithAuth from "@/hooks/useSupabaseWithAuth";
-import { TCategory, TCategoryForm } from "@/types";
-import { urlToBlob } from "@/lib/utils";
+import { getDirtyFields } from "@/lib/utils";
+import { Category } from "@/dto/categories";
+import {
+  CreateCategory,
+  createCategorySchema,
+  UpdateCategory,
+  updateCategorySchema,
+} from "@/schema/category";
+import { toast } from "react-toastify";
+import {
+  useCreateCategoryMutation,
+  useUpdateCategoryMutation,
+} from "@/lib/react-query/mutations";
+import { safeAsync } from "@/lib/safe";
 
-const useCategoryForm = ({ initialData, isUpdate }: TCategoryForm) => {
+type CategoryFormValues = CreateCategory | UpdateCategory;
+
+const useCategoryForm = ({ initial }: { initial?: Category }) => {
   const router = useRouter();
-  const { createSupabaseClient } = useSupabaseWithAuth();
-  const { register, control, formState, handleSubmit } = useForm<TCategory>({
-    resolver: zodResolver(categoryFormSchema),
-    defaultValues: initialData,
-  });
-
-  const { mutateAsync: createAsync, isPending: isCreating } = useMutation({
-    mutationFn: async (data: TCategory) => {
-      const supabase = await createSupabaseClient();
-
-      const imageToUpload = await urlToBlob(data.image);
-      if (!imageToUpload) throw new Error("image not found");
-
-      const { data: mediaData, error: mediaError } = await supabase.storage
-        .from("media")
-        .upload(`categories/${uuidv4()}.jpg`, imageToUpload);
-
-      if (mediaError) throw mediaError;
-
-      const { error, data: category } = await supabase
-        .from("categories")
-        .insert({
-          name: data.name,
-          image: mediaData.path.split("categories/")[1],
-        })
-        .select();
-
-      if (error) throw error;
-      return category;
+  const form = useForm<CategoryFormValues>({
+    resolver: zodResolver(
+      initial ? updateCategorySchema : createCategorySchema
+    ),
+    defaultValues: {
+      id: initial?.id,
+      name: initial?.name,
     },
   });
 
-  const { mutateAsync: updateAsync, isPending: isUpdating } = useMutation({
-    mutationFn: async (data: TCategory) => {
-      if (!initialData?.id) throw new Error("id not found");
-      let newImage: string | null = null;
-      const supabase = await createSupabaseClient();
-      // check if the image have been changed!!
-      if (data.image !== initialData?.image) {
-      }
+  const createMutation = useCreateCategoryMutation();
+  const updateMutation = useUpdateCategoryMutation();
 
-      const { error } = await supabase.rpc("update_category", {
-        id: initialData?.id,
-        name: data.name,
-        image: data.image.split("/categories/")[1],
-      });
+  const onSubmit = async (data: CategoryFormValues) => {
+    if ("id" in data && initial) {
+      const dirtyFields = form.formState.dirtyFields;
+      const dirtyData = {
+        ...(getDirtyFields(dirtyFields, data) as UpdateCategory),
+        id: data.id,
+      };
 
-      if (error) throw error;
-      return true;
-    },
-  });
+      const category = await safeAsync(updateMutation.mutateAsync(dirtyData));
+      if (!category.success)
+        return toast.error("there was an error updating the category");
 
-  const onCreate = async (data: TCategory) => {
-    const res = await toast.promise(createAsync(data), {
-      error: "something went wrong",
-      success: "success",
-      pending: "pending",
-    });
+      toast.success("category updated successfully");
+      return router.refresh();
+    }
 
-    router.push(`/dashboard/category/${res[0]?.id}`);
+    const category = await safeAsync(
+      createMutation.mutateAsync(data as CreateCategory)
+    );
+    if (!category.success) return toast.error("");
+
+    toast.success("category created successfully");
+    router.push(`/dashboard/category/${category.data.id}`);
+    return router.refresh();
   };
-
-  const onUpdate = async (data: TCategory) => {
-    await toast.promise(updateAsync(data), {
-      error: "something went wrong",
-      success: "success",
-      pending: "pending",
-    });
-
-    router.refresh();
-  };
-
-  const isLoading = isCreating || isUpdating;
-  const onSubmit = isUpdate ? onUpdate : onCreate;
 
   return {
-    register,
-    control,
-    formState,
-    handleSubmit,
-    onSubmit,
-    isLoading,
+    ...form,
+    handleSubmit: form.handleSubmit(onSubmit),
   };
 };
 

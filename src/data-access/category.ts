@@ -57,14 +57,21 @@ export const getCategoriesByIds = async (ids: Id[]) => {
 export const createCategory = async (
   data: Omit<CreateCategory, "image"> & { image: string }
 ) => {
-  return db.insert(categoriesTable).values(data);
+  return db
+    .insert(categoriesTable)
+    .values(data)
+    .returning({ id: categoriesTable.id });
 };
 
 export const updateCategory = async ({
   id,
   ...data
 }: Omit<UpdateCategory, "image"> & { image?: string }) => {
-  return db.update(categoriesTable).set(data).where(eq(categoriesTable.id, id));
+  return db
+    .update(categoriesTable)
+    .set(data)
+    .where(eq(categoriesTable.id, id))
+    .returning({ id: categoriesTable.id });
 };
 
 export const deleteCategory = async (id: Id) => {

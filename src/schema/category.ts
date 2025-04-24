@@ -5,7 +5,7 @@ import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { ImageSchema, PaginationSchema, idSchema } from "@/lib/schema";
 
 export const createCategorySchema = createInsertSchema(categoriesTable, {
-  name: z.string(),
+  name: z.string().min(1),
   image: ImageSchema,
 }).omit({
   id: true,

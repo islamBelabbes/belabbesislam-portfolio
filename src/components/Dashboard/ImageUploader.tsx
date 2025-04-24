@@ -1,13 +1,11 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useDropzone } from "react-dropzone";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
-import { MEDIA_URL } from "@/constants/constants";
 
 type ImageUploadProps = {
-  image: File | null;
+  image: File | string | null;
   setImage: (image: File | null) => void;
-  placeholder?: string;
   className?: string;
   disabled?: boolean;
 };
@@ -16,7 +14,6 @@ const ImageUploader = ({
   image,
   setImage,
   className,
-  placeholder,
   disabled = false,
 }: ImageUploadProps) => {
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -32,10 +29,11 @@ const ImageUploader = ({
     multiple: true,
   });
 
-  const handleRemove = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.stopPropagation();
-    setImage(null);
-  };
+  const rendered = useMemo(() => {
+    if (!image) return undefined;
+    if (typeof image === "object") return URL.createObjectURL(image);
+    return image;
+  }, [image]);
   return (
     <div
       {...getRootProps({
@@ -49,27 +47,15 @@ const ImageUploader = ({
       <input {...getInputProps({ className: "dropzone" })} disabled />
       <div className="flex gap-2 flex-col items-center relative h-[360px] ">
         <div className="!absolute !z-10  flex flex-col gap-2 justify-center items-center overlay">
-          <div className="flex gap-2">
-            <Button type="button" className="w-fit" disabled={disabled}>
-              {image ? "Change" : "Upload"}
-            </Button>
-            {image && (
-              <Button
-                onClick={handleRemove}
-                type="button"
-                className="w-fit"
-                disabled={disabled}
-              >
-                Remove
-              </Button>
-            )}
-          </div>
+          <Button type="button" className="w-fit" disabled={disabled}>
+            {rendered ? "Change" : "Upload"}
+          </Button>
           <span className="text-white">or drag and drop</span>
         </div>
         <div className="w-full flex relative h-full">
-          {image || placeholder ? (
+          {rendered ? (
             <img
-              src={image ? URL.createObjectURL(image) : placeholder}
+              src={rendered}
               alt="project"
               className="object-cover w-full h-full"
             />

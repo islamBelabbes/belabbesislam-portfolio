@@ -54,10 +54,11 @@ export const createCategoryUseCase = async (
   const { data: udata, error } = await utapi.uploadFiles(image);
   if (error) throw new AppError("Error uploading image");
 
-  await createCategory({
+  const [created] = await createCategory({
     ...rest,
     image: udata.key,
   });
+  return created;
 };
 export const updateCategoryUseCase = async (
   data: UpdateCategory,
@@ -79,10 +80,11 @@ export const updateCategoryUseCase = async (
     _image = newImage.data.key;
   }
 
-  await updateCategory({
+  const [updated] = await updateCategory({
     ...rest,
     image: _image,
   });
+  return updated;
 };
 
 export const deleteCategoryUseCase = async (id: Id, user?: User) => {

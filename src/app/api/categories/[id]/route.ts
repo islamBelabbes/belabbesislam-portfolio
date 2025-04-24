@@ -43,13 +43,13 @@ async function patchHandler(
 
   const validatedBody = updateCategorySchema.parse(body);
 
-  const category = await updateCategoryUseCase({ ...validatedBody }, user);
+  const updated = await updateCategoryUseCase({ ...validatedBody }, user);
 
   const response = apiResponse({
     success: true,
     message: "category updated successfully",
     status: 200,
-    data: category,
+    data: updated,
   });
   return NextResponse.json(response, { status: response.status });
 }
