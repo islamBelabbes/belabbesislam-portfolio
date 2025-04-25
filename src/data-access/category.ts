@@ -1,7 +1,11 @@
 import { PAGINATION } from "@/constants/constants";
 import { categoryDtoMapper } from "@/dto/categories";
 import db from "@/lib/db";
-import { categoriesTable, projectCategoriesTable } from "@/lib/db/schema";
+import {
+  CategoryTable,
+  categoriesTable,
+  projectCategoriesTable,
+} from "@/lib/db/schema";
 import { Id } from "@/lib/schema";
 import {
   CreateCategory,
@@ -9,29 +13,43 @@ import {
   UpdateCategory,
 } from "@/schema/category";
 import { QueryWithPagination } from "@/types";
-import { count as drizzleCount, eq, exists } from "drizzle-orm";
+import { and, count as drizzleCount, eq, exists, like } from "drizzle-orm";
 
 export const getCategories = async ({
   limit = PAGINATION.LIMIT,
   page = PAGINATION.PAGE,
   showEmpty = false,
+  name,
 }: QueryWithPagination<GetCategories> = {}) => {
-  const categories = await db.query.categoriesTable.findMany({
-    limit,
-    offset: (page - 1) * limit,
-    orderBy: (fields, { desc }) => desc(fields.createdAt),
+  const whereClause = (
+    categories: (typeof db.query.categoriesTable)["table"],
+    { and, like, exists, eq }: any
+  ) => {
+    const conditions = [];
 
-    ...(!showEmpty && {
-      where: (categories, { exists }) => {
-        return exists(
+    if (!showEmpty) {
+      conditions.push(
+        exists(
           db
             .select({ id: projectCategoriesTable.projectId })
             .from(projectCategoriesTable)
             .where(eq(projectCategoriesTable.categoryId, categories.id))
             .limit(1)
-        );
-      },
-    }),
+        )
+      );
+    }
+
+    if (name) {
+      conditions.push(like(categories.name, `%${name}%`));
+    }
+
+    return and(...conditions);
+  };
+  const categories = await db.query.categoriesTable.findMany({
+    limit,
+    offset: (page - 1) * limit,
+    orderBy: (fields, { desc }) => desc(fields.createdAt),
+    ...(name || !showEmpty ? { where: whereClause } : {}),
   });
 
   return categories.map(categoryDtoMapper);
@@ -78,20 +96,36 @@ export const deleteCategory = async (id: Id) => {
   return db.delete(categoriesTable).where(eq(categoriesTable.id, id));
 };
 
-export const countCategories = async ({ showEmpty }: GetCategories = {}) => {
-  const countP = db.select({ count: drizzleCount() }).from(categoriesTable);
+export const countCategories = async ({
+  showEmpty,
+  name,
+}: GetCategories = {}) => {
+  const whereClause = () => {
+    const conditions = [];
 
-  if (!showEmpty) {
-    countP.where(
-      exists(
-        db
-          .select({ id: projectCategoriesTable.projectId })
-          .from(projectCategoriesTable)
-          .where(eq(projectCategoriesTable.categoryId, categoriesTable.id))
-          .limit(1)
-      )
-    );
-  }
+    if (!showEmpty) {
+      conditions.push(
+        exists(
+          db
+            .select({ id: projectCategoriesTable.projectId })
+            .from(projectCategoriesTable)
+            .where(eq(projectCategoriesTable.categoryId, categoriesTable.id))
+            .limit(1)
+        )
+      );
+    }
+
+    if (name) {
+      conditions.push(like(categoriesTable.name, `%${name}%`));
+    }
+
+    return and(...conditions);
+  };
+
+  const countP = db
+    .select({ count: drizzleCount() })
+    .from(categoriesTable)
+    .where(whereClause);
 
   const count = await countP;
 

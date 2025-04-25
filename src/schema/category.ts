@@ -23,6 +23,7 @@ export const getCategoriesSchema = z.object({
     .union([z.literal("true"), z.literal("false")])
     .transform((val) => val === "true")
     .optional(),
+  name: z.string().min(1).optional(),
 });
 
 export type CreateCategory = z.infer<typeof createCategorySchema>;

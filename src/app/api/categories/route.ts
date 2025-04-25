@@ -15,9 +15,10 @@ async function getHandler(req: NextRequest) {
   const page = url.searchParams.get("page");
   const limit = url.searchParams.get("limit");
   const showEmpty = url.searchParams.get("show-empty") ?? undefined;
+  const name = url.searchParams.get("name") ?? undefined;
 
   const pagination = PaginationSchema.parse({ page, limit });
-  const validated = getCategoriesSchema.parse({ showEmpty });
+  const validated = getCategoriesSchema.parse({ showEmpty, name });
   const categories = await getCategoriesUseCase({
     ...pagination,
     ...validated,
