@@ -19,8 +19,6 @@ function CategoryForm({ initial }: { initial?: Category }) {
   });
 
   const cover = initial?.image ? `${MEDIA_URL}/${initial.image}` : null;
-  console.log(formState.errors);
-
   return (
     <div>
       <BlockUi isBlock={formState.isSubmitting}>
