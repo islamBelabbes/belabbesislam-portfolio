@@ -16,10 +16,13 @@ const ImageUploader = ({
   className,
   disabled = false,
 }: ImageUploadProps) => {
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    if (!acceptedFiles[0]) return;
-    setImage(acceptedFiles[0]);
-  }, []);
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      if (!acceptedFiles[0]) return;
+      setImage(acceptedFiles[0]);
+    },
+    [setImage]
+  );
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,

@@ -17,7 +17,6 @@ import { getDirtyFields } from "@/lib/utils";
 import { safeAsync } from "@/lib/safe";
 import { toast } from "react-toastify";
 import { useState } from "react";
-import { Id } from "@/lib/schema";
 
 type ProjectFormValues = CreateProject | UpdateProject;
 
@@ -28,11 +27,11 @@ export const isInSelectedCategories = (
   return selectedCategories?.some((item) => item.id === category?.id);
 };
 
-const useProjectForm = ({ initial }: { initial: Project }) => {
+const useProjectForm = ({ initial }: { initial?: Project }) => {
   const router = useRouter();
-  const [selectedCategories, setSelectedCategories] = useState<Category[]>([
-    ...initial?.categories,
-  ]);
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>(
+    initial ? [...initial.categories] : []
+  );
   const form = useForm<ProjectFormValues>({
     resolver: zodResolver(initial ? updateProjectSchema : createProjectSchema),
     defaultValues: {

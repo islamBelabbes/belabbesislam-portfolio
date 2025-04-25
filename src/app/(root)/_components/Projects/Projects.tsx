@@ -1,9 +1,7 @@
 "use client";
 import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
 import Categories from "./Categories";
-import { createSupabaseClient } from "@/lib/supabase";
-import { useMemo, useState } from "react";
-import { TProject } from "@/types";
+import { useState } from "react";
 
 import { ClipLoader } from "react-spinners";
 import { Category } from "@/dto/categories";
@@ -16,13 +14,6 @@ import { cn } from "@/lib/utils";
 import { getProjects } from "@/lib/api";
 import { Project } from "@/dto/projects";
 import { MEDIA_URL } from "@/constants/constants";
-
-const limit = 4;
-
-type TLoadMoreButtonProps = {
-  isFetchingNextPage: boolean;
-  fetchNextPage: () => void;
-};
 
 function Projects({ categories }: { categories: Category[] }) {
   const [selectedCategory, setSelectedCategory] = useState<Category>(

@@ -1,16 +1,16 @@
-import { TCategory } from "@/types";
+import { Category } from "@/dto/categories";
 import { X } from "lucide-react";
 import React from "react";
 
 type TCategoriesTag = {
-  item: TCategory;
+  item: Category;
   isRemovable?: null | undefined;
 };
 
 type TCategoriesTagRemovable = {
   isRemovable: true;
   onRemove: () => void;
-  item: TCategory;
+  item: Category;
 };
 
 type TCategoriesTagProps = TCategoriesTag | TCategoriesTagRemovable;

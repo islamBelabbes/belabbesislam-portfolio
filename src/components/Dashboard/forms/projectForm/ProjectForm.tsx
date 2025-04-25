@@ -16,11 +16,10 @@ import { Project } from "@/dto/projects";
 import { MEDIA_URL } from "@/constants/constants";
 import { Category } from "@/dto/categories";
 
-const ProjectForm = ({ initial }: { initial: Project }) => {
-  const { form, onSelect, selectedCategories, setSelectedCategories } =
-    useProjectForm({
-      initial,
-    });
+const ProjectForm = ({ initial }: { initial?: Project }) => {
+  const { form, onSelect, selectedCategories } = useProjectForm({
+    initial,
+  });
   const cover = initial?.image ? `${MEDIA_URL}/${initial.image}` : null;
   const isDirtyAlt = !!Object.keys(form.formState.dirtyFields).length;
 
