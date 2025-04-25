@@ -14,11 +14,13 @@ import { Category } from "@/dto/categories";
 import { MEDIA_URL } from "@/constants/constants";
 
 function CategoryForm({ initial }: { initial?: Category }) {
-  const { register, control, formState, handleSubmit } = useCategoryForm({
-    initial,
-  });
+  const { register, control, formState, handleSubmit, ...form } =
+    useCategoryForm({
+      initial,
+    });
 
   const cover = initial?.image ? `${MEDIA_URL}/${initial.image}` : null;
+  const isDirtyAlt = !!Object.keys(formState.dirtyFields).length;
   return (
     <div>
       <BlockUi isBlock={formState.isSubmitting}>
@@ -39,9 +41,8 @@ function CategoryForm({ initial }: { initial?: Category }) {
             </div>
 
             <Button
-              disabled={formState.isSubmitting}
+              disabled={formState.isSubmitting || !isDirtyAlt}
               className="w-full mt-3"
-              type="submit"
             >
               {initial ? "Update" : "Create"}
             </Button>

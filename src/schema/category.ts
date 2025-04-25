@@ -12,6 +12,7 @@ export const createCategorySchema = createInsertSchema(categoriesTable, {
   createdAt: true,
 });
 export const updateCategorySchema = createUpdateSchema(categoriesTable, {
+  name: z.string().min(1),
   id: idSchema,
   image: ImageSchema.optional(),
 }).omit({
