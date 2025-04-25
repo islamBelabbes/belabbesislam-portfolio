@@ -1,8 +1,6 @@
 import { TApiResponse } from "@/lib/api-response";
 import { Pagination } from "@/lib/generate-pagination";
-import { categoryFormSchema, projectFormSchema } from "@/lib/schema";
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 
 export type TODO = any; // this is placeholder type
 
@@ -11,13 +9,6 @@ export type TDashboardMenuItems = {
   href: string;
   icon: JSX.Element;
   subMenu?: TDashboardMenuItems[] | null;
-};
-
-export type TToken = { token: string | null };
-
-export type TTableData = {
-  total: number;
-  hasNext: boolean;
 };
 
 export type PaginationQuery = {

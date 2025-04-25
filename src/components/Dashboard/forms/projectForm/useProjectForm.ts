@@ -1,124 +1,103 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { toast } from "react-toastify";
-import { v4 as uuidv4 } from "uuid";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next13-progressbar";
+import { Category } from "@/dto/categories";
+import {
+  CreateProject,
+  UpdateProject,
+  createProjectSchema,
+  updateProjectSchema,
+} from "@/schema/project";
+import { Project } from "@/dto/projects";
+import {
+  useCreateProjectMutation,
+  useUpdateProjectMutation,
+} from "@/lib/react-query/mutations";
+import { getDirtyFields } from "@/lib/utils";
+import { safeAsync } from "@/lib/safe";
+import { toast } from "react-toastify";
+import { useState } from "react";
+import { Id } from "@/lib/schema";
 
-import { projectFormSchema } from "@/lib/schema";
-import { isInSelectedCategories, urlToBlob } from "@/lib/utils";
-import useSupabaseWithAuth from "@/hooks/useSupabaseWithAuth";
-import { TCategory, TPostForm, TProject } from "@/types";
+type ProjectFormValues = CreateProject | UpdateProject;
 
-const useProjectForm = ({ initialData, isUpdate }: TPostForm) => {
+export const isInSelectedCategories = (
+  selectedCategories: Category[],
+  category: Category
+) => {
+  return selectedCategories?.some((item) => item.id === category?.id);
+};
+
+const useProjectForm = ({ initial }: { initial: Project }) => {
   const router = useRouter();
-  const { createSupabaseClient } = useSupabaseWithAuth();
-  const { register, handleSubmit, formState, control } = useForm<TProject>({
-    resolver: zodResolver(projectFormSchema),
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([
+    ...initial?.categories,
+  ]);
+  const form = useForm<ProjectFormValues>({
+    resolver: zodResolver(initial ? updateProjectSchema : createProjectSchema),
     defaultValues: {
-      ...initialData,
-      categories: initialData?.categories || [],
+      id: initial?.id,
+      title: initial?.title,
+      categories: initial?.categories.map((cat) => cat.id),
+      description: initial?.description ?? undefined,
+      url: initial?.url ?? undefined,
     },
   });
 
-  const { mutateAsync: createAsync, isPending: isCreating } = useMutation({
-    mutationFn: async (data: TProject) => {
-      const supabase = await createSupabaseClient();
+  const createMutation = useCreateProjectMutation();
+  const updateMutation = useUpdateProjectMutation();
 
-      const imageToUpload = await urlToBlob(data.image);
-      if (!imageToUpload) throw new Error("image not found");
+  const onSubmit = async (data: ProjectFormValues) => {
+    if ("id" in data && initial) {
+      const dirtyFields = form.formState.dirtyFields;
+      const dirtyData = {
+        ...(getDirtyFields(dirtyFields, data) as UpdateProject),
+        id: data.id,
+        categories: form.getValues("categories"), //this should be included both in post and patch,
+      };
 
-      const { data: mediaData, error: mediaError } = await supabase.storage
-        .from("media")
-        .upload(`projects/${uuidv4()}.jpg`, imageToUpload);
+      const project = await safeAsync(updateMutation.mutateAsync(dirtyData));
+      if (!project.success) {
+        console.log(project.error);
 
-      if (mediaError) throw mediaError;
-
-      const { error, data: project } = await supabase.rpc(
-        "insert_project_with_categories",
-        {
-          description: data.description!,
-          image: mediaData.path.split("projects/")[1],
-          title: data.title,
-          url: data.url!,
-          categories: data.categories.map((item) => item.id),
-        }
-      );
-
-      if (error) throw error;
-
-      return { id: project };
-    },
-  });
-
-  const { mutateAsync: updateAsync, isPending: isUpdating } = useMutation({
-    mutationFn: async (data: TProject) => {
-      let newImage: string | null = null;
-      if (!initialData?.id) throw new Error("id not found");
-
-      const supabase = await createSupabaseClient();
-      // check if the image have been changed!!
-      if (data.image !== initialData?.image) {
+        return toast.error("there was an error updating the project");
       }
 
-      const { error } = await supabase.rpc("update_project", {
-        categories: data.categories.map((item) => item.id),
-        description: data?.description || "",
-        id: initialData?.id,
-        title: data.title,
-        url: data?.url || "",
-        image: initialData?.image.split("/projects/")[1],
-      });
-
-      if (error) throw error;
-      return true;
-    },
-  });
-
-  const onCreate = async (data: TProject) => {
-    const { id } = await toast.promise(createAsync(data), {
-      error: "something went wrong",
-      success: "success",
-      pending: "pending",
-    });
-
-    router.push(`/dashboard/project/${id}`);
-  };
-  const onUpdate = async (data: TProject) => {
-    await toast.promise(updateAsync(data), {
-      error: "something went wrong",
-      success: "success",
-      pending: "pending",
-    });
-
-    router.refresh();
-  };
-
-  const onSelect = (
-    value: TCategory,
-    onChange: (...event: any[]) => void,
-    selectedValues: TCategory[]
-  ) => {
-    // make sure the value in not already selected
-    if (isInSelectedCategories(selectedValues, value)) {
-      onChange &&
-        onChange(selectedValues.filter((item) => item.id !== value.id));
-      return;
+      toast.success("project updated successfully");
+      return router.refresh();
     }
-    onChange && onChange([...selectedValues, value]);
+
+    const project = await safeAsync(
+      createMutation.mutateAsync(data as CreateProject)
+    );
+    if (!project.success) return toast.error("an error occurred");
+
+    toast.success("project created successfully");
+    router.push(`/dashboard/project/${project.data.id}`);
+    return router.refresh();
   };
 
-  const isLoading = isCreating || isUpdating;
-  const onSubmit = isUpdate ? onUpdate : onCreate;
+  const onSelect = (value: Category, onChange: (...event: any[]) => void) => {
+    // make sure the value in not already selected
+    if (isInSelectedCategories(selectedCategories, value)) {
+      const filtered = selectedCategories.filter((cat) => cat.id !== value.id);
+      setSelectedCategories(filtered);
+      return onChange([...filtered.map((item) => item.id)]);
+    }
+
+    const selected = [...selectedCategories, value];
+    setSelectedCategories(selected);
+    return onChange([...selected.map((item) => item.id)]);
+  };
 
   return {
-    register,
-    handleSubmit,
-    formState,
-    control,
-    onSubmit,
+    form: {
+      ...form,
+      handleSubmit: form.handleSubmit(onSubmit),
+    },
     onSelect,
-    isLoading,
+    setSelectedCategories,
+    selectedCategories,
   };
 };
 

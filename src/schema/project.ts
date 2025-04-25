@@ -5,7 +5,8 @@ import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { ImageSchema, idSchema } from "@/lib/schema";
 
 export const createProjectSchema = createInsertSchema(projectsTable, {
-  url: z.string().url().optional(),
+  title: z.string().min(1),
+  url: z.coerce.string().url().optional(),
   description: z.string().optional(),
   image: ImageSchema,
 })

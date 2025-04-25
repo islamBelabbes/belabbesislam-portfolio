@@ -2,8 +2,12 @@ import { QueryWithPagination, DataWithPagination } from "@/types";
 import { generateSearchParams } from "./utils";
 import { Project } from "@/dto/projects";
 import { AppError } from "./error";
-import { GetProjects } from "@/schema/project";
-import { CreateCategory, UpdateCategory } from "@/schema/category";
+import { CreateProject, GetProjects, UpdateProject } from "@/schema/project";
+import {
+  CreateCategory,
+  GetCategories,
+  UpdateCategory,
+} from "@/schema/category";
 import { Category } from "@/dto/categories";
 import { Id } from "./schema";
 
@@ -21,6 +25,7 @@ export const deleteEntry = async (route: string) => {
   return true;
 };
 
+// Projects
 export const getProjects = async (
   query: QueryWithPagination<GetProjects> = {}
 ) => {
@@ -40,6 +45,70 @@ export const getProjects = async (
   return data?.data as DataWithPagination<Project[]>;
 };
 
+export const createProject = async (data: CreateProject) => {
+  const formData = new FormData();
+  formData.append("title", data.title);
+  formData.append("image", data.image);
+  data.description && formData.append("description", data.description);
+  data.url && formData.append("url", data.url);
+  data.categories.forEach((category) => {
+    formData.append("categories[]", category.toString());
+  });
+
+  const response = await fetch("/api/projects", {
+    method: "POST",
+    body: formData,
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    throw new AppError("something went wrong", response.status);
+  }
+
+  const res = await response.json();
+  return res.data as { id: Id };
+};
+export const updateProject = async (data: UpdateProject) => {
+  const formData = new FormData();
+  data.title && formData.append("title", data.title);
+  data.image && formData.append("image", data.image);
+  data.description && formData.append("description", data.description);
+  data.url && formData.append("url", data.url);
+  data.categories.forEach((category) => {
+    formData.append("categories[]", category.toString());
+  });
+
+  const response = await fetch(`/api/projects/${data.id}`, {
+    method: "PATCH",
+    body: formData,
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    throw new AppError("something went wrong", response.status);
+  }
+
+  const res = await response.json();
+  return res.data as { id: Id };
+};
+
+// Categories
+export const getCategories = async (
+  query: QueryWithPagination<GetCategories> = {}
+) => {
+  const searchParams = generateSearchParams({
+    ...query,
+    "show-empty": query.showEmpty,
+  });
+
+  const response = await fetch(`/api/categories?${searchParams.toString()}`);
+  if (!response.ok) {
+    throw new AppError("something went wrong", response.status);
+  }
+
+  const data = await response.json();
+  return data?.data as DataWithPagination<Category[]>;
+};
 export const createCategory = async (data: CreateCategory) => {
   const formData = new FormData();
   formData.append("name", data.name);
@@ -60,8 +129,6 @@ export const createCategory = async (data: CreateCategory) => {
 };
 
 export const updateCategory = async (data: UpdateCategory) => {
-  console.log(data);
-
   const formData = new FormData();
   data.name && formData.append("name", data.name);
   data.image && formData.append("image", data.image);

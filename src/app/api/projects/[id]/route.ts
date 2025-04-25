@@ -35,13 +35,15 @@ async function patchHandler(
 ) {
   const id = (await params).id;
   const formData = await req.formData();
+  const categories = formData.getAll("categories[]");
+  console.log("from-server", categories);
   const body = {
     id,
     title: formData.get("title") || undefined,
     url: formData.get("url") || undefined,
     description: formData.get("description") || undefined,
     image: formData.get("image") || undefined,
-    categories: formData.getAll("categories") || undefined,
+    categories,
   };
 
   const validatedBody = updateProjectSchema.parse(body);

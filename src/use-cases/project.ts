@@ -58,7 +58,7 @@ export const createProjectUseCase = async (
   const uploadedImage = await utapi.uploadFiles(image);
   if (uploadedImage.error) throw new AppError("Error uploading image");
 
-  await createProject({
+  return createProject({
     ...rest,
     image: uploadedImage.data.key,
   });
@@ -90,7 +90,7 @@ export const updateProjectUseCase = async (
     _image = uploadedImage.data.key;
   }
 
-  await updateProject({
+  return updateProject({
     ...rest,
     image: _image,
   });

@@ -95,6 +95,8 @@ export const createProject = async (
         categoryId: category,
       }))
     );
+
+    return id;
   });
 };
 
@@ -103,6 +105,8 @@ export const updateProject = async ({
   categories,
   ...data
 }: Omit<UpdateProject, "image"> & { image?: string }) => {
+  const hasData = Boolean(Object.values(data).filter(Boolean).length);
+
   return db.transaction(async (tx) => {
     await tx
       .delete(projectCategoriesTable)
@@ -115,7 +119,19 @@ export const updateProject = async ({
       }))
     );
 
-    await tx.update(projectsTable).set(data).where(eq(projectsTable.id, id));
+    // if there is no data to update, we don't need to do anything
+    if (!hasData) {
+      return new Promise<{ id: number }[]>((resolve) => {
+        resolve([{ id }]);
+      });
+    }
+
+    const [updated] = await tx
+      .update(projectsTable)
+      .set(data)
+      .where(eq(projectsTable.id, id))
+      .returning({ id: projectsTable.id });
+    return updated;
   });
 };
 

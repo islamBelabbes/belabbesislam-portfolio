@@ -1,4 +1,3 @@
-import { TCategory, TTryCatch } from "@/types";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { z } from "zod";
@@ -6,28 +5,6 @@ import { z } from "zod";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-
-export const isInSelectedCategories = (
-  selectedCategories: TCategory[],
-  category: TCategory
-) => {
-  return selectedCategories?.some((item) => item.id === category?.id);
-};
-
-export const tryCatch: TTryCatch = async (promise) => {
-  try {
-    const data = await promise;
-    return {
-      data,
-      error: null,
-    };
-  } catch (error) {
-    return {
-      data: null,
-      error: error,
-    };
-  }
-};
 
 export async function urlToBlob(url: string) {
   try {
@@ -46,9 +23,7 @@ export const flatZodError = (error: z.ZodError) => {
   }));
 };
 
-export function generateSearchParams(
-  params: Record<string, string | number | undefined>
-) {
+export function generateSearchParams(params: Record<string, any>) {
   // filter out undefined values
   const searchParams = new URLSearchParams();
   Object.keys(params)

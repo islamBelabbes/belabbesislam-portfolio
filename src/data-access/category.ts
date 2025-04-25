@@ -23,7 +23,7 @@ export const getCategories = async ({
 }: QueryWithPagination<GetCategories> = {}) => {
   const whereClause = (
     categories: (typeof db.query.categoriesTable)["table"],
-    { and, like, exists, eq }: any
+    { and, ilike, exists, eq }: any
   ) => {
     const conditions = [];
 
@@ -40,7 +40,7 @@ export const getCategories = async ({
     }
 
     if (name) {
-      conditions.push(like(categories.name, `%${name}%`));
+      conditions.push(ilike(categories.name, `%${name.toLowerCase()}%`));
     }
 
     return and(...conditions);
@@ -85,6 +85,13 @@ export const updateCategory = async ({
   id,
   ...data
 }: Omit<UpdateCategory, "image"> & { image?: string }) => {
+  // if there is no data to update, we don't need to do anything
+  const hasData = Boolean(Object.values(data).filter(Boolean).length);
+  if (!hasData) {
+    return new Promise<{ id: number }[]>((resolve) => {
+      resolve([{ id }]);
+    });
+  }
   return db
     .update(categoriesTable)
     .set(data)
