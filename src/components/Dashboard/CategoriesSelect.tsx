@@ -10,18 +10,19 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
-import { TCategory, TODO } from "@/types";
-import { cn, isInSelectedCategories } from "@/lib/utils";
+import { TODO } from "@/types";
+import { cn } from "@/lib/utils";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import CategoriesTag from "@/components/CategoriesTag";
 import { ClassValue } from "clsx";
-import useSupabaseWithAuth from "@/hooks/useSupabaseWithAuth";
-import { useQuery } from "@tanstack/react-query";
 import { useDebounce } from "@/hooks/useDebounce";
+import { useCategoriesQuery } from "@/lib/react-query/queries";
+import { Category } from "@/dto/categories";
+import { isInSelectedCategories } from "./forms/projectForm/useProjectForm";
 
 type TCategoriesSelectProps = {
-  selectedCategories: TCategory[];
+  selectedCategories: Category[];
   onSelect: TODO;
   className?: {
     PopoverTrigger?: ClassValue;
@@ -29,7 +30,7 @@ type TCategoriesSelectProps = {
 };
 
 type TSearchResult = TCategoriesSelectProps & {
-  searchResult: TCategory[] | undefined;
+  searchResult: Category[] | undefined;
   isLoading: boolean;
 };
 
@@ -41,22 +42,15 @@ const CategoriesSelect = ({
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const value = useDebounce(search, 500);
-  const { createSupabaseClient } = useSupabaseWithAuth();
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["categories", value],
-    queryFn: async () => {
-      const supabase = await createSupabaseClient();
-      const { data, error } = await supabase
-        .from("categories")
-        .select("*")
-        .ilike("name", `%${value}%`);
-
-      if (error) throw error;
-      return data;
+  const { data, isLoading, isError } = useCategoriesQuery(
+    {
+      name: value,
     },
-    enabled: Boolean(value),
-  });
+    {
+      enabled: Boolean(value),
+    }
+  );
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -102,7 +96,7 @@ const CategoriesSelect = ({
             <SearchResult
               selectedCategories={selectedCategories}
               onSelect={onSelect}
-              searchResult={data}
+              searchResult={data?.data}
               isLoading={isLoading}
             />
           </Command>

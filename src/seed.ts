@@ -1,7 +1,10 @@
-import { tryCatch } from "./lib/utils";
-import { TCategory, TProject } from "./types";
+import { Category } from "./dto/categories";
+import { Project } from "./dto/projects";
 
-export const categories: TCategory[] = [
+type CleanCategory = Omit<Category, "createdAt">;
+type CleanProject = Omit<Project, "createdAt" | "categories">;
+
+export const categories: CleanCategory[] = [
   {
     id: 0,
     image: "/icon-tailwindcss.png",
@@ -24,7 +27,7 @@ export const categories: TCategory[] = [
   },
 ];
 
-export const projects: TProject[] = [
+export const projects: (CleanProject & { categories: CleanCategory[] })[] = [
   {
     id: 0,
     title: "wahaj",

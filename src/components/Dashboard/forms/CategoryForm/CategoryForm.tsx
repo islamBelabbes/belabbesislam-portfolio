@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 
 import { Controller } from "react-hook-form";
 
@@ -8,23 +8,25 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import ImageUploader from "../../ImageUploader";
 import { Button } from "@/components/ui/button";
-import { TCategoryForm } from "@/types";
 import { cn } from "@/lib/utils";
 import useCategoryForm from "./useCategoryForm";
+import { Category } from "@/dto/categories";
+import { MEDIA_URL } from "@/constants/constants";
 
-function CategoryForm({ initialData, isUpdate = false }: TCategoryForm) {
-  const { register, control, formState, handleSubmit, onSubmit, isLoading } =
+function CategoryForm({ initial }: { initial?: Category }) {
+  const { register, control, formState, handleSubmit, ...form } =
     useCategoryForm({
-      initialData,
-      isUpdate,
+      initial,
     });
+
+  const cover = initial?.image ? `${MEDIA_URL}/${initial.image}` : null;
+  const isDirtyAlt = !!Object.keys(formState.dirtyFields).length;
   return (
     <div>
-      <h2> {isUpdate ? "Update" : "Create"} Category</h2>
-      <BlockUi isBlock={false}>
+      <BlockUi isBlock={formState.isSubmitting}>
         <form
-          onSubmit={handleSubmit(onSubmit)}
           className="flex justify-between gap-2 lg:flex-row flex-col"
+          onSubmit={handleSubmit}
         >
           <div className="flex-grow">
             <div>
@@ -38,8 +40,11 @@ function CategoryForm({ initialData, isUpdate = false }: TCategoryForm) {
               />
             </div>
 
-            <Button disabled={isLoading} className="w-full mt-3">
-              {isUpdate ? "Update" : "Create"}
+            <Button
+              disabled={formState.isSubmitting || !isDirtyAlt}
+              className="w-full mt-3"
+            >
+              {initial ? "Update" : "Create"}
             </Button>
           </div>
 
@@ -48,15 +53,14 @@ function CategoryForm({ initialData, isUpdate = false }: TCategoryForm) {
             control={control}
             render={({ field: { onChange, value } }) => (
               <ImageUploader
-                image={value}
+                image={value ?? cover}
                 setImage={onChange}
                 className={cn("basis-1/3", {
                   "border-red-700": formState.errors.image,
                 })}
-                disabled={isLoading}
               />
             )}
-          ></Controller>
+          />
         </form>
       </BlockUi>
     </div>

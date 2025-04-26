@@ -1,21 +1,12 @@
-import { authMiddleware, redirectToSignIn } from "@clerk/nextjs";
-import { NextResponse } from "next/server";
+import { clerkMiddleware } from "@clerk/nextjs/server";
 
-export default authMiddleware({
-  publicRoutes: ["/"],
-  afterAuth: async (auth, req) => {
-    if (!auth.userId && !auth.isPublicRoute) {
-      return redirectToSignIn({ returnBackUrl: req.url });
-    }
-
-    if (!auth.isPublicRoute && auth.userId) {
-      const { sessionClaims } = auth;
-      if (sessionClaims?.isAdmin !== "true")
-        return NextResponse.redirect(new URL(req.url).origin);
-    }
-  },
-});
+export default clerkMiddleware();
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: [
+    "/dashboard/:path*",
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    // Always run for API routes
+    "/(api|trpc)(.*)",
+  ],
 };
