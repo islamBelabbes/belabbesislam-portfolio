@@ -14,11 +14,12 @@ import { cn } from "@/lib/utils";
 import { getProjects } from "@/lib/api";
 import { Project } from "@/dto/projects";
 import { MEDIA_URL } from "@/constants/constants";
+import { isInSelectedCategories } from "@/components/Dashboard/forms/projectForm/useProjectForm";
 
 function Projects({ categories }: { categories: Category[] }) {
-  const [selectedCategory, setSelectedCategory] = useState<Category>(
-    categories[0]
-  );
+  const [selectedCategory, setSelectedCategory] = useState<
+    Category | undefined
+  >(undefined);
 
   const {
     data,
@@ -32,7 +33,7 @@ function Projects({ categories }: { categories: Category[] }) {
     queryFn: async ({ pageParam }) => {
       return getProjects({
         page: pageParam,
-        categoryId: selectedCategory.id,
+        categoryId: selectedCategory?.id,
       });
     },
 
@@ -48,6 +49,12 @@ function Projects({ categories }: { categories: Category[] }) {
     return [...acc, ...item.data];
   }, []);
 
+  const handleCategorySelect = (category: Category) => {
+    const selected =
+      selectedCategory?.id === category.id ? undefined : category;
+    setSelectedCategory(selected);
+  };
+
   return (
     <section
       className="bg-WhitePrimary dark:bg-BlackPrimary py-10"
@@ -61,7 +68,7 @@ function Projects({ categories }: { categories: Category[] }) {
         />
         <Categories
           selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
+          setSelectedCategory={handleCategorySelect}
           categories={categories}
         />
         <BlockUi

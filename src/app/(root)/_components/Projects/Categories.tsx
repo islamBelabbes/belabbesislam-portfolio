@@ -6,8 +6,8 @@ import Image from "next/image";
 import React from "react";
 
 type CategoriesProps = {
-  selectedCategory: Category | null;
-  setSelectedCategory: React.Dispatch<React.SetStateAction<Category>>;
+  selectedCategory: Category | undefined;
+  setSelectedCategory: (category: Category) => void;
   categories: Category[];
 };
 
