@@ -26,6 +26,8 @@ export default async function DashboardLayout({
   const redirectUrl = `${protocol}://${_headers.get("host")}/dashboard`;
 
   const user = await getCurrentUserUseCase();
+  console.log("from-dashboard", user);
+
   if (!user || !user.isAdmin)
     return redirect(
       `${process.env.CLERK_SIGN_IN_URL!}?redirect_url=${redirectUrl}`
