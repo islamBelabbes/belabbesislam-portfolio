@@ -17,6 +17,7 @@ import {
 } from "@/schema/category";
 import { QueryWithPagination } from "@/types";
 import generatePagination from "@/lib/generate-pagination";
+import { revalidatePath } from "next/cache";
 
 export const getCategoriesUseCase = async (
   query: QueryWithPagination<GetCategories> = {}
@@ -58,8 +59,11 @@ export const createCategoryUseCase = async (
     ...rest,
     image: udata.key,
   });
+
+  revalidatePath("/");
   return created;
 };
+
 export const updateCategoryUseCase = async (
   data: UpdateCategory,
   user?: User
@@ -84,6 +88,8 @@ export const updateCategoryUseCase = async (
     ...rest,
     image: _image,
   });
+
+  revalidatePath("/");
   return updated;
 };
 
@@ -92,5 +98,7 @@ export const deleteCategoryUseCase = async (id: Id, user?: User) => {
   const category = await getCategoryByIdUseCase(id);
 
   await Promise.all([utapi.deleteFiles(category.image), deleteCategory(id)]);
+
+  revalidatePath("/");
   return true;
 };
