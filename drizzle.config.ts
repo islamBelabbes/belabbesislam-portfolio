@@ -5,6 +5,6 @@ export default defineConfig({
   schema: "./src/lib/db/schema.ts",
   dialect: "postgresql",
   dbCredentials: {
-    url: "postgresql://postgres:admin@localhost:5432/belabbesislam",
+    url: process.env.DIRECT_URL!,
   },
 });
