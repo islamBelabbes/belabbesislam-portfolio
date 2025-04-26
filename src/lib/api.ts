@@ -26,12 +26,13 @@ export const deleteEntry = async (route: string) => {
 };
 
 // Projects
-export const getProjects = async (
-  query: QueryWithPagination<GetProjects> = {}
-) => {
+export const getProjects = async ({
+  categoryId,
+  ...query
+}: QueryWithPagination<GetProjects> = {}) => {
   const searchParams = generateSearchParams({
     ...query,
-    "category-id": query.categoryId,
+    "category-id": categoryId,
   });
 
   const response = await fetch(`/api/projects?${searchParams.toString()}`, {
