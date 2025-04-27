@@ -20,7 +20,6 @@ export default async function DashboardLayout({
 }>) {
   // auth shouldn't be done in layout but its ok for this use case
   const user = await getCurrentUserUseCase();
-  console.log("from-dashboard", user);
   if (!user || !user.isAdmin) return <RedirectToSignIn />;
 
   return (
