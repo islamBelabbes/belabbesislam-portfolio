@@ -10,6 +10,7 @@ import { getCategoriesUseCase } from "@/use-cases/category";
 import { DataTable } from "@/components/Dashboard/tables/data-table";
 import { columns as projectColumns } from "@/components/Dashboard/tables/project-columns";
 import { columns as categoryColumns } from "@/components/Dashboard/tables/category-columns";
+import Link from "next/link";
 
 export const revalidate = 0;
 
@@ -45,25 +46,47 @@ async function page() {
         />
       </div>
       <div className="mt-4 flex flex-col gap-3">
-        <div className="flex flex-col gap-2">
-          <Badge className="w-fit font-semibold text-sm">last Projects</Badge>
+        <RenderTable title="last Projects" viewAllLink="/dashboard/project/all">
           <DataTable
             columns={projectColumns}
             data={projects.data}
             withPagination={false}
           />
-        </div>
-        <div className="flex flex-col gap-2">
-          <Badge className="w-fit font-semibold text-sm">last Categories</Badge>
+        </RenderTable>
+
+        <RenderTable
+          title="last Categories"
+          viewAllLink="/dashboard/category/all"
+        >
           <DataTable
             columns={categoryColumns}
             data={categories.data}
             withPagination={false}
           />
-        </div>
+        </RenderTable>
       </div>
     </div>
   );
 }
+
+const RenderTable = ({
+  viewAllLink,
+  title,
+  children,
+}: {
+  viewAllLink: string;
+  title: string;
+  children: React.ReactNode;
+}) => {
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex justify-between items-center text-sm px-3">
+        <Badge className="w-fit font-semibold text-sm">{title}</Badge>
+        <Link href={viewAllLink}>View All</Link>
+      </div>
+      {children}
+    </div>
+  );
+};
 
 export default page;
