@@ -8,7 +8,7 @@ import {
 import { cn } from "@/lib/utils";
 
 type DashboardStatusProps = {
-  Icon: JSX.Element;
+  Icon: React.JSX.Element;
   iconBackground: string;
   status: number;
   title: string;
