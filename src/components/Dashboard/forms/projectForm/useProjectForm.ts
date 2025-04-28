@@ -33,7 +33,9 @@ const useProjectForm = ({ initial }: { initial?: Project }) => {
     initial ? [...initial.categories] : []
   );
   const form = useForm<ProjectFormValues>({
-    resolver: zodResolver(initial ? updateProjectSchema : createProjectSchema),
+    resolver: zodResolver(
+      (initial ? updateProjectSchema : createProjectSchema) as any
+    ),
     defaultValues: {
       id: initial?.id,
       title: initial?.title,
