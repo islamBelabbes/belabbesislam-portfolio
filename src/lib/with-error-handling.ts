@@ -1,14 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { AppError, AuthError, NotFoundError } from "./error";
+import { AppError, AuthError } from "./error";
 import apiResponse, { TApiErrorResponse } from "./api-response";
 import { ZodError } from "zod";
 import { flatZodError } from "./utils";
 import { TApiHandler } from "@/types";
 
-const withErrorHandler = <T extends object>(handler: TApiHandler<T>) => {
-  return async (req: NextRequest, params: T) => {
+const withErrorHandler = <T extends Promise<object>>(
+  handler: TApiHandler<T>
+) => {
+  return async (req: NextRequest, segmentData: { params: T }) => {
     try {
-      return await handler(req, params);
+      return await handler(req, segmentData);
     } catch (error) {
       const response = apiResponse({
         success: false,
@@ -30,7 +32,7 @@ const withErrorHandler = <T extends object>(handler: TApiHandler<T>) => {
         response.errors = flatZodError(error);
       }
 
-      if (error instanceof AuthError || error instanceof NotFoundError) {
+      if (error instanceof AuthError) {
         response.message = error.message;
         response.status = error.statusCode;
       }
