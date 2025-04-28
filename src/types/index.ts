@@ -1,13 +1,14 @@
 import { TApiResponse } from "@/lib/api-response";
 import { Pagination } from "@/lib/generate-pagination";
 import { NextRequest, NextResponse } from "next/server";
+import React from "react";
 
 export type TODO = any; // this is placeholder type
 
 export type TDashboardMenuItems = {
   name: string;
   href: string;
-  icon: JSX.Element;
+  icon: React.JSX.Element;
   subMenu?: TDashboardMenuItems[] | null;
 };
 
