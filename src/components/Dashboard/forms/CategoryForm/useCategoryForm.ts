@@ -23,7 +23,7 @@ const useCategoryForm = ({ initial }: { initial?: Category }) => {
   const router = useRouter();
   const form = useForm<CategoryFormValues>({
     resolver: zodResolver(
-      initial ? updateCategorySchema : createCategorySchema
+      (initial ? updateCategorySchema : createCategorySchema) as any
     ),
     defaultValues: {
       id: initial?.id,

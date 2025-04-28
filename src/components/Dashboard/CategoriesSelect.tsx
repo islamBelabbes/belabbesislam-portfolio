@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { MousePointerSquare } from "lucide-react";
+import { MousePointer } from "lucide-react";
 
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import {
@@ -78,7 +78,7 @@ const CategoriesSelect = ({
             <span> Select Category...</span>
           )}
 
-          <MousePointerSquare className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <MousePointer className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
 

@@ -3,7 +3,6 @@
 import { ThemeProvider } from "next-themes";
 import { Next13ProgressBar } from "next13-progressbar";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
 
