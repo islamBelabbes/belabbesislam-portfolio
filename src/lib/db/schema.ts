@@ -9,6 +9,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { relations } from "drizzle-orm/relations";
+import { integer } from "drizzle-orm/gel-core";
 
 export const categoriesTable = pgTable(
   "categories",
@@ -69,6 +70,12 @@ export const projectsTable = pgTable(
   ]
 );
 
+export const projectGalleryTable = pgTable("", {
+  id: bigint({ mode: "number" }).primaryKey(),
+  image: text().notNull(),
+  projectId: bigint({ mode: "number" }).notNull(),
+});
+
 export const projectCategoriesTable = pgTable(
   "project_categories",
   {
@@ -121,7 +128,18 @@ export const categoriesRelations = relations(categoriesTable, ({ many }) => ({
 
 export const projectsRelations = relations(projectsTable, ({ many }) => ({
   projectCategories: many(projectCategoriesTable),
+  projectGallery: many(projectGalleryTable),
 }));
+
+export const projectGalleryRelations = relations(
+  projectGalleryTable,
+  ({ one }) => ({
+    project: one(projectsTable, {
+      fields: [projectGalleryTable.projectId],
+      references: [projectsTable.id],
+    }),
+  })
+);
 
 export type ProjectTable = typeof projectsTable;
 export type CategoryTable = typeof categoriesTable;

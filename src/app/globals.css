@@ -106,3 +106,7 @@ td.url {
 td.actions {
   width: 10%;
 }
+
+[data-vaul-drawer][data-vaul-drawer-direction="bottom"]::after {
+  display: none;
+}
