@@ -14,6 +14,14 @@ export const getProjects = async ({
 }: QueryWithPagination<GetProjects> = {}) => {
   const projects = await db.query.projectsTable.findMany({
     with: {
+      projectGallery: {
+        columns: {
+          projectId: false,
+          createdAt: true,
+          image: true,
+          id: true,
+        },
+      },
       projectCategories: {
         columns: {
           categoryId: false,
@@ -58,6 +66,14 @@ export const getProjects = async ({
 export const getProjectById = async (id: Id) => {
   const post = await db.query.projectsTable.findFirst({
     with: {
+      projectGallery: {
+        columns: {
+          projectId: false,
+          createdAt: true,
+          image: true,
+          id: true,
+        },
+      },
       projectCategories: {
         columns: {
           categoryId: false,

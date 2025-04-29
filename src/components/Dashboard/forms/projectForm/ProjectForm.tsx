@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Controller } from "react-hook-form";
 
@@ -15,6 +15,9 @@ import useProjectForm from "./useProjectForm";
 import { Project } from "@/dto/projects";
 import { MEDIA_URL } from "@/constants/constants";
 import { Category } from "@/dto/categories";
+import Image from "next/image";
+import { Images } from "lucide-react";
+import GalleryUploader from "./gallery-uploader";
 
 const ProjectForm = ({ initial }: { initial?: Project }) => {
   const { form, onSelect, selectedCategories } = useProjectForm({
@@ -22,6 +25,13 @@ const ProjectForm = ({ initial }: { initial?: Project }) => {
   });
   const cover = initial?.image ? `${MEDIA_URL}/${initial.image}` : null;
   const isDirtyAlt = !!Object.keys(form.formState.dirtyFields).length;
+
+  const gal = form.watch("gallery");
+
+  useEffect(() => {
+    console.log(gal);
+    console.log(form.formState.errors);
+  });
 
   return (
     <div>
@@ -88,24 +98,83 @@ const ProjectForm = ({ initial }: { initial?: Project }) => {
             ></Controller>
           </div>
 
-          <div className="flex flex-col gap-3 w-[450px]">
-            <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              Project Image
-            </span>
-            <Controller
-              name="image"
-              control={form.control}
-              render={({ field: { onChange, value } }) => (
-                <ImageUploader
-                  image={value ?? cover}
-                  setImage={onChange}
-                  className={cn({
-                    "border-red-700": form.formState.errors.image,
-                  })}
-                  disabled={form.formState.isSubmitting}
+          <div className="flex gap-3">
+            {/* Cover Image */}
+            <div className="flex flex-col gap-3 basis-[450px] shrink-0">
+              <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                Project Image
+              </span>
+              <Controller
+                name="image"
+                control={form.control}
+                render={({ field: { onChange, value } }) => (
+                  <ImageUploader
+                    image={value ?? cover}
+                    setImage={onChange}
+                    className={cn({
+                      "border-red-700": form.formState.errors.image,
+                    })}
+                    disabled={form.formState.isSubmitting}
+                  />
+                )}
+              ></Controller>
+            </div>
+
+            {/* Gallery */}
+            <div className="grow flex flex-col gap-3">
+              <span
+                className={cn(
+                  "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+                  {
+                    "text-red-700": form.formState.errors.gallery,
+                  }
+                )}
+              >
+                Project Gallery
+              </span>
+
+              <div className="flex flex-wrap gap-2">
+                <div className="relative aspect-video w-[200px]">
+                  <Image
+                    src="/g (2).png"
+                    fill
+                    alt="gallery item"
+                    className="rounded-md object-cover"
+                  />
+                </div>
+                <div className="relative aspect-video w-[200px]">
+                  <Image
+                    src="/g (2).png"
+                    fill
+                    alt="gallery item"
+                    className="rounded-md object-cover"
+                  />
+                </div>
+                <div className="relative aspect-video w-[200px]">
+                  <Image
+                    src="/g (2).png"
+                    fill
+                    alt="gallery item"
+                    className="rounded-md object-cover"
+                  />
+                </div>
+
+                <Controller
+                  control={form.control}
+                  name="gallery"
+                  render={({ field: { onChange, value } }) => (
+                    <GalleryUploader
+                      setGallery={onChange}
+                      gallery={value}
+                      className={{
+                        "border-red-700": form.formState.errors.gallery,
+                      }}
+                      disabled={form.formState.isSubmitting}
+                    />
+                  )}
                 />
-              )}
-            ></Controller>
+              </div>
+            </div>
           </div>
 
           <Button disabled={form.formState.isSubmitting || !isDirtyAlt}>

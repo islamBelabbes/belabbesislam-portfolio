@@ -16,6 +16,7 @@ export const createProjectSchema = createInsertSchema(projectsTable, {
   })
   .extend({
     categories: z.array(idSchema).min(1),
+    gallery: z.array(ImageSchema),
   });
 
 export const updateProjectSchema = createUpdateSchema(projectsTable, {
@@ -29,6 +30,8 @@ export const updateProjectSchema = createUpdateSchema(projectsTable, {
   })
   .extend({
     categories: z.array(idSchema).min(1),
+    gallery: z.array(ImageSchema),
+    deletedGalleryImage: z.array(idSchema),
   });
 
 export const getProjectsSchema = z.object({
