@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { AppError, AuthError } from "./error";
+import { AppError, AuthError, NotFoundError } from "./error";
 import apiResponse, { TApiErrorResponse } from "./api-response";
 import { ZodError } from "zod";
 import { flatZodError } from "./utils";
@@ -24,6 +24,11 @@ const withErrorHandler = <T extends Promise<object>>(
         if (error.statusCode) {
           response.status = error.statusCode;
         }
+      }
+
+      if (error instanceof NotFoundError) {
+        response.message = error.message;
+        response.status = error.statusCode ?? 404;
       }
 
       if (error instanceof ZodError) {
