@@ -6,6 +6,7 @@ import {
   text,
   foreignKey,
   primaryKey,
+  serial,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { relations } from "drizzle-orm/relations";
@@ -73,7 +74,7 @@ export const projectsTable = pgTable(
 );
 
 export const projectGalleryTable = pgTable("project_gallery", {
-  id: bigint({ mode: "number" }).primaryKey(),
+  id: serial("id").primaryKey(),
   image: text().notNull(),
   projectId: bigint({ mode: "number" }).notNull(),
   createdAt,
