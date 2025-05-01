@@ -49,18 +49,29 @@ export const createProjectUseCase = async (
   if (!user?.isAdmin) throw new AuthError();
 
   const categories = await getCategoriesByIds(data.categories);
-
   if (categories.length !== data.categories.length) {
     throw new AppError("one or more Invalid categories", 400);
   }
 
-  const { image, ...rest } = data;
+  const { image, gallery, ...rest } = data;
   const uploadedImage = await utapi.uploadFiles(image);
   if (uploadedImage.error) throw new AppError("Error uploading image");
+
+  let galleryKeys: string[] | undefined;
+  if (gallery) {
+    // for this use case i assume that upload-thing will not throw any error.
+    const uploadedGallery = await Promise.all(
+      gallery.map((image) => utapi.uploadFiles(image))
+    );
+    galleryKeys = uploadedGallery
+      .map((item) => item.data?.key)
+      .filter(Boolean) as string[];
+  }
 
   return createProject({
     ...rest,
     image: uploadedImage.data.key,
+    gallery: galleryKeys,
   });
 };
 
@@ -99,8 +110,9 @@ export const updateProjectUseCase = async (
 export const deleteProjectUseCase = async (id: Id, user?: User) => {
   if (!user?.isAdmin) throw new AuthError();
 
-  const project = await getProjectByIdUseCase(id);
+  const { gallery, ...project } = await getProjectByIdUseCase(id);
+  const filesToDelete = [...gallery.map((item) => item.image), project.image];
 
-  await Promise.all([utapi.deleteFiles(project.image), deleteProject(id)]);
+  await Promise.all([utapi.deleteFiles(filesToDelete), deleteProject(id)]);
   return true;
 };

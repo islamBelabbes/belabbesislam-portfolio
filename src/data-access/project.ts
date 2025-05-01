@@ -1,7 +1,11 @@
 import { PAGINATION } from "@/constants/constants";
 import { projectDtoMapper } from "@/dto/projects";
 import db from "@/lib/db";
-import { projectCategoriesTable, projectsTable } from "@/lib/db/schema";
+import {
+  projectCategoriesTable,
+  projectGalleryTable,
+  projectsTable,
+} from "@/lib/db/schema";
 import { Id } from "@/lib/schema";
 import { CreateProject, GetProjects, UpdateProject } from "@/schema/project";
 import { QueryWithPagination } from "@/types";
@@ -96,23 +100,35 @@ export const getProjectById = async (id: Id) => {
   });
 };
 
-export const createProject = async (
-  data: Omit<CreateProject, "image"> & { image: string }
-) => {
+export const createProject = async ({
+  gallery,
+  ...data
+}: Omit<CreateProject, "image" | "gallery"> & {
+  image: string;
+  gallery?: string[];
+}) => {
   return db.transaction(async (tx) => {
-    const [id] = await tx
+    const [inserted] = await tx
       .insert(projectsTable)
       .values(data)
       .returning({ id: projectsTable.id });
 
     await tx.insert(projectCategoriesTable).values(
       data.categories.map((category) => ({
-        projectId: id.id,
+        projectId: inserted.id,
         categoryId: category,
       }))
     );
 
-    return id;
+    if (gallery) {
+      const preparedGallery = gallery.map((image) => ({
+        image,
+        projectId: inserted.id,
+      }));
+      await tx.insert(projectGalleryTable).values(preparedGallery);
+    }
+
+    return inserted;
   });
 };
 
