@@ -160,7 +160,7 @@ export const updateProject = async ({
       .delete(projectGalleryTable)
       .where(inArray(projectGalleryTable.id, deletedGalleryImage));
 
-    if (gallery) {
+    if (gallery?.length) {
       await tx.insert(projectGalleryTable).values(
         gallery.map((image) => ({
           image,

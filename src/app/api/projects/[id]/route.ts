@@ -48,10 +48,7 @@ async function patchHandler(
     gallery: formData.getAll("gallery[]"),
   };
 
-  console.log(body);
   const validatedBody = updateProjectSchema.parse(body);
-
-  return NextResponse.json(validatedBody);
 
   const post = await updateProjectUseCase({ ...validatedBody }, user);
 
