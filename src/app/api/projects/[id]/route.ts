@@ -41,12 +41,17 @@ async function patchHandler(
     url: formData.get("url") || undefined,
     description: formData.get("description") || undefined,
     image: formData.get("image") || undefined,
-    categories: formData.getAll("categories[]"),
-    deletedGalleryImage: formData.getAll("deletedGalleryImage[]"),
+    categories: formData.getAll("categories[]").filter(Boolean),
+    deletedGalleryImage: formData
+      .getAll("deletedGalleryImage[]")
+      .filter(Boolean),
     gallery: formData.getAll("gallery[]"),
   };
 
+  console.log(body);
   const validatedBody = updateProjectSchema.parse(body);
+
+  return NextResponse.json(validatedBody);
 
   const post = await updateProjectUseCase({ ...validatedBody }, user);
 
