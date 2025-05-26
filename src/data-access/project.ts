@@ -25,6 +25,7 @@ export const getProjects = async ({
           image: true,
           id: true,
         },
+        orderBy: (fields, { asc }) => asc(fields.createdAt),
       },
       projectCategories: {
         columns: {
