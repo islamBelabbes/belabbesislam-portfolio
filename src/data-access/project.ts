@@ -9,7 +9,7 @@ import {
 import { Id } from "@/lib/schema";
 import { CreateProject, GetProjects, UpdateProject } from "@/schema/project";
 import { QueryWithPagination } from "@/types";
-import { and, eq, exists, count as drizzleCount } from "drizzle-orm";
+import { and, eq, exists, count as drizzleCount, inArray } from "drizzle-orm";
 
 export const getProjects = async ({
   limit = PAGINATION.LIMIT,
@@ -135,8 +135,13 @@ export const createProject = async ({
 export const updateProject = async ({
   id,
   categories,
+  gallery,
+  deletedGalleryImage,
   ...data
-}: Omit<UpdateProject, "image"> & { image?: string }) => {
+}: Omit<UpdateProject, "image" | "gallery"> & {
+  image?: string;
+  gallery?: string[];
+}) => {
   const hasData = Boolean(Object.values(data).filter(Boolean).length);
 
   return db.transaction(async (tx) => {
@@ -150,6 +155,19 @@ export const updateProject = async ({
         categoryId: category,
       }))
     );
+
+    await tx
+      .delete(projectGalleryTable)
+      .where(inArray(projectGalleryTable.id, deletedGalleryImage));
+
+    if (gallery) {
+      await tx.insert(projectGalleryTable).values(
+        gallery.map((image) => ({
+          image,
+          projectId: id,
+        }))
+      );
+    }
 
     // if there is no data to update, we don't need to do anything
     if (!hasData) {
@@ -192,4 +210,13 @@ export const countProjects = async ({ categoryId }: GetProjects = {}) => {
 
   const count = await countP;
   return count[0]?.value || 0;
+};
+
+export const getGallery = async (ids: Id[]) => {
+  const gallery = await db.query.projectGalleryTable.findMany({
+    where: (projectGalleryTable, { inArray }) =>
+      inArray(projectGalleryTable.id, ids),
+  });
+
+  return gallery.map((item) => item.image);
 };
