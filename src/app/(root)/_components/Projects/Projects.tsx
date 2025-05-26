@@ -167,9 +167,11 @@ const ProjectItem = (item: Project) => {
                         <DrawerDescription>
                           {item.description}
                         </DrawerDescription>
-                        <a href="" target="_blank">
-                          <ExternalLink size={20} />
-                        </a>
+                        {item.url && (
+                          <a href={item.url} target="_blank">
+                            <ExternalLink size={20} />
+                          </a>
+                        )}
                         <a href="" target="_blank">
                           <Github size={20} />
                         </a>
@@ -187,21 +189,14 @@ const ProjectItem = (item: Project) => {
 
                   {/* gallery */}
                   <div className="flex mt-2 gap-2 flex-col max-w-6xl">
-                    <img
-                      src="/g (1).png"
-                      alt="project"
-                      className="rounded-[32px]  w-full max-h-full border border-transparent"
-                    />
-                    <img
-                      src="/g (2).png"
-                      alt="project"
-                      className="rounded-[32px]  w-full max-h-full border border-transparent"
-                    />
-                    <img
-                      src="/g (3).png"
-                      alt="project"
-                      className="rounded-[32px]  w-full max-h-full border border-transparent"
-                    />
+                    {item.gallery.map((item) => (
+                      <img
+                        key={item.id}
+                        src={`${MEDIA_URL}/${item.image}`}
+                        alt="project gallery"
+                        className="rounded-[32px] border border-transparent"
+                      />
+                    ))}
                   </div>
                 </div>
               </ScrollArea>
