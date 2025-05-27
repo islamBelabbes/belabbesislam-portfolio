@@ -7,6 +7,7 @@ import { ImageSchema, idSchema } from "@/lib/schema";
 export const createProjectSchema = createInsertSchema(projectsTable, {
   title: z.string().min(1),
   url: z.coerce.string().url().optional(),
+  github: z.coerce.string().url().optional(),
   description: z.string().optional(),
   image: ImageSchema,
 })
@@ -24,6 +25,7 @@ export const createProjectSchema = createInsertSchema(projectsTable, {
 export const updateProjectSchema = createUpdateSchema(projectsTable, {
   id: idSchema,
   url: z.string().url().optional(),
+  github: z.string().url().optional(),
   description: z.string().optional(),
   image: ImageSchema.optional(),
 })

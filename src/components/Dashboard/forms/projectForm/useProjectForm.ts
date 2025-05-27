@@ -62,6 +62,7 @@ const useProjectForm = ({ initial }: { initial?: Project }) => {
       categories: initial?.categories.map((cat) => cat.id),
       description: initial?.description ?? undefined,
       url: initial?.url ?? undefined,
+      github: initial?.github ?? undefined,
     },
   });
 

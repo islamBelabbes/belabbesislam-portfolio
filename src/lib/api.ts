@@ -52,6 +52,7 @@ export const createProject = async (data: CreateProject) => {
   formData.append("image", data.image);
   data.description && formData.append("description", data.description);
   data.url && formData.append("url", data.url);
+  data.github && formData.append("github", data.github);
   data.categories.forEach((category) => {
     formData.append("categories[]", category.toString());
   });
@@ -77,6 +78,7 @@ export const updateProject = async (data: UpdateProject) => {
   data.image && formData.append("image", data.image);
   data.description && formData.append("description", data.description);
   data.url && formData.append("url", data.url);
+  data.github && formData.append("github", data.github);
   data.categories.forEach((category) => {
     formData.append("categories[]", category.toString());
   });
