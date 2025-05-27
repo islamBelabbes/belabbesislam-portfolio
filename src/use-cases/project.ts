@@ -64,11 +64,7 @@ export const createProjectUseCase = async (
     // for this use case i assume that upload-thing will not throw any error.
     const uploadedGallery = await utapi.uploadFiles(gallery);
 
-    // if there's any error log it
-    const errors = uploadedGallery.filter((item) => item.error);
-    if (errors.length > 0) {
-      console.log("errors from upload thing", errors);
-    }
+    console.log("createProjectUseCase-upload-thing", uploadedGallery);
 
     galleryKeys = uploadedGallery
       .map((item) => item.data?.key)
@@ -119,6 +115,8 @@ export const updateProjectUseCase = async (
   if (gallery) {
     const uploadedGallery = await utapi.uploadFiles(gallery);
 
+    console.log("updateProjectUseCase-upload-thing", uploadedGallery);
+
     // if there's any error log it
     const errors = uploadedGallery.filter((item) => item.error);
     if (errors.length > 0) {
@@ -146,6 +144,11 @@ export const deleteProjectUseCase = async (id: Id, user?: User) => {
   const { gallery, ...project } = await getProjectByIdUseCase(id);
   const filesToDelete = [...gallery.map((item) => item.image), project.image];
 
-  await Promise.all([utapi.deleteFiles(filesToDelete), deleteProject(id)]);
+  const [uploadThing] = await Promise.all([
+    utapi.deleteFiles(filesToDelete),
+    deleteProject(id),
+  ]);
+  console.log("deleteProjectUseCase-upload-thing", uploadThing);
+
   return true;
 };
