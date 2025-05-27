@@ -80,6 +80,12 @@ export const updateProject = async (data: UpdateProject) => {
   data.categories.forEach((category) => {
     formData.append("categories[]", category.toString());
   });
+  data.gallery?.forEach((image) => formData.append("gallery[]", image));
+  data.deletedGalleryImage?.forEach((image) =>
+    formData.append("deletedGalleryImage[]", image.toString())
+  );
+
+  console.log(data);
 
   const response = await fetch(`/api/projects/${data.id}`, {
     method: "PATCH",

@@ -76,6 +76,7 @@ const useProjectForm = ({ initial }: { initial?: Project }) => {
         ...data,
         gallery: data.gallery?.map((item) => item.image) ?? [],
       };
+
       const dirtyData = {
         ...(getDirtyFields(dirtyFields, mappedData) as UpdateProject),
         id: data.id,
@@ -90,7 +91,8 @@ const useProjectForm = ({ initial }: { initial?: Project }) => {
       }
 
       toast.success("project updated successfully");
-      return router.refresh();
+      router.refresh();
+      return form.reset({}, { keepValues: true });
     }
 
     const mappedData = {
@@ -104,7 +106,8 @@ const useProjectForm = ({ initial }: { initial?: Project }) => {
 
     toast.success("project created successfully");
     router.push(`/dashboard/project/${project.data.id}`);
-    return router.refresh();
+    router.refresh();
+    return form.reset({}, { keepValues: true });
   };
 
   const onSelect = (value: Category, onChange: (...event: any[]) => void) => {

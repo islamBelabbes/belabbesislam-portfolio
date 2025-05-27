@@ -43,12 +43,14 @@ const ProjectForm = ({ initial }: { initial?: Project }) => {
 
     if (!gallery.isUploaded) {
       const deleted = form.getValues("deletedGalleryImage") ?? [];
-      form.setValue("deletedGalleryImage", [...deleted, +gallery.id]);
+      form.setValue("deletedGalleryImage", [...deleted, +gallery.id], {
+        shouldDirty: true,
+      });
     } else {
       const newGal =
         form.getValues("gallery")?.filter((item) => item.id !== gallery.id) ??
         [];
-      form.setValue("gallery", newGal);
+      form.setValue("gallery", newGal, { shouldDirty: true });
     }
 
     setRenderedGallery(filtered);

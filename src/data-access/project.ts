@@ -157,9 +157,11 @@ export const updateProject = async ({
       }))
     );
 
-    await tx
-      .delete(projectGalleryTable)
-      .where(inArray(projectGalleryTable.id, deletedGalleryImage));
+    if (deletedGalleryImage?.length) {
+      await tx
+        .delete(projectGalleryTable)
+        .where(inArray(projectGalleryTable.id, deletedGalleryImage));
+    }
 
     if (gallery?.length) {
       await tx.insert(projectGalleryTable).values(

@@ -104,7 +104,7 @@ export const updateProjectUseCase = async (
   }
 
   // handle deleted gallery images
-  if (deletedGalleryImage.length) {
+  if (deletedGalleryImage?.length) {
     const gallery = await getGallery(deletedGalleryImage);
     fileToDelete.push(...gallery);
   }

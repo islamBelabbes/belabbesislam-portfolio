@@ -33,7 +33,7 @@ export const updateProjectSchema = createUpdateSchema(projectsTable, {
   .extend({
     categories: z.array(idSchema).min(1),
     gallery: z.array(ImageSchema).optional(),
-    deletedGalleryImage: z.array(idSchema),
+    deletedGalleryImage: z.array(idSchema).optional(),
   });
 
 export const getProjectsSchema = z.object({
