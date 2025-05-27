@@ -47,7 +47,10 @@ const ImageUploader = ({
         className
       )}
     >
-      <input {...getInputProps({ className: "dropzone" })} disabled />
+      <input
+        {...getInputProps({ className: "dropzone" })}
+        disabled={disabled}
+      />
       <div className="flex gap-2 flex-col items-center relative h-[360px] ">
         <div className="!absolute !z-10  flex flex-col gap-2 justify-center items-center overlay">
           <Button type="button" className="w-fit" disabled={disabled}>
