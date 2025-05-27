@@ -62,9 +62,14 @@ export const createProjectUseCase = async (
   let galleryKeys: string[] | undefined;
   if (gallery) {
     // for this use case i assume that upload-thing will not throw any error.
-    const uploadedGallery = await Promise.all(
-      gallery.map((image) => utapi.uploadFiles(image))
-    );
+    const uploadedGallery = await utapi.uploadFiles(gallery);
+
+    // if there's any error log it
+    const errors = uploadedGallery.filter((item) => item.error);
+    if (errors.length > 0) {
+      console.log("errors from upload thing", errors);
+    }
+
     galleryKeys = uploadedGallery
       .map((item) => item.data?.key)
       .filter(Boolean) as string[];
@@ -113,6 +118,13 @@ export const updateProjectUseCase = async (
   let _gallery: string[] | undefined;
   if (gallery) {
     const uploadedGallery = await utapi.uploadFiles(gallery);
+
+    // if there's any error log it
+    const errors = uploadedGallery.filter((item) => item.error);
+    if (errors.length > 0) {
+      console.log("errors from upload thing", errors);
+    }
+
     _gallery = uploadedGallery
       .map((item) => item.data?.key)
       .filter(Boolean) as string[];
