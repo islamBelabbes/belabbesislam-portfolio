@@ -158,7 +158,7 @@ const ProjectItem = (item: Project) => {
             <DrawerContent className="p-2">
               <ScrollArea className="lg:h-[calc(100vh-6rem)] h-[calc(100vh-3rem)]">
                 <div className="px-5 items-center flex flex-col gap-2">
-                  <DrawerHeader className="justify-center items-center gap-3 sticky top-0 z-50 bg-white w-full border-none">
+                  <DrawerHeader className="justify-center items-center gap-3 sticky top-0 z-50 bg-white dark:bg-transparent w-full border-none">
                     <div>
                       <DrawerTitle className="text-center text-2xl">
                         {item.title}
