@@ -55,6 +55,8 @@ export const createProject = async (data: CreateProject) => {
   data.categories.forEach((category) => {
     formData.append("categories[]", category.toString());
   });
+  data.gallery &&
+    data.gallery.forEach((image) => formData.append("gallery[]", image));
 
   const response = await fetch("/api/projects", {
     method: "POST",
