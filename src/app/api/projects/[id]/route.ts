@@ -39,6 +39,7 @@ async function patchHandler(
     id,
     title: formData.get("title") || undefined,
     url: formData.get("url") || undefined,
+    github: formData.get("github") || undefined,
     description: formData.get("description") || undefined,
     image: formData.get("image") || undefined,
     categories: formData.getAll("categories[]").filter(Boolean),

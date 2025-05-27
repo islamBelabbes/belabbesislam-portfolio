@@ -146,7 +146,7 @@ const ProjectItem = (item: Project) => {
           </div>
 
           <Button
-            className="flex gap-2 w-fit"
+            className="flex gap-2 w-fit hover:bg-transparent hover:opacity-50 p-0"
             onClick={handleOpen}
             variant="ghost"
           >
@@ -167,14 +167,18 @@ const ProjectItem = (item: Project) => {
                         <DrawerDescription>
                           {item.description}
                         </DrawerDescription>
+
                         {item.url && (
                           <a href={item.url} target="_blank">
                             <ExternalLink size={20} />
                           </a>
                         )}
-                        <a href="" target="_blank">
-                          <Github size={20} />
-                        </a>
+
+                        {item.github && (
+                          <a href={item.github} target="_blank">
+                            <Github size={20} />
+                          </a>
+                        )}
                       </div>
                     </div>
                   </DrawerHeader>

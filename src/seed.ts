@@ -36,6 +36,7 @@ export const projects: (CleanProject & { categories: CleanCategory[] })[] = [
     categories: categories,
     url: "https://wahaj.co/",
     gallery: [],
+    github: "",
   },
   {
     id: 1,
@@ -45,6 +46,7 @@ export const projects: (CleanProject & { categories: CleanCategory[] })[] = [
     categories: categories,
     url: "https://wahaj.co/",
     gallery: [],
+    github: "",
   },
   {
     id: 2,
@@ -54,6 +56,7 @@ export const projects: (CleanProject & { categories: CleanCategory[] })[] = [
     categories: categories,
     url: "https://wahaj.co/",
     gallery: [],
+    github: "",
   },
   {
     id: 3,
@@ -63,5 +66,6 @@ export const projects: (CleanProject & { categories: CleanCategory[] })[] = [
     categories: categories,
     url: "https://wahaj.co/",
     gallery: [],
+    github: "",
   },
 ];

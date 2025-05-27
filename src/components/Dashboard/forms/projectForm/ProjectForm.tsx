@@ -102,6 +102,25 @@ const ProjectForm = ({ initial }: { initial?: Project }) => {
             />
           </div>
           <div className="flex flex-col gap-3">
+            <Label htmlFor="github">Project github</Label>
+            <Controller
+              name="github"
+              control={form.control}
+              render={({ field }) => (
+                <Input
+                  className={cn("focus-visible:ring-0", {
+                    "border-red-700": form.formState.errors.github,
+                  })}
+                  id="github"
+                  placeholder="project github Url"
+                  {...field}
+                  value={field.value ?? ""}
+                  onChange={(e) => field.onChange(e.target.value || undefined)}
+                />
+              )}
+            />
+          </div>
+          <div className="flex flex-col gap-3">
             <Label htmlFor="url">Project Categories</Label>
             <Controller
               name="categories"

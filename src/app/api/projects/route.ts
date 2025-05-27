@@ -35,6 +35,7 @@ async function postHandler(req: NextRequest, _: any, user: User) {
     title: formData.get("title"),
     image: formData.get("image"),
     url: formData.get("url") || undefined,
+    github: formData.get("github") || undefined,
     description: formData.get("description"),
     categories: categories.filter(Boolean),
     gallery: gallery.length > 0 ? gallery : undefined,

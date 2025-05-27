@@ -60,6 +60,7 @@ export const projectsTable = pgTable(
     createdAt,
     title: text().notNull(),
     url: text(),
+    github: text(),
     description: text(),
     image: text().notNull(),
   },
