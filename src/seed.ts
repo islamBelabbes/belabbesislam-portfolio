@@ -35,6 +35,7 @@ export const projects: (CleanProject & { categories: CleanCategory[] })[] = [
     image: "/project.png",
     categories: categories,
     url: "https://wahaj.co/",
+    gallery: [],
   },
   {
     id: 1,
@@ -43,6 +44,7 @@ export const projects: (CleanProject & { categories: CleanCategory[] })[] = [
     image: "/project.png",
     categories: categories,
     url: "https://wahaj.co/",
+    gallery: [],
   },
   {
     id: 2,
@@ -51,6 +53,7 @@ export const projects: (CleanProject & { categories: CleanCategory[] })[] = [
     image: "/project.png",
     categories: categories,
     url: "https://wahaj.co/",
+    gallery: [],
   },
   {
     id: 3,
@@ -59,5 +62,6 @@ export const projects: (CleanProject & { categories: CleanCategory[] })[] = [
     image: "/project.png",
     categories: categories,
     url: "https://wahaj.co/",
+    gallery: [],
   },
 ];

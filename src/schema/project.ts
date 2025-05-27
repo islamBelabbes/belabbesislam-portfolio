@@ -15,7 +15,10 @@ export const createProjectSchema = createInsertSchema(projectsTable, {
     id: true,
   })
   .extend({
-    categories: z.array(idSchema).min(1),
+    categories: z
+      .array(idSchema)
+      .min(1, { message: "Please select at least one category" }),
+    gallery: z.array(ImageSchema).optional(),
   });
 
 export const updateProjectSchema = createUpdateSchema(projectsTable, {
@@ -29,6 +32,8 @@ export const updateProjectSchema = createUpdateSchema(projectsTable, {
   })
   .extend({
     categories: z.array(idSchema).min(1),
+    gallery: z.array(ImageSchema).optional(),
+    deletedGalleryImage: z.array(idSchema).optional(),
   });
 
 export const getProjectsSchema = z.object({

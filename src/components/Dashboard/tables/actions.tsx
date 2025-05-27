@@ -10,7 +10,7 @@ import {
 import { useDeleteEntryMutation } from "@/lib/react-query/mutations";
 import { safeAsync } from "@/lib/safe";
 import { MoreHorizontal } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next13-progressbar";
 import toast from "react-hot-toast";
 
 type TTableActionsProps = {

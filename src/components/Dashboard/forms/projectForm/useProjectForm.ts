@@ -17,8 +17,28 @@ import { getDirtyFields } from "@/lib/utils";
 import { safeAsync } from "@/lib/safe";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import { z } from "zod";
+import { ImageSchema } from "@/lib/schema";
 
-type ProjectFormValues = CreateProject | UpdateProject;
+const gallerySchema = z.array(
+  z.object({
+    id: z.string(),
+    image: ImageSchema,
+  })
+);
+
+const updateProjectFormSchema = updateProjectSchema.extend({
+  gallery: gallerySchema.optional(),
+});
+
+const createProjectFormSchema = createProjectSchema.extend({
+  gallery: gallerySchema.optional(),
+});
+
+type CreateProjectForm = z.infer<typeof createProjectFormSchema>;
+type UpdateProjectForm = z.infer<typeof updateProjectFormSchema>;
+
+type ProjectFormValues = CreateProjectForm | UpdateProjectForm;
 
 export const isInSelectedCategories = (
   selectedCategories: Category[],
@@ -34,7 +54,7 @@ const useProjectForm = ({ initial }: { initial?: Project }) => {
   );
   const form = useForm<ProjectFormValues>({
     resolver: zodResolver(
-      (initial ? updateProjectSchema : createProjectSchema) as any
+      (initial ? updateProjectFormSchema : createProjectFormSchema) as any
     ),
     defaultValues: {
       id: initial?.id,
@@ -51,8 +71,14 @@ const useProjectForm = ({ initial }: { initial?: Project }) => {
   const onSubmit = async (data: ProjectFormValues) => {
     if ("id" in data && initial) {
       const dirtyFields = form.formState.dirtyFields;
+
+      const mappedData = {
+        ...data,
+        gallery: data.gallery?.map((item) => item.image) ?? [],
+      };
+
       const dirtyData = {
-        ...(getDirtyFields(dirtyFields, data) as UpdateProject),
+        ...(getDirtyFields(dirtyFields, mappedData) as UpdateProject),
         id: data.id,
         categories: form.getValues("categories"), //this should be included both in post and patch,
       };
@@ -65,17 +91,23 @@ const useProjectForm = ({ initial }: { initial?: Project }) => {
       }
 
       toast.success("project updated successfully");
-      return router.refresh();
+      router.refresh();
+      return form.reset({}, { keepValues: true });
     }
 
+    const mappedData = {
+      ...data,
+      gallery: data.gallery?.map((item) => item.image) ?? [],
+    };
     const project = await safeAsync(
-      createMutation.mutateAsync(data as CreateProject)
+      createMutation.mutateAsync(mappedData as CreateProject)
     );
     if (!project.success) return toast.error("an error occurred");
 
     toast.success("project created successfully");
     router.push(`/dashboard/project/${project.data.id}`);
-    return router.refresh();
+    router.refresh();
+    return form.reset({}, { keepValues: true });
   };
 
   const onSelect = (value: Category, onChange: (...event: any[]) => void) => {

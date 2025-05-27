@@ -29,16 +29,18 @@ async function getHandler(req: NextRequest) {
 
 async function postHandler(req: NextRequest, _: any, user: User) {
   const formData = await req.formData();
+  const gallery = formData.getAll("gallery[]");
+  const categories = formData.getAll("categories[]");
   const body = {
     title: formData.get("title"),
     image: formData.get("image"),
     url: formData.get("url") || undefined,
     description: formData.get("description"),
-    categories: formData.getAll("categories[]"),
+    categories: categories.filter(Boolean),
+    gallery: gallery.length > 0 ? gallery : undefined,
   };
 
   const validatedBody = createProjectSchema.parse(body);
-
   const post = await createProjectUseCase({ ...validatedBody }, user);
 
   const response = apiResponse({

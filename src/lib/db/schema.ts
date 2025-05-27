@@ -6,9 +6,17 @@ import {
   text,
   foreignKey,
   primaryKey,
+  serial,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { relations } from "drizzle-orm/relations";
+
+const createdAt = timestamp("created_at", {
+  withTimezone: true,
+  mode: "string",
+})
+  .defaultNow()
+  .notNull();
 
 export const categoriesTable = pgTable(
   "categories",
@@ -24,13 +32,11 @@ export const categoriesTable = pgTable(
         cache: 1,
       })
       .notNull(),
-    createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
-      .defaultNow()
-      .notNull(),
+    createdAt,
     name: text().notNull(),
     image: text().notNull(),
   },
-  (table) => [
+  () => [
     pgPolicy("Enable read access for all users", {
       as: "permissive",
       for: "select",
@@ -51,15 +57,13 @@ export const projectsTable = pgTable(
       minValue: 1,
       cache: 1,
     }),
-    createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
-      .defaultNow()
-      .notNull(),
+    createdAt,
     title: text().notNull(),
     url: text(),
     description: text(),
     image: text().notNull(),
   },
-  (table) => [
+  () => [
     pgPolicy("Enable read access for all users", {
       as: "permissive",
       for: "select",
@@ -69,6 +73,13 @@ export const projectsTable = pgTable(
   ]
 );
 
+export const projectGalleryTable = pgTable("project_gallery", {
+  id: serial("id").primaryKey(),
+  image: text().notNull(),
+  projectId: bigint({ mode: "number" }).notNull(),
+  createdAt,
+});
+
 export const projectCategoriesTable = pgTable(
   "project_categories",
   {
@@ -76,6 +87,7 @@ export const projectCategoriesTable = pgTable(
     projectId: bigint("project_id", { mode: "number" }).notNull(),
     // You can use { mode: "bigint" } if numbers are exceeding js number limitations
     categoryId: bigint("category_id", { mode: "number" }).notNull(),
+    createdAt,
   },
   (table) => [
     foreignKey({
@@ -121,8 +133,20 @@ export const categoriesRelations = relations(categoriesTable, ({ many }) => ({
 
 export const projectsRelations = relations(projectsTable, ({ many }) => ({
   projectCategories: many(projectCategoriesTable),
+  projectGallery: many(projectGalleryTable),
 }));
+
+export const projectGalleryRelations = relations(
+  projectGalleryTable,
+  ({ one }) => ({
+    project: one(projectsTable, {
+      fields: [projectGalleryTable.projectId],
+      references: [projectsTable.id],
+    }),
+  })
+);
 
 export type ProjectTable = typeof projectsTable;
 export type CategoryTable = typeof categoriesTable;
 export type ProjectCategoryTable = typeof projectCategoriesTable;
+export type ProjectGalleryTable = typeof projectGalleryTable;

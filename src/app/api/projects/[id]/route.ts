@@ -41,7 +41,11 @@ async function patchHandler(
     url: formData.get("url") || undefined,
     description: formData.get("description") || undefined,
     image: formData.get("image") || undefined,
-    categories: formData.getAll("categories[]"),
+    categories: formData.getAll("categories[]").filter(Boolean),
+    deletedGalleryImage: formData
+      .getAll("deletedGalleryImage[]")
+      .filter(Boolean),
+    gallery: formData.getAll("gallery[]"),
   };
 
   const validatedBody = updateProjectSchema.parse(body);
