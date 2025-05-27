@@ -96,7 +96,7 @@ const ProjectForm = ({ initial }: { initial?: Project }) => {
                   placeholder="project Url"
                   {...field}
                   value={field.value ?? ""}
-                  onChange={(e) => field.onChange(e.target.value || undefined)}
+                  onChange={(e) => field.onChange(e.target.value || "")}
                 />
               )}
             />
@@ -115,7 +115,7 @@ const ProjectForm = ({ initial }: { initial?: Project }) => {
                   placeholder="project github Url"
                   {...field}
                   value={field.value ?? ""}
-                  onChange={(e) => field.onChange(e.target.value || undefined)}
+                  onChange={(e) => field.onChange(e.target.value || "")}
                 />
               )}
             />
