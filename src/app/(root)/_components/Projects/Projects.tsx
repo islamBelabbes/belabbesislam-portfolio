@@ -27,6 +27,7 @@ import {
 import { ArrowRight, ExternalLink } from "lucide-react";
 import { Github } from "@/components/ui/icons";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { SmartImage } from "@/components/smart-image";
 
 function Projects({ categories }: { categories: Category[] }) {
   const [selectedCategory, setSelectedCategory] = useState<
@@ -192,9 +193,9 @@ const ProjectItem = (item: Project) => {
                   </div>
 
                   {/* gallery */}
-                  <div className="flex mt-2 gap-2 flex-col max-w-6xl">
+                  <div className="flex mt-2 gap-2 flex-col max-w-6xl w-full">
                     {item.gallery.map((item) => (
-                      <img
+                      <SmartImage
                         key={item.id}
                         src={`${MEDIA_URL}/${item.image}`}
                         alt="project gallery"
