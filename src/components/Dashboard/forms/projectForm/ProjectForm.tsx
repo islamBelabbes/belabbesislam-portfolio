@@ -18,43 +18,20 @@ import { Category } from "@/dto/categories";
 import Image from "next/image";
 import GalleryUploader from "./gallery-uploader";
 
-type LocalGallery = {
-  id: string;
-  image: string;
-  isUploaded: boolean;
-};
-
 const ProjectForm = ({ initial }: { initial?: Project }) => {
-  const { form, onSelect, selectedCategories } = useProjectForm({
+  const {
+    form,
+    onSelect,
+    selectedCategories,
+    onGalleryRemove,
+    renderedGallery,
+    setRenderedGallery,
+  } = useProjectForm({
     initial,
   });
-  const [renderedGallery, setRenderedGallery] = useState<LocalGallery[]>(
-    initial?.gallery.map((i) => ({
-      id: i.id.toString(),
-      image: `${MEDIA_URL}/${i.image}`,
-      isUploaded: false,
-    })) ?? []
-  );
+
   const cover = initial?.image ? `${MEDIA_URL}/${initial.image}` : null;
   const isDirtyAlt = !!Object.keys(form.formState.dirtyFields).length;
-
-  const onGalleryRemove = (gallery: LocalGallery) => {
-    const filtered = renderedGallery.filter((item) => item.id !== gallery.id);
-
-    if (!gallery.isUploaded) {
-      const deleted = form.getValues("deletedGalleryImage") ?? [];
-      form.setValue("deletedGalleryImage", [...deleted, +gallery.id], {
-        shouldDirty: true,
-      });
-    } else {
-      const newGal =
-        form.getValues("gallery")?.filter((item) => item.id !== gallery.id) ??
-        [];
-      form.setValue("gallery", newGal, { shouldDirty: true });
-    }
-
-    setRenderedGallery(filtered);
-  };
 
   return (
     <div>

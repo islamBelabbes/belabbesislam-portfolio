@@ -1,5 +1,5 @@
 import { PAGINATION } from "@/constants/constants";
-import { projectDtoMapper } from "@/dto/projects";
+import { Project, projectDtoMapper } from "@/dto/projects";
 import db from "@/lib/db";
 import {
   projectCategoriesTable,
@@ -145,7 +145,7 @@ export const updateProject = async ({
 }) => {
   const hasData = Boolean(Object.values(data).filter(Boolean).length);
 
-  return db.transaction(async (tx) => {
+  await db.transaction(async (tx) => {
     await tx
       .delete(projectCategoriesTable)
       .where(eq(projectCategoriesTable.projectId, id));
@@ -174,18 +174,19 @@ export const updateProject = async ({
 
     // if there is no data to update, we don't need to do anything
     if (!hasData) {
-      return new Promise<{ id: number }[]>((resolve) => {
-        resolve([{ id }]);
+      const project = (await getProjectById(id)) as Project;
+      return new Promise<Project>((resolve) => {
+        resolve(project);
       });
     }
 
-    const [updated] = await tx
+    await tx
       .update(projectsTable)
       .set(data)
       .where(eq(projectsTable.id, id))
       .returning({ id: projectsTable.id });
-    return updated;
   });
+  return getProjectById(id);
 };
 
 export const deleteProject = async (id: Id) => {

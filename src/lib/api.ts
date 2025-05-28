@@ -100,7 +100,7 @@ export const updateProject = async (data: UpdateProject) => {
   }
 
   const res = await response.json();
-  return res.data as { id: Id };
+  return res.data as Project;
 };
 
 // Categories

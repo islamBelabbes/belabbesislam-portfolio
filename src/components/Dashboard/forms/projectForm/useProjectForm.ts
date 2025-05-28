@@ -19,6 +19,7 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import { z } from "zod";
 import { ImageSchema } from "@/lib/schema";
+import { MEDIA_URL } from "@/constants/constants";
 
 const gallerySchema = z.array(
   z.object({
@@ -40,6 +41,12 @@ type UpdateProjectForm = z.infer<typeof updateProjectFormSchema>;
 
 type ProjectFormValues = CreateProjectForm | UpdateProjectForm;
 
+type LocalGallery = {
+  id: string;
+  image: string;
+  isUploaded: boolean;
+};
+
 export const isInSelectedCategories = (
   selectedCategories: Category[],
   category: Category
@@ -52,6 +59,14 @@ const useProjectForm = ({ initial }: { initial?: Project }) => {
   const [selectedCategories, setSelectedCategories] = useState<Category[]>(
     initial ? [...initial.categories] : []
   );
+  const [renderedGallery, setRenderedGallery] = useState<LocalGallery[]>(
+    initial?.gallery.map((i) => ({
+      id: i.id.toString(),
+      image: `${MEDIA_URL}/${i.image}`,
+      isUploaded: false,
+    })) ?? []
+  );
+
   const form = useForm<ProjectFormValues>({
     resolver: zodResolver(
       (initial ? updateProjectFormSchema : createProjectFormSchema) as any
@@ -87,13 +102,24 @@ const useProjectForm = ({ initial }: { initial?: Project }) => {
       const project = await safeAsync(updateMutation.mutateAsync(dirtyData));
       if (!project.success) {
         console.log(project.error);
-
         return toast.error("there was an error updating the project");
       }
 
-      toast.success("project updated successfully");
-      router.refresh();
-      return form.reset({}, { keepValues: true });
+      form.setValue("deletedGalleryImage", []);
+      form.setValue("gallery", []);
+      console.log("client", project);
+
+      const newGal = project.data.gallery.map((item) => ({
+        id: item.id.toString(),
+        image: `${MEDIA_URL}/${item.image}`,
+        isUploaded: false,
+      }));
+      console.log(newGal);
+
+      setRenderedGallery(newGal);
+
+      form.reset(form.getValues());
+      return toast.success("project updated successfully");
     }
 
     const mappedData = {
@@ -106,9 +132,7 @@ const useProjectForm = ({ initial }: { initial?: Project }) => {
     if (!project.success) return toast.error("an error occurred");
 
     toast.success("project created successfully");
-    router.push(`/dashboard/project/${project.data.id}`);
-    router.refresh();
-    return form.reset({}, { keepValues: true });
+    return router.push(`/dashboard/project/${project.data.id}`);
   };
 
   const onSelect = (value: Category, onChange: (...event: any[]) => void) => {
@@ -124,6 +148,24 @@ const useProjectForm = ({ initial }: { initial?: Project }) => {
     return onChange([...selected.map((item) => item.id)]);
   };
 
+  const onGalleryRemove = (gallery: LocalGallery) => {
+    const filtered = renderedGallery.filter((item) => item.id !== gallery.id);
+
+    if (!gallery.isUploaded) {
+      const deleted = form.getValues("deletedGalleryImage") ?? [];
+      form.setValue("deletedGalleryImage", [...deleted, +gallery.id], {
+        shouldDirty: true,
+      });
+    } else {
+      const newGal =
+        form.getValues("gallery")?.filter((item) => item.id !== gallery.id) ??
+        [];
+      form.setValue("gallery", newGal, { shouldDirty: true });
+    }
+
+    setRenderedGallery(filtered);
+  };
+
   return {
     form: {
       ...form,
@@ -132,6 +174,9 @@ const useProjectForm = ({ initial }: { initial?: Project }) => {
     onSelect,
     setSelectedCategories,
     selectedCategories,
+    onGalleryRemove,
+    renderedGallery,
+    setRenderedGallery,
   };
 };
 
