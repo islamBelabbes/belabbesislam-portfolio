@@ -112,7 +112,7 @@ export const updateProjectUseCase = async (
 
   // upload new gallery images
   let _gallery: string[] | undefined;
-  if (gallery) {
+  if (gallery?.length) {
     const uploadedGallery = await utapi.uploadFiles(gallery);
 
     console.log("updateProjectUseCase-upload-thing", uploadedGallery);
@@ -128,7 +128,7 @@ export const updateProjectUseCase = async (
       .filter(Boolean) as string[];
   }
 
-  await utapi.deleteFiles(fileToDelete);
+  fileToDelete.length && (await utapi.deleteFiles(fileToDelete));
 
   return updateProject({
     ...rest,
