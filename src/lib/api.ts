@@ -77,8 +77,11 @@ export const updateProject = async (data: UpdateProject) => {
   data.title && formData.append("title", data.title);
   data.image && formData.append("image", data.image);
   data.description && formData.append("description", data.description);
-  data.url && formData.append("url", data.url);
-  data.github && formData.append("github", data.github);
+
+  // here we want to allow empty string
+  data.url !== undefined && formData.append("url", data.url);
+  data.github !== undefined && formData.append("github", data.github);
+
   data.categories.forEach((category) => {
     formData.append("categories[]", category.toString());
   });
@@ -86,8 +89,6 @@ export const updateProject = async (data: UpdateProject) => {
   data.deletedGalleryImage?.forEach((image) =>
     formData.append("deletedGalleryImage[]", image.toString())
   );
-
-  console.log(data);
 
   const response = await fetch(`/api/projects/${data.id}`, {
     method: "PATCH",

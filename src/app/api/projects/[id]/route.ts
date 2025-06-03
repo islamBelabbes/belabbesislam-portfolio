@@ -35,11 +35,15 @@ async function patchHandler(
 ) {
   const id = (await params).id;
   const formData = await req.formData();
+
+  // we extract these cuz we want to allow empty string
+  const url = formData.get("url");
+  const github = formData.get("github");
   const body = {
     id,
     title: formData.get("title") || undefined,
-    url: formData.get("url") || undefined,
-    github: formData.get("github") || undefined,
+    url: url === "" ? url : url || undefined,
+    github: github === "" ? github : github || undefined,
     description: formData.get("description") || undefined,
     image: formData.get("image") || undefined,
     categories: formData.getAll("categories[]").filter(Boolean),

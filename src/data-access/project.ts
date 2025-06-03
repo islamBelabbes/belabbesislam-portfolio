@@ -143,7 +143,9 @@ export const updateProject = async ({
   image?: string;
   gallery?: string[];
 }) => {
-  const hasData = Boolean(Object.values(data).filter(Boolean).length);
+  const hasData = Boolean(
+    Object.values(data).filter((item) => item !== undefined).length
+  );
 
   await db.transaction(async (tx) => {
     await tx

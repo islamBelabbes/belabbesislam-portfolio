@@ -4,10 +4,12 @@ import { z } from "zod";
 import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { ImageSchema, idSchema } from "@/lib/schema";
 
+const urlSchema = z.string().url().optional().or(z.literal(""));
+
 export const createProjectSchema = createInsertSchema(projectsTable, {
   title: z.string().min(1),
-  url: z.coerce.string().url().optional(),
-  github: z.coerce.string().url().optional(),
+  url: urlSchema,
+  github: urlSchema,
   description: z.string().optional(),
   image: ImageSchema,
 })
@@ -24,8 +26,8 @@ export const createProjectSchema = createInsertSchema(projectsTable, {
 
 export const updateProjectSchema = createUpdateSchema(projectsTable, {
   id: idSchema,
-  url: z.string().url().optional(),
-  github: z.string().url().optional(),
+  url: urlSchema,
+  github: urlSchema,
   description: z.string().optional(),
   image: ImageSchema.optional(),
 })
