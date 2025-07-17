@@ -155,7 +155,7 @@ const ProjectItem = (item: Project) => {
             <ArrowRight />
           </Button>
 
-          <Drawer open={open} onOpenChange={setOpen}>
+          <Drawer open={open} onOpenChange={setOpen} autoFocus>
             <DrawerContent className="p-2 bg-background">
               <ScrollArea className="lg:h-[calc(100vh-6rem)] h-[calc(100vh-3rem)]">
                 <div className="px-5 items-center flex flex-col gap-2">
