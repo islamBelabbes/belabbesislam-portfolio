@@ -172,18 +172,6 @@ const ProjectItem = (item: Project) => {
                           {item.description}
                         </DrawerDescription>
 
-                        {/* {item.url && (
-                          <a href={item.url} target="_blank">
-                            <ExternalLink size={20} />
-                          </a>
-                        )}
-
-                        {item.github && (
-                          <a href={item.github} target="_blank">
-                            <Github size={20} />
-                          </a>
-                        )} */}
-
                         <a
                           href={item.url ?? "#"}
                           target="_blank"
