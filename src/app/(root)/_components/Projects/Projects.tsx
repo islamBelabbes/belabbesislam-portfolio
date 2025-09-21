@@ -114,6 +114,9 @@ const ProjectItem = (item: Project) => {
   const handleOpen = () => {
     setOpen(true);
   };
+
+  const disableLink = (e: React.MouseEvent<HTMLAnchorElement>) =>
+    e.preventDefault();
   return (
     <div
       className="shadow_sm  rounded-[32px] flex flex-col transition-all duration-300 h-full"
@@ -169,7 +172,7 @@ const ProjectItem = (item: Project) => {
                           {item.description}
                         </DrawerDescription>
 
-                        {item.url && (
+                        {/* {item.url && (
                           <a href={item.url} target="_blank">
                             <ExternalLink size={20} />
                           </a>
@@ -179,7 +182,31 @@ const ProjectItem = (item: Project) => {
                           <a href={item.github} target="_blank">
                             <Github size={20} />
                           </a>
-                        )}
+                        )} */}
+
+                        <a
+                          href={item.url ?? "#"}
+                          target="_blank"
+                          onClick={(e) => (!item.url ? disableLink(e) : true)}
+                          className={cn({
+                            "opacity-50 cursor-not-allowed": !item.url,
+                          })}
+                        >
+                          <ExternalLink size={20} />
+                        </a>
+
+                        <a
+                          href={item.github ?? "#"}
+                          target="_blank"
+                          onClick={(e) =>
+                            !item.github ? disableLink(e) : true
+                          }
+                          className={cn({
+                            "opacity-50 cursor-not-allowed": !item.github,
+                          })}
+                        >
+                          <Github size={20} />
+                        </a>
                       </div>
                     </div>
                   </DrawerHeader>
